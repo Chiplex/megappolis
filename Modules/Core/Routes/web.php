@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,11 +11,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
-Route::get('users/{id}', function ($id) {
-    return $id;
+Route::prefix('core')->group(function() {
+    Route::get('/index/{hola}', 'CoreController@index');
 });
