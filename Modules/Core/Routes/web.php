@@ -11,6 +11,14 @@
 |
 */
 
-Route::prefix('core')->group(function() {
-    Route::get('/index/{hola}', 'CoreController@index');
+Route::prefix('core/')->group(function() {
+    Route::get('/User/Index', 'UserController@index');
+    Route::get('/User/Register', 'UserController@register');
+
+    Route::get('/Role/Index', 'RoleController@index');
+    Route::get('/Role/UserPagePermissions ', 'RoleController@userPagePermissions');
+
+    Route::get('/Parameter/Index', 'ParameterController@index');
+
+    Route::get('/Page/Index', 'PageController@index');
 });
