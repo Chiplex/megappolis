@@ -14,7 +14,8 @@ class PageController extends Controller
      */
     public function index()
     {
-        return view('core::page\index');
+        $pages = Page::paginate(50);
+        return view('core::page\index', \compact('pages'));
     }
 
     /**
