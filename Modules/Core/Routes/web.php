@@ -12,13 +12,13 @@
 */
 
 Route::prefix('core/')->group(function() {
-    Route::get('/User/Index', 'UserController@index');
-    Route::get('/User/Register', 'UserController@register');
+    Route::get('/user/index/{hola}', 'UserController@index');
+    Route::get('/user/register', 'UserController@register');
 
-    Route::get('/Role/Index', 'RoleController@index');
-    Route::get('/Role/UserPagePermissions ', 'RoleController@userPagePermissions');
+    Route::get('/role/index', 'RoleController@index');
+    Route::get('/role/userPagePermissions ', 'RoleController@userPagePermissions');
 
-    Route::get('/Parameter/Index', 'ParameterController@index');
+    Route::get('/parameter/index', 'ParameterController@index');
 
-    Route::get('/Page/Index', 'PageController@index');
+    Route::get('/page/index', 'PageController@index');
 });

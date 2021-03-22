@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
-class PageController extends Controller
+class AppController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        return view('core::page\index');
+        return view('core::app\index');
     }
 
     /**
@@ -23,7 +23,7 @@ class PageController extends Controller
      */
     public function create()
     {
-        return view('core::page\create');
+        return view('core::app\create');
     }
 
     /**
@@ -43,7 +43,7 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        return view('core::page\show');
+        return view('core::app\show');
     }
 
     /**
@@ -53,7 +53,7 @@ class PageController extends Controller
      */
     public function edit($id)
     {
-        return view('core::page\edit');
+        return view('core::app\edit');
     }
 
     /**

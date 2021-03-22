@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('core::index');
+        return view('core::user\index');
     }
 
     /**
@@ -23,7 +23,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('core::create');
+        return view('core::user\create');
     }
 
     /**
