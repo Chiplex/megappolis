@@ -3,35 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Core\Entities\App;
+use Modules\Core\Entities\Page;
+use Modules\Core\Entities\Permission;
+use App\Models\User;
 
 class ViewController extends Controller
 {
     public function getView($view){
-        $app = \request()->segment(1);
-        $controller = \request()->segment(2);
-        $action = \request()->segment(3);
         
-        $app = App::find(['name' => $app]);
-        $matchesPage = ['app_id'=> $app->id, 'controller' => $controller, 'action' => $action];
-        $page = Page::where($matchesPage)->first();
+        if (count(request()->segments()) > 2) {
+            $appName = 'main';
+            $controller = \request()->segment(1);
+            $action = \request()->segment(2);
+        } else {
+            $appName = \request()->segment(1);
+            $controller = \request()->segment(2);
+            $action = \request()->segment(3);
+        }
 
-        $permissions;
+        $app = App::find(['name' => $app, 'user_id' => 1 ])->first();
+        $page = Page::where(['app_id'=> $app->id, 'controller' => 'page', 'action' => 'index'])->first();
 
-        $matchesRole = ['user_id' => auth()->user()->id , 'role_id' => 1];
-        if(Role::where($matchesRole)->count() > 0){
-            $matchPage = ['controller' => $controller, 'action' => $action];
-            $permissions = Permission::whereHas('pages', function (Builder $query) use($matchPage){
-                $query->where($matchPage);
-            })->orderBy('name')->groupBy('name')->get();
+        $user = User::find(1);
+        $roles = $user->roles();
+        
+        if($roles->where('name', 'CORE-MEGAPPOLIS')->exists()){
+            $permissions = Permission::where('page_id', $page->id)->select('name')->orderBy('name')->groupBy('name')->get();
         }
         else{
-            $permissions = Permission::whereHas('roles.user', function (Builder $query)
-            {
-                $query->where('id', auth()->user()->id);
-            })->orderBy('name')->groupBy('name')->get();
+            $permissions = $role->permissions()->select('name')->where('page_id', $page->id)->orderBy('name')->groupBy('name')->get();
         }
         
-        return view('core::'.$app."\'".$view,compact($permissions));
+        $result = ['result' => true, 'data' => $permissions];
+        //return view('core::'.$app."\'".$view, compact($permissions->toArray()));
+        return view('core::app\shared\viewIndex', compact('result'))->render();
     }
 }
