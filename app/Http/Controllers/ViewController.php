@@ -3,20 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Modules\Core\Entities\Permission;
-use Modules\Core\Entities\Page;
 use Modules\Core\Entities\App;
-use Modules\Core\Entities\Role;
 
-class View extends Controller
+class ViewController extends Controller
 {
-    public function GetView($view)
-    {   
-        $app = \request()->segment(0);
-        $controller = \request()->segment(1);
-        $action = \request()->segment(2);
+    public function getView($view){
+        $app = \request()->segment(1);
+        $controller = \request()->segment(2);
+        $action = \request()->segment(3);
         
-        $app = App::first(['name' => $app]);
+        $app = App::find(['name' => $app]);
         $matchesPage = ['app_id'=> $app->id, 'controller' => $controller, 'action' => $action];
         $page = Page::where($matchesPage)->first();
 
