@@ -23,18 +23,10 @@ class ViewController extends Controller
             $action = \request()->segment(3);
         }
 
-        $app = App::find(['name' => $app, 'user_id' => 1 ])->first();
-        $page = Page::where(['app_id'=> $app->id, 'controller' => 'page', 'action' => 'index'])->first();
+        $app = App::find(['name' => $appName, 'user_id' => 1 ])->first();
+        $page = Page::where(['app_id'=> $appName->id, 'controller' => 'page', 'action' => 'index'])->first();
 
-        $user = User::find(1);
-        $roles = $user->roles();
-        
-        if($roles->where('name', 'CORE-MEGAPPOLIS')->exists()){
-            $permissions = Permission::where('page_id', $page->id)->select('name')->orderBy('name')->groupBy('name')->get();
-        }
-        else{
-            $permissions = $role->permissions()->select('name')->where('page_id', $page->id)->orderBy('name')->groupBy('name')->get();
-        }
+        $permissions = GetPermisos($page);
         
         $result = ['result' => true, 'data' => $permissions];
         //return view('core::'.$app."\'".$view, compact($permissions->toArray()));
