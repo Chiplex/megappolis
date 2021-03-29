@@ -4,17 +4,20 @@
 
 @section('content_top_nav_right')
     @if (Route::has('login'))
-        <li class="nav-item">
-            @auth
+        @auth
+            <li class="nav-item">
                 <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
-            @else
+            </li>
+        @else
+            <li>
                 <a href="{{ route('login') }}" class="nav-link">Log in</a>
-
+            </li>
+            <li>
                 @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="ml-4 nav-link">Register</a>
+                    <a href="{{ route('register') }}" class="nav-link">Register</a>
                 @endif
-            @endauth
-        </li>
+            </li>
+        @endauth
     @endif
 @endsection
 

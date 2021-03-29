@@ -4,7 +4,11 @@ namespace Modules\Core\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+//use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Modules\Core\Entities\Permission;
+
 
 class UserController extends Controller
 {
@@ -14,7 +18,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('core::user\index');
+        $users = User::all();
+        $data = ['users' => $users];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+        return view('dashboard', $info);
     }
 
     /**
