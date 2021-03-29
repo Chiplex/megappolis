@@ -19,7 +19,7 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>User</th>
+                <th>Name</th>
                 <th>Email</th>
                 <th></th>
               </tr>
@@ -30,7 +30,13 @@
                     <td>{{$user->id}}</td>
                     <td>{{$user->name}}</td>
                     <td>{{$user->email}}</td>
-                    <td><a href="{{ url('/core/user/register/'.$user->id) }}" class="nav-link"><i class="far fa-calendar-alt"></i></a></td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{ url('/core/user/register/'.$user->id) }}" class="btn btn-info btn-flat">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

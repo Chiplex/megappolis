@@ -16,12 +16,40 @@ class PageTableSeeder extends Seeder
     {
         Model::unguard();
 
-        DB::table('role')->insert([
+        DB::table('page')->insert([
             'app_id' => '1',
             'controller' => 'user',
             'action' => 'index',
-            'name' => 'Lista de Usuario',
+            'name' => 'Lista de Usuarios',
+            'type' => 'submenu',
             'page_id' => 0,
+        ]);
+
+        DB::table('page')->insert([
+            'app_id' => '1',
+            'controller' => 'role',
+            'action' => 'index',
+            'name' => 'Lista de Roles',
+            'type' => 'submenu',
+            'page_id' => 0,
+        ]);
+
+        DB::table('page')->insert([
+            'app_id' => '1',
+            'controller' => 'role',
+            'action' => 'user',
+            'name' => 'Lista de Roles',
+            'type' => 'page',
+            'page_id' => 2,
+        ]);
+
+        DB::table('page')->insert([
+            'app_id' => '1',
+            'controller' => 'page',
+            'action' => 'index',
+            'name' => 'Lista de Paginas',
+            'type' => 'submenu',
+            'page_id' => 2,
         ]);
     }
 }

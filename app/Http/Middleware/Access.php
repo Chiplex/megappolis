@@ -22,18 +22,18 @@ class Access
         // se redirecciona cuando el usuario no tiene el rol asignado por la ruta
         $user = $request->user();
         if (!$user->roles()->where('name', $role)->exists()) {
-            return redirect('home');
+            return back()->with('message', 'Acceso no autorizado');
         }
         $roles = $user->roles();
         // se redirecciona cuando el usuario no tiene el app que viene del url
         if (!$user->apps()->where('name', $request->segment(1))->exists()) {
-            return redirect('home');
+            return back()->with('message', 'App no instalada');
         }
         
         // se redirecciona cuando el usuario no tiene el pagina y la accion que viene del url
         $app = $user->apps()->where('name', $request->segment(1))->first();
         if (!$app->pages()->where(['controller' => $request->segment(2), 'action' => $request->segment(3)])->exists()) {
-            return redirect('home');
+            return back()->with('message', 'Módulos no instalados');
         }
 
         if ($role != "guest") {
@@ -46,7 +46,7 @@ class Access
         // Se redirecciona cuando no tiene el permiso de ver en esta pagina
         $role = $roles->where('name', $role)->first();
         if (!$role->permissions()->where(['page_id' => $page->id, 'name' => 'view'])->exists()) {
-            return redirect('home');
+            return back()->with('message', 'No tiene permisos para ver esta pagina');
         }
         
         // Si es el creador pasar todos los permisos

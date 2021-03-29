@@ -5,6 +5,7 @@ namespace Modules\Core\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Role;
 
 class RoleController extends Controller
 {
@@ -14,7 +15,14 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return view('core::index');
+        $roles = Role::all();
+        $data = ['roles' => $roles];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+
+        return view('dashboard', $info);
     }
 
     /**
@@ -75,5 +83,21 @@ class RoleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
+    public function user(Role $role)
+    {
+        $roles = Role::all();
+        $data = ['users' => $role->users()->get()];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+        
+        return view('dashboard', $info);
     }
 }

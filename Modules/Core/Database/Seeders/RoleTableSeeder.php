@@ -17,7 +17,7 @@ class RoleTableSeeder extends Seeder
     {
         Model::unguard();
 
-        DB::table('role')->insert([
+        DB::table('roles')->insert([
             'name' => 'CORE-MEGAPPOLIS',
             'type' => 'MAIN',
         ]);

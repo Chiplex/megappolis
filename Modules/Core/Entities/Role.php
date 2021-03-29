@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Core\Entities\Page;
 use Modules\Core\Entities\Permission;
+use App\Models\User;
 
 class Role extends Model
 {
@@ -32,5 +33,13 @@ class Role extends Model
     public function permissions()
     {
         return $this->hasMany(Permission::class);
+    }
+
+    /**
+     * The roles that belong to the users.
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'roles_users');
     }
 }

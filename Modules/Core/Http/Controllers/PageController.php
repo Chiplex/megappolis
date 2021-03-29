@@ -5,6 +5,7 @@ namespace Modules\Core\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Page;
 
 class PageController extends Controller
 {
@@ -14,8 +15,14 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages = Page::paginate(50);
-        return view('core::page\index', \compact('pages'));
+        $pages = Page::with('app')->get();
+        $data = ['pages' => $pages];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+
+        return view('dashboard', $info);
     }
 
     /**

@@ -19,18 +19,25 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>User</th>
-                <th>Email</th>
+                <th>Name</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-                @foreach ($users as $user)
+                @foreach ($roles as $role)
                 <tr>
-                    <td>{{$user->id}}</td>
-                    <td>{{$user->name}}</td>
-                    <td>{{$user->email}}</td>
-                    <td><a href="{{ url('/core/user/register/'.$user->id) }}" class="nav-link"><i class="far fa-calendar-alt"></i></a></td>
+                    <td>{{$role->id}}</td>
+                    <td>{{$role->name}}</td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{ url('/core/role/register/'.$role->id) }}" class="btn btn-info btn-flat">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ url('/core/role/user/'.$role->id) }}" class="btn btn-info btn-flat">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

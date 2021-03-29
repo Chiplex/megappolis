@@ -13,9 +13,13 @@
 
 Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(function() {
     Route::get('/user/index', 'UserController@index');
-    Route::get('/user/register', 'UserController@register');
+    Route::get('/user/register', 'UserController@create');
+    Route::get('/user/register/{id}', 'UserController@show');
 
     Route::get('/role/index', 'RoleController@index');
+    Route::get('/role/register', 'RoleController@create');
+    Route::get('/role/register/{id}', 'RoleController@show');
+    Route::get('/role/user/{role} ', 'RoleController@user');
     Route::get('/role/userPagePermissions ', 'RoleController@userPagePermissions');
 
     Route::get('/parameter/index', 'ParameterController@index');

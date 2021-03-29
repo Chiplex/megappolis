@@ -51,9 +51,14 @@ class UserController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(User $user)
     {
-        return view('core::show');
+        $data = ['users' => $users];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+        return view('dashboard', $info);
     }
 
     /**
