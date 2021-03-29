@@ -15,4 +15,12 @@ class App extends Model
     {
         return \Modules\Core\Database\factories\AppFactory::new();
     }
+
+    /**
+     * Get the pages for the app.
+     */
+    public function pages()
+    {
+        return $this->hasMany(Page::class);
+    }
 }
