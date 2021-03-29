@@ -19,14 +19,8 @@ class Controller extends BaseController
         $user = Auth::user();
         $roles = $user->roles();
         
-        if($roles->where('name', $role)->exists())
-        {
-            $permissions = Permission::where('page_id', $page->id)->select('name')->orderBy('name')->groupBy('name')->get();
-        }
-        else
-        {
-            $permissions = $role->permissions()->select('name')->where('page_id', $page->id)->orderBy('name')->groupBy('name')->get();
-        }
-        return $permissions;
+        return $permissions = $roles->where('name', $role)->exists() 
+            ? Permission::where('page_id', $page->id)->GetByRole()
+            : $roles->permissions()->GetByRole();
     }
 }

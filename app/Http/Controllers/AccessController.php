@@ -3,13 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Builder;
-use Modules\Core\Entities\App;
-use Modules\Core\Entities\Page;
-use Modules\Core\Entities\Permission;
-use App\Models\User;
 
-class ViewController extends Controller
+class AccessController extends Controller
 {
     public function show($view){
         

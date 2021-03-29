@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ViewController;
+use App\Http\Controllers\AccessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('/view/{view}', [ViewController::class, 'getView']);
+Route::get('/view/{view}', [ViewController::class, 'show']);
+Route::get('/access/{access}', [AccessController::class, 'show'])->middleware(['auth']);
 
 require __DIR__.'/auth.php';

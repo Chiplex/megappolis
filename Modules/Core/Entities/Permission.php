@@ -21,4 +21,9 @@ class Permission extends Model
     {
         return $this->belongsTo(Page::class);
     }
+
+    public function GetByRole()
+    {
+        return $this->select('name')->orderBy('name')->groupBy('name')->get();
+    }
 }

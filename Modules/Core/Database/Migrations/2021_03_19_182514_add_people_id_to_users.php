@@ -14,7 +14,7 @@ class AddPeopleIdToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('people_id');
+            $table->foreignId('people_id')->nullable();
             $table->foreign('people_id')->references('id')->on('peoples');
         });
     }
@@ -26,8 +26,10 @@ class AddPeopleIdToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('', function (Blueprint $table) {
-
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign('people_id');
+            $table->dropIndex('people_id');
+            $table->dropColumn('people_id');
         });
     }
 }
