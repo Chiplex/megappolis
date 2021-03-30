@@ -29,4 +29,9 @@ class Page extends Model
     {
         return $this->app->name.'::'.$this->controller.'\\'.$this->action;
     }
+
+    public function buildTitle()
+    {
+        return strtoupper($this->app->name).'-'.$this->name;
+    }
 }

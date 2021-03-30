@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', $view->buildTitle())
 
 @section('content_top_nav_right')
     @if (Route::has('login'))
@@ -27,11 +27,10 @@
         {!! \Session::get('message') !!}
     </div>
 @endif
-{{$view->name}}
+<h1>{{$view->name}}</h1>
 @stop
 
 @section('content')
-
 @include($view->buildView(), $data)
 @stop
 

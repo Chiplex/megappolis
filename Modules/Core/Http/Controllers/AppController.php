@@ -5,6 +5,7 @@ namespace Modules\Core\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\App;
 
 class AppController extends Controller
 {
@@ -14,7 +15,14 @@ class AppController extends Controller
      */
     public function index()
     {
-        return view('core::app\index');
+        $apps = App::all();
+        $data = ['apps' => $apps];
+
+        $page = request()->attributes->get('page');
+        $permission = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permission, 'data'=> $data];
+
+        return view('dashboard', $info);
     }
 
     /**

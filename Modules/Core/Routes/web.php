@@ -22,7 +22,12 @@ Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(fu
     Route::get('/role/user/{role} ', 'RoleController@user');
     Route::get('/role/userPagePermissions ', 'RoleController@userPagePermissions');
 
-    Route::get('/parameter/index', 'ParameterController@index');
+    Route::get('/permission/index', 'PermissionController@index');
+    Route::get('/permission/register', 'PermissionController@register');
+
+    Route::get('/app/index', 'AppController@index');
+    Route::get('/app/register', 'appController@create');
 
     Route::get('/page/index', 'PageController@index');
+    Route::get('/page/register', 'PageController@create');
 });

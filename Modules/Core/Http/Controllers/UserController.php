@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Modules\Core\Entities\Permission;
+use Modules\Core\Entities\People;
 
 
 class UserController extends Controller
@@ -24,6 +25,7 @@ class UserController extends Controller
         $page = request()->attributes->get('page');
         $permissions = request()->attributes->get('permissions');
         $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+
         return view('dashboard', $info);
     }
 
@@ -33,7 +35,14 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('core::user\create');
+        $peoples = People::all();
+        $data = ['peoples' => $peoples];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+        
+        return view('dashboard', $info);
     }
 
     /**

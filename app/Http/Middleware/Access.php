@@ -27,13 +27,13 @@ class Access
         $roles = $user->roles();
         // se redirecciona cuando el usuario no tiene el app que viene del url
         if (!$user->apps()->where('name', $request->segment(1))->exists()) {
-            return back()->with('message', 'App no instalada');
+            return back()->with('message', 'App no instalada: '.$request->segment(1));
         }
         
         // se redirecciona cuando el usuario no tiene el pagina y la accion que viene del url
         $app = $user->apps()->where('name', $request->segment(1))->first();
         if (!$app->pages()->where(['controller' => $request->segment(2), 'action' => $request->segment(3)])->exists()) {
-            return back()->with('message', 'Módulos no instalados');
+            return back()->with('message', 'Módulo no instalado: '.$request->segment(2));
         }
 
         if ($role != "guest") {

@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Core\Entities\Page;
+use Modules\Core\Entities\Role;
 
 class Permission extends Model
 {
@@ -17,8 +18,13 @@ class Permission extends Model
         return \Modules\Core\Database\factories\PermissionFactory::new();
     }
 
-    public function pages()
+    public function page()
     {
         return $this->belongsTo(Page::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 }

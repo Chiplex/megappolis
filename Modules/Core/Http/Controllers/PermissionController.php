@@ -5,10 +5,9 @@ namespace Modules\Core\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Page;
-use Modules\Core\Entities\App;
+use Modules\Core\Entities\Permission;
 
-class PageController extends Controller
+class PermissionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,12 +15,12 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages = Page::with('app')->get();
-        $data = ['pages' => $pages];
+        $permissions = Permission::with(['page.app'])->get();
+        $data = ['permissions' => $permissions];
 
         $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+        $permission = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permission, 'data'=> $data];
 
         return view('dashboard', $info);
     }
@@ -32,14 +31,7 @@ class PageController extends Controller
      */
     public function create()
     {
-        $apps = App::all();
-        $data = ['apps' => $apps];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-
-        return view('dashboard', $info);
+        return view('core::create');
     }
 
     /**
@@ -59,7 +51,7 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        return view('core::page\show');
+        return view('core::show');
     }
 
     /**
@@ -69,7 +61,7 @@ class PageController extends Controller
      */
     public function edit($id)
     {
-        return view('core::page\edit');
+        return view('core::edit');
     }
 
     /**
