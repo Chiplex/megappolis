@@ -15,7 +15,7 @@ class AppController extends Controller
      */
     public function index()
     {
-        $apps = App::all();
+        $apps = App::with('user')->get();
         $data = ['apps' => $apps];
 
         $page = request()->attributes->get('page');
@@ -31,7 +31,13 @@ class AppController extends Controller
      */
     public function create()
     {
-        return view('core::app\create');
+        $data = [];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+
+        return view('dashboard', $info);
     }
 
     /**
@@ -41,7 +47,18 @@ class AppController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = $request->all();
+            $data['user_id'] = auth()->user()->id;
+            App::create($data);
+
+            return redirect()->route('core.page.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            dd($exception);
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**

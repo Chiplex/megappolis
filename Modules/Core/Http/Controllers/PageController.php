@@ -49,7 +49,19 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = $request->all();
+            $data['state'] = "A";
+            $data['page_id'] = 0;
+            Page::create($data);
+
+            return redirect()->route('core.page.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            dd($exception);
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -57,9 +69,9 @@ class PageController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(Page $page)
     {
-        return view('core::page\show');
+        
     }
 
     /**
@@ -67,9 +79,16 @@ class PageController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Page $page)
     {
-        return view('core::page\edit');
+        $apps = App::all();
+        $data = ['apps' => $apps, 'page' => $page];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+
+        return view('dashboard', $info);
     }
 
     /**
@@ -78,9 +97,19 @@ class PageController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,  Page $page)
     {
-        //
+        try {
+            $data = $request->all();
+            $page->update($data);
+
+            return redirect()->route('core.page.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            dd($exception);
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**

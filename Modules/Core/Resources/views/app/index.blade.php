@@ -2,15 +2,18 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <div class="card-tools">
-            <div class="input-group input-group-sm" style="width: 150px;">
-              <input type="text" name="table_search" class="form-control" placeholder="Search">
+          <div class="card-title">
+            <div class="input-group" >
+              <input type="text" name="table_search" class="form-control" placeholder="Search" />
               <div class="input-group-append">
                 <button type="submit" class="btn btn-default">
                   <i class="fas fa-search"></i>
                 </button>
               </div>
             </div>
+          </div>
+          <div class="card-tools">
+            <a class="btn btn-tool btn-primary" href="{{ url('/core/app/register/') }}" role="button"><i class="fa fa-plus" aria-hidden="true"></i></a>
           </div>
         </div>
         <!-- /.card-header -->
@@ -24,6 +27,7 @@
                 <th>Type</th>
                 <th>Aproved</th>
                 <th>Blocked</th>
+                <th>Owner</th>
                 <th></th>
               </tr>
             </thead>
@@ -36,6 +40,7 @@
                     <td>{{$app->type}}</td>
                     <td>{{$app->approved}}</td>
                     <td>{{$app->blocked}}</td>
+                    <td>{{$app->user->email}}</td>
                     <td>
                         <div class="btn-group btn-group-sm">
                             <a href="{{ url('/core/role/register/'.$app->id) }}" class="btn btn-info btn-flat">

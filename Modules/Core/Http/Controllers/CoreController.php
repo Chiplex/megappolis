@@ -12,10 +12,10 @@ class CoreController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index($hola)
+    public function index()
     {
         
-        return view('core::index',\compact("hola"));
+        return view('core::index');
     }
 
     /**

@@ -31,7 +31,13 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('core::create');
+        $data = [];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+
+        return view('dashboard', $info);
     }
 
     /**
@@ -59,9 +65,15 @@ class RoleController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        return view('core::edit');
+        $data = ['role' => $role];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+
+        return view('dashboard', $info);
     }
 
     /**

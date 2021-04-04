@@ -2,15 +2,18 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <div class="card-tools">
-            <div class="input-group input-group-sm" style="width: 150px;">
-              <input type="text" name="table_search" class="form-control" placeholder="Search">
+          <div class="card-title">
+            <div class="input-group" >
+              <input type="text" name="table_search" class="form-control" placeholder="Search" />
               <div class="input-group-append">
                 <button type="submit" class="btn btn-default">
                   <i class="fas fa-search"></i>
                 </button>
               </div>
             </div>
+          </div>
+          <div class="card-tools">
+            <a class="btn btn-tool btn-primary" href="{{ url('/core/user/register/') }}" role="button"><i class="fa fa-plus" aria-hidden="true"></i></a>
           </div>
         </div>
         <!-- /.card-header -->
@@ -30,7 +33,7 @@
                     <td>{{$user->id}}</td>
                     <td>{{$user->name}}</td>
                     <td>{{$user->email}}</td>
-                    <td><a href="{{ url('/core/user/register/'.$user->id) }}" class="nav-link"><i class="far fa-calendar-alt"></i></a></td>
+                    <td><a href="{{ url('/core/user/register/'.$user->id) }}" class="nav-link"><i class="far fa-edit"></i></a></td>
                 </tr>
                 @endforeach
             </tbody>

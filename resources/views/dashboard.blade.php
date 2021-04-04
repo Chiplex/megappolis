@@ -20,14 +20,21 @@
 
 
 @section('content_header')
-@if (\Session::has('message'))
-    <div class="alert alert-danger alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h5><i class="icon fas fa-ban"></i> Alert!</h5>
-        {!! \Session::get('message') !!}
-    </div>
-@endif
-<h1>{{$view->name}}</h1>
+    @if (\Session::has('message'))
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-ban"></i> Alert!</h5>
+            {!! \Session::get('message') !!}
+        </div>
+    @endif
+    <h1>{{$view->name}}</h1>
+    @if ($errors->any())
+        <ul class="alert alert-danger">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    @endif
 @stop
 
 @section('content')
@@ -40,7 +47,8 @@
 @stop
 
 @section('js')
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
+    {{-- <script src="{{ asset('js/dashboard.js') }}" defer></script> --}}
 @stop
 
 @section('footer')

@@ -10,7 +10,15 @@ class Page extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'app_id',
+        'controller',
+        'action',
+        'name',
+        'type',
+        'state',
+        'page_id'
+    ];
     
     protected static function newFactory()
     {

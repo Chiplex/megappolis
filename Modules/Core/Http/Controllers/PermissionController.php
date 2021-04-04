@@ -5,6 +5,8 @@ namespace Modules\Core\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Page;
+use Modules\Core\Entities\Role;
 use Modules\Core\Entities\Permission;
 
 class PermissionController extends Controller
@@ -31,7 +33,15 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        return view('core::create');
+        $pages = Page::all();
+        $roles = Role::all();
+        $data = ['pages' => $pages, 'roles' => $roles];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+
+        return view('dashboard', $info);
     }
 
     /**
@@ -41,7 +51,17 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = $request->all();
+            Permission::create($data);
+
+            return redirect()->route('core.permission.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            dd($exception);
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -59,9 +79,17 @@ class PermissionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Permission $permission)
     {
-        return view('core::edit');
+        $pages = Page::all();
+        $roles = Role::all();
+        $data = ['pages' => $pages, 'roles' => $roles, 'permission' => $permission];
+
+        $page = request()->attributes->get('page');
+        $permissions = request()->attributes->get('permissions');
+        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
+
+        return view('dashboard', $info);
     }
 
     /**
