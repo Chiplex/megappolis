@@ -2,9 +2,11 @@
 
 namespace Modules\Core\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+// use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 use Modules\Core\Entities\App;
 
 class AppController extends Controller
@@ -17,12 +19,7 @@ class AppController extends Controller
     {
         $apps = App::with('user')->get();
         $data = ['apps' => $apps];
-
-        $page = request()->attributes->get('page');
-        $permission = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permission, 'data'=> $data];
-
-        return view('dashboard', $info);
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -32,12 +29,7 @@ class AppController extends Controller
     public function create()
     {
         $data = [];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-
-        return view('dashboard', $info);
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -52,11 +44,12 @@ class AppController extends Controller
             $data['user_id'] = auth()->user()->id;
             App::create($data);
 
-            return redirect()->route('core.page.index')
-                ->with('success_message', 'Attribute was successfully added.');
+            return redirect()
+                ->route('core.page.index')
+                ->with('success_message', 'App was successfully added.');
         } catch (Exception $exception) {
-            dd($exception);
-            return back()->withInput()
+            return back()
+                ->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
     }
@@ -66,9 +59,10 @@ class AppController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(App $app)
     {
-        return view('core::app\show');
+        $data = ['app_' => $app];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -76,9 +70,10 @@ class AppController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(App $app)
     {
-        return view('core::app\edit');
+        $data = ['app_' => $app];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -87,9 +82,19 @@ class AppController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, App $app)
     {
-        //
+        try {
+            $data = $request->all();
+            $app->update($data);
+
+            return redirect()->route('core.app.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            dd($exception);
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -100,5 +105,35 @@ class AppController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function approve(App $app)
+    {
+        try {
+            $app->approved_at = Carbon::now();
+            $app->blocked_at = null;
+            $app->save();
+
+            return redirect()->route('core.app.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
+    public function block(App $app)
+    {
+        try {
+            $app->blocked_at = Carbon::now();
+            $app->approved_at = null;
+            $app->save();
+
+            return redirect()->route('core.app.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 }

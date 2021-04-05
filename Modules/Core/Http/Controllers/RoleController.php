@@ -4,7 +4,8 @@ namespace Modules\Core\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+// use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 use Modules\Core\Entities\Role;
 
 class RoleController extends Controller
@@ -17,12 +18,7 @@ class RoleController extends Controller
     {
         $roles = Role::all();
         $data = ['roles' => $roles];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-
-        return view('dashboard', $info);
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -32,12 +28,7 @@ class RoleController extends Controller
     public function create()
     {
         $data = [];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-
-        return view('dashboard', $info);
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -68,12 +59,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         $data = ['role' => $role];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-
-        return view('dashboard', $info);
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -103,13 +89,7 @@ class RoleController extends Controller
      */
     public function user(Role $role)
     {
-        $roles = Role::all();
-        $data = ['users' => $role->users()->get()];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-        
-        return view('dashboard', $info);
+        $data = ['user' => $role->with("user")->get()];
+        return view('dashboard', $this->GetInfo($data));
     }
 }

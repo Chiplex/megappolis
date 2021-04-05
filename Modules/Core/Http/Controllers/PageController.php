@@ -4,7 +4,8 @@ namespace Modules\Core\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+// use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 use Modules\Core\Entities\Page;
 use Modules\Core\Entities\App;
 
@@ -18,12 +19,7 @@ class PageController extends Controller
     {
         $pages = Page::with('app')->get();
         $data = ['pages' => $pages];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-
-        return view('dashboard', $info);
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -34,12 +30,7 @@ class PageController extends Controller
     {
         $apps = App::all();
         $data = ['apps' => $apps];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-
-        return view('dashboard', $info);
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -83,12 +74,7 @@ class PageController extends Controller
     {
         $apps = App::all();
         $data = ['apps' => $apps, 'page' => $page];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-
-        return view('dashboard', $info);
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**

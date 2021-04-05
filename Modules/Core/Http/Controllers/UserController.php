@@ -21,12 +21,7 @@ class UserController extends Controller
     {
         $users = User::all();
         $data = ['users' => $users];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-
-        return view('dashboard', $info);
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -37,12 +32,7 @@ class UserController extends Controller
     {
         $peoples = People::all();
         $data = ['peoples' => $peoples];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-        
-        return view('dashboard', $info);
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -62,12 +52,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $data = ['users' => $users];
-
-        $page = request()->attributes->get('page');
-        $permissions = request()->attributes->get('permissions');
-        $info = ['view' => $page, 'permissions' => $permissions, 'data'=> $data];
-        return view('dashboard', $info);
+        
     }
 
     /**
@@ -75,9 +60,10 @@ class UserController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        return view('core::edit');
+        $data = ['user' => $user];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**

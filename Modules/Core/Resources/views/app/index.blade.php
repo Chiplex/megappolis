@@ -32,27 +32,33 @@
               </tr>
             </thead>
             <tbody>
-                @foreach ($apps as $app)
-                <tr>
-                    <td>{{$app->id}}</td>
-                    <td>{{$app->name}}</td>
-                    <td>{{$app->icon_id}}</td>
-                    <td>{{$app->type}}</td>
-                    <td>{{$app->approved}}</td>
-                    <td>{{$app->blocked}}</td>
-                    <td>{{$app->user->email}}</td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <a href="{{ url('/core/role/register/'.$app->id) }}" class="btn btn-info btn-flat">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="{{ url('/core/role/user/'.$app->id) }}" class="btn btn-info btn-flat">
-                                <i class="fas fa-user"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
+              @foreach ($apps as $app)
+              <tr>
+                <td>{{$app->id}}</td>
+                <td>{{$app->name}}</td>
+                <td>{{$app->icon_id}}</td>
+                <td>{{$app->type}}</td>
+                <td>{{$app->approved_at}}</td>
+                <td>{{$app->blocked_at}}</td>
+                <td>{{$app->user->email}}</td>
+                <td>
+                  <div class="btn-group btn-group-sm">
+                    <a href="{{ url('/core/app/register/'.$app->id) }}" class="btn btn-info btn-flat">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    @if (isset($app->approved_at))
+                    <a href="{{ url('/core/app/block/'.$app->id) }}" class="btn btn-info btn-flat">
+                      <i class="fa fa-ban" aria-hidden="true"></i>
+                    </a>
+                    @else
+                    <a href="{{ url('/core/app/approve/'.$app->id) }}" class="btn btn-info btn-flat">
+                      <i class="fas fa-check    "></i>
+                    </a>
+                    @endif
+                  </div>
+                </td>
+              </tr>
+              @endforeach
             </tbody>
           </table>
         </div>
