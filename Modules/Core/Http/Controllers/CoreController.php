@@ -4,7 +4,8 @@ namespace Modules\Core\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+//use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 
 class CoreController extends Controller
 {
@@ -14,8 +15,8 @@ class CoreController extends Controller
      */
     public function index()
     {
-        
-        return view('core::index');
+        $data = [];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**

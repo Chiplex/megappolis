@@ -16,7 +16,7 @@ class Page extends Model
         'action',
         'name',
         'type',
-        'state',
+        'icon',
         'page_id'
     ];
     
@@ -41,5 +41,10 @@ class Page extends Model
     public function buildTitle()
     {
         return strtoupper($this->app->name).'-'.$this->name;
+    }
+
+    public function buildUrl()
+    {
+        return $this->app->name.'/'.$this->controller.'/'.$this->action;
     }
 }

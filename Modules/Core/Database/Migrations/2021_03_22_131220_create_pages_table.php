@@ -17,13 +17,11 @@ class CreatePagesTable extends Migration
             $table->id();
             $table->foreignId('app_id');
             $table->string('controller', 200);
-            $table->string('action', 200);
+            $table->string('action', 200)->nullable();
             $table->string('name', 200);
-            $table->boolean('navigable');
-            $table->boolean('load');
-            $table->boolean('title');
             $table->string('type', 20);
-            $table->string('state', 20);
+            $table->string('icon')->nullable();
+            $table->foreignId('page_id')->default(0);
             $table->timestamps();
         });
     }

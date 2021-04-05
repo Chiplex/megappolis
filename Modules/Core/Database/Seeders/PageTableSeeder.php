@@ -63,17 +63,15 @@ class PageTableSeeder extends Seeder
             'action' => 'register',
             'name' => 'Registro de Paginas',
             'type' => 'page',
-            'state' => 'A',
             'page_id' => 0,
         ]);
 
         DB::table('pages')->insert([
             'app_id' => '1',
             'controller' => 'permission',
-            'action' => 'index',
-            'name' => 'Lista de Permisos',
-            'type' => 'submenu',
-            'state' => 'A',
+            'action' => 'register',
+            'name' => 'Registro de Permisos',
+            'type' => 'page',
             'page_id' => 0,
         ]);
     }

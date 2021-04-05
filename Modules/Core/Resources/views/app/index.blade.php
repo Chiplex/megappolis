@@ -36,7 +36,9 @@
               <tr>
                 <td>{{$app->id}}</td>
                 <td>{{$app->name}}</td>
-                <td>{{$app->icon_id}}</td>
+                <td>
+                  <i class="{{$app->icon}}"></i>
+                </td>
                 <td>{{$app->type}}</td>
                 <td>{{$app->approved_at}}</td>
                 <td>{{$app->blocked_at}}</td>

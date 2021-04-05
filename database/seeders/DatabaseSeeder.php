@@ -20,9 +20,10 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        $this->call(PageTableSeeder::class);
-        $this->call(PermissionTableSeeder::class);
         $this->call(RoleTableSeeder::class);
         $this->call(RoleUserTableSeeder::class);
+        $this->call(AppTableSeeder::class);
+        // $this->call(PageTableSeeder::class);
+        // $this->call(PermissionTableSeeder::class);
     }
 }

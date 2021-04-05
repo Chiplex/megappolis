@@ -223,33 +223,7 @@ return [
     |
     */
 
-    'menu' => [        
-        [
-            'text'        => 'Apps',
-            'url'         => 'core/app/index',
-            'icon'        => 'fa fa-city',
-        ],
-        [
-            'text'        => 'Pages',
-            'url'         => 'core/page/index',
-            'icon'        => 'far fa-fw fa-file',
-        ],
-        [
-            'text'        => 'Roles',
-            'url'         => 'core/role/index',
-            'icon'        => 'fa fa-user-tag',
-        ],
-        [
-            'text'        => 'Users',
-            'url'         => 'core/user/index',
-            'icon'        => 'fa fa-user-friends',
-        ],
-        [
-            'text'        => 'Permissions',
-            'url'         => 'core/permission/index',
-            'icon'        => 'fa fa-user-shield',
-        ],
-    ],
+    'menu' => [],
 
     /*
     |--------------------------------------------------------------------------

@@ -16,7 +16,7 @@ use App\Http\Controllers\AccessController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('register');
 });
 
 Route::get('/dashboard', function () {

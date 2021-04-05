@@ -45,7 +45,7 @@ class AppController extends Controller
             App::create($data);
 
             return redirect()
-                ->route('core.page.index')
+                ->route('core.app.index')
                 ->with('success_message', 'App was successfully added.');
         } catch (Exception $exception) {
             return back()

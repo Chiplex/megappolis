@@ -18,7 +18,8 @@ class Controller extends BaseController
     {
         $user = request()->user();
         $app = $user->apps()->where('name', request()->segment(1))->first();
-        $page = $app->pages()->where(['controller' => request()->segment(2), 'action' => request()->segment(3)])->first();
+        $page = $app->pages()->where(['controller' => request()->segment(2) ?? 'home', 'action' => request()->segment(3) ?? 'index'])->first();
+
         return $page;
     }
 

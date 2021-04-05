@@ -21,7 +21,7 @@
       <div class="form-group row">
         <label for="icon" class="col-sm-2 col-form-label">Icon</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control" id="icon" placeholder="icon" name="icon_id" value="{{ old('icon') ?? isset($app_) ? $app_->icon : '' }}">
+          <input type="text" class="form-control" id="icon" placeholder="icon" name="icon" value="{{ old('icon') ?? isset($app_) ? $app_->icon : '' }}">
         </div>
       </div>
       <div class="form-group row">

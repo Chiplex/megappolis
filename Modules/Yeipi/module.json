@@ -1,0 +1,13 @@
+{
+    "name": "Yeipi",
+    "alias": "yeipi",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Yeipi\\Providers\\YeipiServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
