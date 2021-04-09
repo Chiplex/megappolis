@@ -27,6 +27,6 @@ class CreateDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('details');
+        Schema::dropIfExists('yeipi_details');
     }
 }

@@ -27,6 +27,6 @@ class CreateDeliveriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('deliveries');
+        Schema::dropIfExists('yeipi_deliveries');
     }
 }
