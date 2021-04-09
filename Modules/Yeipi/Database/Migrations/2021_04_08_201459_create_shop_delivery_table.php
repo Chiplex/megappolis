@@ -13,7 +13,7 @@ class CreateShopDeliveryTable extends Migration
      */
     public function up()
     {
-        Schema::create('shop_delivery', function (Blueprint $table) {
+        Schema::create('yeipi_shop_delivery', function (Blueprint $table) {
             $table->id();
 
             $table->timestamps();

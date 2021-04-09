@@ -13,7 +13,7 @@ class CreateOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('yeipi_orders', function (Blueprint $table) {
             $table->id();
 
             $table->timestamps();
