@@ -1,0 +1,46 @@
+<?php
+
+namespace Modules\Yeipi\Entities;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Yeipi\Entities\Customer;
+use Modules\Yeipi\Entities\Contract;
+
+class Order extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'customer_id',
+        'shop_delivery_id',
+        'fechaSolicitud',
+        'fechaSalida',
+        'fechaEntrega',
+    ];
+    
+    protected static function newFactory()
+    {
+        return \Modules\Yeipi\Database\factories\OrderFactory::new();
+    }
+
+    /**
+     * Get the customer that owns the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Get the contract that owns the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function contract(): BelongsTo
+    {
+        return $this->belongsTo(Contract::class);
+    }
+}

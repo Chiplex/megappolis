@@ -15,7 +15,10 @@ class CreateDetailsTable extends Migration
     {
         Schema::create('yeipi_details', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignId("order_id");
+            $table->string('descripcion', 100);
+            $table->integer('cantidad')->unsigned()->default(1);
+            $table->decimal('precio', $precision = 8, $scale = 4);
             $table->timestamps();
         });
     }
