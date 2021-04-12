@@ -11,6 +11,8 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $table = 'yeipi_orders';
+
     protected $fillable = [
         'customer_id',
         'shop_delivery_id',

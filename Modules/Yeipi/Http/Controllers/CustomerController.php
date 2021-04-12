@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 //use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
 use Modules\Yeipi\Entities\Customer;
+use Modules\Core\Entities\Role;
 
 class CustomerController extends Controller
 {
+    protected $role_name = 'YEIPI-CUSTOMER';
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -35,8 +38,17 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        Customer::create($request->all());
-        return redirect()->route('yeipi.pedir.index');
+        try {
+            $role = Role::firstWhere('name', $this->role_name);
+            auth()->user()->roles()->syncWithoutDetaching($role->id);
+            Customer::firstOrCreate($request->except('_token'));
+
+            return redirect()->route('yeipi.pedir.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**

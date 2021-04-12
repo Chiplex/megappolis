@@ -48,4 +48,5 @@ class People extends Model
     {
         return $this->hasOne(Customer::class);
     }
+    
 }

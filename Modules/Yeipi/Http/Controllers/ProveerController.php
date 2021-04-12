@@ -4,12 +4,9 @@ namespace Modules\Yeipi\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-//use Illuminate\Routing\Controller;
-use App\Http\Controllers\Controller;
-use Modules\Yeipi\Entities\Order;
-use Modules\Yeipi\Entities\Shop;
+use Illuminate\Routing\Controller;
 
-class PedirController extends Controller
+class ProveerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +14,8 @@ class PedirController extends Controller
      */
     public function index()
     {
-        $customer = auth()->user()->people()->first()->customer()->first();
-        $orders = $customer->orders()->get();
-        $data = ['customer' => $customer, 'orders' => $orders];
+        $orders = auth()->user()->people()->customer()->get();
+        $data = ['apps' => $orders];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -29,8 +25,7 @@ class PedirController extends Controller
      */
     public function create()
     {
-        $data = [];
-        return view('dashboard', $this->GetInfo($data));
+        return view('yeipi::create');
     }
 
     /**
@@ -40,16 +35,7 @@ class PedirController extends Controller
      */
     public function store(Request $request)
     {
-        try { 
-            $values = $request->all();
-            $order = Order::create($values);
-
-            return redirect()->route('yeipi.pedir.update', ['order' => $order->id])
-                ->with('success_message', 'Attribute was successfully added.');
-        } catch (Exception $exception) {
-            return back()->withInput()
-                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
-        }
+        //
     }
 
     /**

@@ -14,6 +14,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected $role = "CORE-MEGAPPOLIS";
+
     public function GetPages()
     {
         $user = request()->user();
@@ -25,11 +27,10 @@ class Controller extends BaseController
 
     public function GetPermissions(Page $page)
     {
-        $role = "CORE-MEGAPPOLIS";
         $user = Auth::user();
         $roles = $user->roles();
         
-        return $permissions = $roles->where('name', $role)->exists() 
+        return $permissions = $roles->where('name', $this->role)->exists() 
             ? Permission::where('page_id', $page->id)->select('name')->orderBy('name')->groupBy('name')->get()
             : $roles->permissions()->select('name')->orderBy('name')->groupBy('name')->get();
     }

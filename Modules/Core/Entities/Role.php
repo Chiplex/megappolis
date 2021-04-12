@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Core\Entities\Page;
 use Modules\Core\Entities\Permission;
+use Modules\Core\Entities\App;
 use App\Models\User;
 
 class Role extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['role_id', 'user_id'];
+    protected $fillable = ['name', 'type', 'app_id'];
     
     protected static function newFactory()
     {
@@ -40,6 +41,16 @@ class Role extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'roles_users');
+        return $this->belongsToMany(User::class, 'roles_users')->withTimestamps();
+    }
+
+    /**
+     * Get the app that owns the Role
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function app()
+    {
+        return $this->belongsTo(App::class);
     }
 }

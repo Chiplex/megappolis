@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 // use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
 use Modules\Core\Entities\Role;
+use Modules\Core\Entities\App;
 
 class RoleController extends Controller
 {
@@ -27,7 +28,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $data = [];
+        $apps = App::all();
+        $data = ['apps' => $apps];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -38,7 +40,17 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = $request->all();
+            Role::create($data);
+
+            return redirect()->route('core.role.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            dd($exception);
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -58,7 +70,8 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $data = ['role' => $role];
+        $apps = App::all();
+        $data = ['apps' => $apps, 'role' => $role];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -68,9 +81,19 @@ class RoleController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Role $role)
     {
-        //
+        try {
+            $data = $request->all();
+            $role->update($data);
+
+            return redirect()->route('core.role.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            dd($exception);
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**

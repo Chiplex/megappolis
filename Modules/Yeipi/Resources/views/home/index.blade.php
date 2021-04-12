@@ -5,18 +5,16 @@
             <div class="inner">
                 <h3>Pedir</h3>
             </div>
+            <div class="icon">
+                <i class="fa fa-cart-plus" aria-hidden="true"></i>
+            </div>
             <form action="{{ route('yeipi.customer.store') }}" method="post" >
                 @csrf
-                <input type="hidden" name="people_id" value="{{auth()->user()->people->id}}">
-                <button type="submit" class="clear-fix">
-                    <div class="icon">
-                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                    </div>
+                <input type="hidden" name="people_id" value="{{ auth()->user()->people->id }}">
+                <button type="submit" class="btn btn-black btn-lg btn-block">
+                    <i class="fas fa-arrow-circle-right"></i>
                 </button>
             </form>
-            <a href="#" class="small-box-footer">
-                <i class="fas fa-arrow-circle-right"></i>
-            </a>
         </div>
     </div>
     <!-- ./col -->
@@ -29,9 +27,31 @@
             <div class="icon">
                 <i class="fa fa-truck"></i>
             </div>
-            <a href="#" class="small-box-footer">
-                <i class="fas fa-arrow-circle-right"></i>
-            </a>
+            <form action="{{ route('yeipi.delivery.store') }}" method="post" >
+                @csrf
+                <input type="hidden" name="people_id" value="{{ auth()->user()->people->id }}">
+                <button type="submit" class="btn btn-black btn-lg btn-block">
+                    <i class="fas fa-arrow-circle-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-primary">
+            <div class="inner">
+                <h3>Proveer</h3>
+            </div>
+            <div class="icon">
+                <i class="fa fa-store"></i>
+            </div>
+            <form action="{{ route('yeipi.shop.store') }}" method="post" >
+                @csrf
+                <input type="hidden" name="people_id" value="{{ auth()->user()->people->id }}">
+                <button type="submit" class="btn btn-black btn-lg btn-block">
+                    <i class="fas fa-arrow-circle-right"></i>
+                </button>
+            </form>
         </div>
     </div>
     <!-- ./col -->

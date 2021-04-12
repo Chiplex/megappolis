@@ -13,7 +13,11 @@
             </div>
           </div>
           <div class="card-tools">
-            <a class="btn btn-tool btn-primary" href="{{ url('/core/role/register/') }}" role="button"><i class="fa fa-plus" aria-hidden="true"></i></a>
+            <form action="{{ route('yeipi.pedir.store')}}" method="post">
+                @csrf
+                <input type="hidden" name="customer_id" value="{{ $customer->id }}">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+            </form>
           </div>
         </div>
         <!-- /.card-header -->
@@ -22,25 +26,28 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>App</th>
+                <th>Delivery</th>
+                <th>Fecha de Solicitud</th>
+                <th>Fecha de Salida</th>
+                <th>Fecha de Entrega</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-                @foreach ($roles as $role)
+                @foreach ($orders as $order)
                 <tr>
-                    <td>{{$role->id}}</td>
-                    <td>{{$role->name}}</td>
-                    <td>{{$role->type}}</td>
-                    <td>{{$role->app->name}}</td>
+                    <td>{{$order->id}}</td>
+                    <td>{{$order->contract->delivery->people->name}}</td>
+                    <td>{{$order->fechaSolicitud}}</td>
+                    <td>{{$order->fechaSalida}}</td>
+                    <td>{{$order->fechaEntrega}}</td>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <a href="{{ url('/core/role/register/'.$role->id) }}" class="btn btn-info btn-flat">
+                            {!! Form::file() !!}
+                            <a href="{{ url('/yeipi/pedir/register/'.$order->id) }}" class="btn btn-info btn-flat">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="{{ url('/core/role/user-page-permissions/'.$role->id) }}" class="btn btn-info btn-flat">
+                            <a href="{{ url('/yeipi/pedir/register/'.$order->id) }}" class="btn btn-info btn-flat">
                                 <i class="fas fa-user"></i>
                             </a>
                         </div>

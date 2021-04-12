@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Yeipi\Entities\Shop;
 use Modules\Yeipi\Entities\Contract;
+use Modules\Core\Entities\People;
 
 class Delivery extends Model
 {
@@ -30,5 +31,15 @@ class Delivery extends Model
     public function contract()
     {
         return $this->hasMany(Contract::class);
+    }
+
+    /**
+     * Get the People that owns the Customer
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function people()
+    {
+        return $this->belongsTo(People::class);
     }
 }

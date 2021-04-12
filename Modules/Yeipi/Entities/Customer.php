@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Yeipi\Entities\Order;
 use Modules\Core\Entities\People;
+use Modules\Yeipi\Entities\Contract;
 
 class Customer extends Model
 {
@@ -35,8 +36,18 @@ class Customer extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function people(): BelongsTo
+    public function people()
     {
         return $this->belongsTo(People::class);
+    }
+
+    /**
+     * Get the contract that owns the Customer
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function contract(): BelongsTo
+    {
+        return $this->belongsTo(Contract::class);
     }
 }
