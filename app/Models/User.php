@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Modules\Core\Entities\Role;
 use Modules\Core\Entities\App;
+use Modules\Core\Entities\People;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'people_id'
     ];
 
     /**
@@ -57,5 +59,15 @@ class User extends Authenticatable
     public function apps()
     {
         return $this->hasMany(App::class);
+    }
+
+    /**
+     * Get the people associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function people()
+    {
+        return $this->belongsTo(People::class);
     }
 }

@@ -4,7 +4,10 @@ namespace Modules\Yeipi\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+//use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
+use Modules\Yeipi\Http\Entities\Order;
+use Modules\Yeipi\Http\Entities\Shop;
 
 class PedirController extends Controller
 {
@@ -14,7 +17,9 @@ class PedirController extends Controller
      */
     public function index()
     {
-        return view('yeipi::index');
+        $orders = auth()->user()->people()->customer()->get();
+        $data = ['apps' => $orders];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -23,7 +28,18 @@ class PedirController extends Controller
      */
     public function create()
     {
-        return view('yeipi::create');
+        try {
+            $data = $request->all();
+            App::create($data);
+
+            return redirect()
+                ->route('core.app.index')
+                ->with('success_message', 'App was successfully added.');
+        } catch (Exception $exception) {
+            return back()
+                ->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**

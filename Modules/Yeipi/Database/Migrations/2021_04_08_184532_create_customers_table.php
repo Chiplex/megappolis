@@ -15,8 +15,7 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('yeipi_customers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("");
-
+            $table->foreignId("people_id");
             $table->timestamps();
         });
     }

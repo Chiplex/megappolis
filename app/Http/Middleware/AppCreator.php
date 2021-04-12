@@ -23,7 +23,7 @@ class AppCreator
         if (!$app)
             return back()->with('message', 'App no instalada: '.$request->segment(1));
         
-        // Solo puede si la app no esta bloqueada
+        // Solo puede entrar si la app no esta bloqueada
         if($app->blocked_at != null)
             return back()->with('message', 'App bloqueada: '.$request->segment(1));
 

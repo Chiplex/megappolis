@@ -15,7 +15,12 @@ class CreateShopsTable extends Migration
     {
         Schema::create('yeipi_shops', function (Blueprint $table) {
             $table->id();
-
+            $table->string('nombre', 50);
+            $table->string('direccion', 200);
+            $table->string('latitud', 10)->nullable();
+            $table->string('longitud', 10)->nullable();
+            $table->time('abre')->nullable();
+            $table->time('cierra')->nullable();
             $table->timestamps();
         });
     }

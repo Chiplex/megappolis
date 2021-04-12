@@ -13,9 +13,12 @@
 
 Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(function() {
     Route::get('/', 'HomeController@index')->name('core.index');
+    
     Route::get('/user/index', 'UserController@index')->name('core.user.index')->middleware(['app.creator']);
     Route::get('/user/register', 'UserController@create')->name('core.user.create')->middleware(['app.creator']);
-    Route::get('/user/register/{id}', 'UserController@update')->name('core.user.edit')->middleware(['app.creator']);
+    Route::post('/user/register', 'UserController@store')->name('core.user.store')->middleware(['app.creator']);
+    Route::get('/user/register/{user}', 'UserController@edit')->name('core.user.edit')->middleware(['app.creator']);
+    Route::put('/user/register/{user}', 'UserController@update')->name('core.user.update')->middleware(['app.creator']);
 
     Route::get('/role/index', 'RoleController@index')->name('core.role.index')->middleware(['app.creator']);
     Route::get('/role/register', 'RoleController@create')->name('core.role.create')->middleware(['app.creator']);
@@ -45,4 +48,10 @@ Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(fu
     Route::post('/page/register', 'PageController@store')->name('core.page.store')->middleware(['app.creator']);
     Route::get('/page/register/{page}', 'PageController@edit')->name('core.page.edit')->middleware(['app.creator']);
     Route::put('/page/register/{page}', 'PageController@update')->name('core.page.update')->middleware(['app.creator']);
+
+    Route::get('/people/index', 'PeopleController@index')->name('core.people.index')->middleware(['app.creator']);
+    Route::get('/people/register', 'PeopleController@create')->name('core.people.create')->middleware(['app.creator']);
+    Route::post('/people/register', 'PeopleController@store')->name('core.people.store')->middleware(['app.creator']);
+    Route::get('/people/register/{page}', 'PeopleController@edit')->name('core.people.edit')->middleware(['app.creator']);
+    Route::put('/people/register/{page}', 'PeopleController@update')->name('core.people.update')->middleware(['app.creator']);
 });

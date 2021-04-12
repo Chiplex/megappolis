@@ -4,11 +4,11 @@ namespace Modules\Yeipi\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-// use Illuminate\Routing\Controller;
+//use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
-use Modules\Yeipi\Http\Entities\Order;
+use Modules\Yeipi\Entities\Customer;
 
-class EntregarController extends Controller
+class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +16,7 @@ class EntregarController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('customer')-> whereNull('fechaSalida')->get();
-        $data = ['apps' => $orders];
-        return view('dashboard', $this->GetInfo($data));
+        return view('yeipi::index');
     }
 
     /**
@@ -37,7 +35,8 @@ class EntregarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Customer::create($request->all());
+        return redirect()->route('yeipi.pedir.index');
     }
 
     /**

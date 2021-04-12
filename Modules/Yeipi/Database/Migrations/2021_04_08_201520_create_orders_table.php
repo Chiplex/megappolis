@@ -15,7 +15,11 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('yeipi_orders', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignId("customer_id");
+            $table->foreignId("contract_id");
+            $table->dateTime('fechaSolicitud');
+            $table->dateTime('fechaSalida')->nullable();
+            $table->dateTime('fechaEntrega')->nullable();
             $table->timestamps();
         });
     }
