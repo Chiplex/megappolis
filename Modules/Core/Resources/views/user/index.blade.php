@@ -26,6 +26,7 @@
                             <th>ID</th>
                             <th>User</th>
                             <th>Email</th>
+                            <th>People</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -35,6 +36,7 @@
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->people->name }}</td>
                                 <td>
 									<a href="{{ url('/core/user/register/' . $user->id) }}" class="nav-link">
 										<i class="far fa-edit"></i>

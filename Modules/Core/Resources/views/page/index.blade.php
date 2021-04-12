@@ -21,9 +21,11 @@
           <thead>
             <tr>
               <th>ID</th>
+              <th>Logo</th>
               <th>App</th>
               <th>Controller</th>
               <th>Action</th>
+              <th>Name</th>
               <th>Type</th>
               <th>Page</th>
               <th></th>
@@ -33,9 +35,13 @@
             @foreach ($pages as $page)
             <tr>
               <td>{{$page->id}}</td>
+              <td>
+                <i class="{{$page->icon}}"></i>
+              </td>
               <td>{{$page->app->name}}</td>
               <td>{{$page->controller}}</td>
               <td>{{$page->action}}</td>
+              <td>{{$page->name}}</td>
               <td>{{$page->type}}</td>
               <td>{{$page->page_id}}</td>
               <td>

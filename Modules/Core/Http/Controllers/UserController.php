@@ -19,7 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::with('people')->get();
         $data = ['users' => $users];
         return view('dashboard', $this->GetInfo($data));
     }
@@ -42,7 +42,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = $request->all();
+            User::create($data);
+
+            return redirect()
+                ->route('core.app.index')
+                ->with('success_message', 'App was successfully added.');
+        } catch (Exception $exception) {
+            return back()
+                ->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -62,7 +73,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $data = ['user' => $user];
+        $peoples = People::all();
+        $data = ['user' => $user, 'peoples' => $peoples];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -72,9 +84,20 @@ class UserController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        try {
+            $data = $request->all();
+            $user->update($data);
+
+            return redirect()
+                ->route('core.user.index')
+                ->with('success_message', 'App was successfully added.');
+        } catch (Exception $exception) {
+            return back()
+                ->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**

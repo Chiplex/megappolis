@@ -11,6 +11,9 @@
 |
 */
 
-Route::prefix('yeipi')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(function() {
+Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     Route::get('/', 'HomeController@index');
+
+    Route::get('/pedir/index', 'PedirController@index')->name('yeipi.pedir.index')->middleware(['app.creator']);
+    Route::post('/customer/store', 'CustomerController@store')->name('yeipi.customer.store');
 });

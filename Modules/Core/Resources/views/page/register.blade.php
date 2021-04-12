@@ -52,6 +52,12 @@
           </div>
       </div>
       <div class="form-group row">
+        <label for="icon" class="col-sm-2 col-form-label">Icon</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="icon" placeholder="icon" name="icon" value="{{ old('icon') ?? isset($page) ? $page->icon : '' }}">
+        </div>
+      </div>
+      <div class="form-group row">
           <label for="type" class="col-sm-2 col-form-label">Type</label>
           <div class="col-sm-4">
             <input type="text" class="form-control" id="type" placeholder="Type" name="type" value="{{ old('type') ?? isset($page) ? $page->type : '' }}">

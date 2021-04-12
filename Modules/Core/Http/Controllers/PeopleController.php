@@ -1,14 +1,14 @@
 <?php
 
-namespace Modules\Yeipi\Http\Controllers;
+namespace Modules\Core\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 // use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
-use Modules\Yeipi\Http\Entities\Order;
+use Modules\Core\Entities\People;
 
-class EntregarController extends Controller
+class PeopleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class EntregarController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('customer')-> whereNull('fechaSalida')->get();
-        $data = ['apps' => $orders];
+        $peoples = People::all();
+        $data = ['peoples' => $peoples];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -27,7 +27,8 @@ class EntregarController extends Controller
      */
     public function create()
     {
-        return view('yeipi::create');
+        $data = [];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -37,7 +38,18 @@ class EntregarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = $request->all();
+            People::create($data);
+
+            return redirect()
+                ->route('core.people.index')
+                ->with('success_message', 'App was successfully added.');
+        } catch (Exception $exception) {
+            return back()
+                ->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -47,7 +59,7 @@ class EntregarController extends Controller
      */
     public function show($id)
     {
-        return view('yeipi::show');
+        return view('core::show');
     }
 
     /**
@@ -57,7 +69,7 @@ class EntregarController extends Controller
      */
     public function edit($id)
     {
-        return view('yeipi::edit');
+        return view('core::edit');
     }
 
     /**
