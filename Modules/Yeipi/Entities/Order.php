@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Yeipi\Entities\Customer;
 use Modules\Yeipi\Entities\Contract;
+use Modules\Yeipi\Entities\Detail;
 
 class Order extends Model
 {
@@ -31,7 +32,7 @@ class Order extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function customer(): BelongsTo
+    public function customer()
     {
         return $this->belongsTo(Customer::class);
     }
@@ -41,8 +42,18 @@ class Order extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function contract(): BelongsTo
+    public function contract()
     {
         return $this->belongsTo(Contract::class);
+    }
+
+    /**
+     * Get all of the details for the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function details()
+    {
+        return $this->hasMany(Detail::class);
     }
 }

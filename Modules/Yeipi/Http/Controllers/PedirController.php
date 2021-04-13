@@ -67,9 +67,11 @@ class PedirController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Order $order)
     {
-        return view('yeipi::edit');
+        $details = $order->details()->get();
+        $data = ['order' => $order, 'details' => $details];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**

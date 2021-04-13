@@ -17,7 +17,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages = Page::with('app')->get();
+        $pages = Page::with('app')->orderBy('controller', 'asc')->orderBy('action', 'asc')->get()->sortBy('app.name',SORT_REGULAR,false);
         $data = ['pages' => $pages];
         return view('dashboard', $this->GetInfo($data));
     }

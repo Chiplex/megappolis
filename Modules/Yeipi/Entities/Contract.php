@@ -28,7 +28,7 @@ class Contract extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function shop(): BelongsTo
+    public function shop()
     {
         return $this->belongsTo(Shop::class);
     }
@@ -38,7 +38,7 @@ class Contract extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function delivery(): BelongsTo
+    public function delivery()
     {
         return $this->belongsTo(Delivery::class);
     }

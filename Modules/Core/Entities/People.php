@@ -31,6 +31,11 @@ class People extends Model
         return \Modules\Core\Database\factories\PeopleFactory::new();
     }
 
+    public function getNameComplete()
+    {
+        return $this->name . ' ' . $this->otherName . ' ' . $this->lastName . ' ' . $this->otherLastName;
+    }
+
     /**
      * Get the users for the people.
      */

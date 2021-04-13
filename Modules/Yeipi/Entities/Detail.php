@@ -10,6 +10,8 @@ class Detail extends Model
 {
     use HasFactory;
 
+    protected $table = 'yeipi_details';
+    
     protected $fillable = [
         'order_id',
         'descripcion',
