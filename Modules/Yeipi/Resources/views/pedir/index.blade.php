@@ -30,6 +30,7 @@
                             <th>Fecha de Solicitud</th>
                             <th>Fecha de Salida</th>
                             <th>Fecha de Entrega</th>
+                            <th>Fecha de Creacion</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -41,6 +42,7 @@
                             <td>{{$order->fechaSolicitud}}</td>
                             <td>{{$order->fechaSalida}}</td>
                             <td>{{$order->fechaEntrega}}</td>
+                            <td>{{$order->created_at}}</td>
                             <td>
                                 <div class="btn-group btn-group-sm">
                                     <a href="{{ url('/yeipi/pedir/register/'.$order->id) }}"

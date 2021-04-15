@@ -9,7 +9,7 @@
         <div class="card-header">
             <div class="card-tools">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save   fa-fw"></i>
+                    <i class="fas fa-save"></i>
                 </button>
             </div>
         </div>
@@ -26,20 +26,49 @@
                 <dt class="col-sm-3">Fecha de Entrega</dt>
                 <dd class="col-sm-9">{{ $order->fechaEntrga }}</dd>
             </dl>
-            <div class="form-group row">
-                <label for="name" class="col-sm-2 col-form-label">Name</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" id="name" placeholder="name" name="name"
-                        value="{{ old('name') ?? isset($order) ? $order->name : '' }}">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="name" class="col-sm-2 col-form-label">Type</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" id="name" placeholder="name" name="type"
-                        value="{{ old('type') ?? isset($order) ? $order->type : '' }}">
-                </div>
-            </div>
         </div>
     </form>
+</div>
+<div class="card">
+    <div class="card-header">
+        Detalles
+        <div class="card-tools">
+            <a href="{{ route('yeipi.detail.create') }}" class="btn btn-primary" href="#" role="button"><i class="fa fa-plus"></i></a>
+        </div>
+    </div>
+    <div class="card-body table-responsive p-0">
+        <table class="table table-head-fixed text-nowrap">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($order->details as $detail)
+                    <tr>
+                        <td>{{ $detail->id }}</td>
+                        <td>{{ $detail->descripcion }}</td>
+                        <td>{{ $detail->cantidad }}</td>
+                        <td>{{ $detail->precio }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url('/yeipi/pedir/detail/'.$detail->id) }}"
+                                    class="btn btn-info btn-flat">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="{{ url('/yeipi/pedir/detail/'.$detail->id) }}"
+                                    class="btn btn-info btn-flat">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>

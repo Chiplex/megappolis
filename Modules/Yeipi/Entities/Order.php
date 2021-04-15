@@ -56,4 +56,14 @@ class Order extends Model
     {
         return $this->hasMany(Detail::class);
     }
+
+    public function scopeLastest()
+    {
+        return $this->orderBy('created_at', 'desc');
+    }
+
+    public function scopeNoDeliveries()
+    {
+        return $this->whereNull('fechaEntrega');
+    }
 }

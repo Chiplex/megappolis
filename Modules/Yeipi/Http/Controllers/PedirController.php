@@ -4,6 +4,7 @@ namespace Modules\Yeipi\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 //use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
 use Modules\Yeipi\Entities\Order;
@@ -17,7 +18,7 @@ class PedirController extends Controller
      */
     public function index()
     {
-        $customer = auth()->user()->people()->first()->customer()->first();
+        $customer = auth()->user()->people->customer;
         $orders = $customer->orders()->get();
         $data = ['customer' => $customer, 'orders' => $orders];
         return view('dashboard', $this->GetInfo($data));
@@ -41,10 +42,14 @@ class PedirController extends Controller
     public function store(Request $request)
     {
         try { 
+            if (auth()->user()->people->customer->orders()->noDeliveries()->count() > 0) {
+                return back()
+                    ->withErrors(['message' => 'Tiene una orden pendiente']);           
+            }
             $values = $request->all();
             $order = Order::create($values);
 
-            return redirect()->route('yeipi.pedir.update', ['order' => $order->id])
+            return redirect()->route('yeipi.pedir.edti', ['order' => $order->id])
                 ->with('success_message', 'Attribute was successfully added.');
         } catch (Exception $exception) {
             return back()->withInput()
@@ -80,9 +85,25 @@ class PedirController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Order $order)
     {
-        //
+        try { 
+            if ($order->details()->count() == 0) {
+                return back()
+                    ->withErrors(['message' => 'No tiene nada que pedir']);           
+            }
+
+            $order->fechaSolicitud = Carbon::now();
+            $order->save();
+
+            return redirect()->route('yeipi.pedir.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+
+        
     }
 
     /**
