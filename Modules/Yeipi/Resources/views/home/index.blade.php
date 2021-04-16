@@ -38,20 +38,23 @@
     </div>
     <div class="col-lg-3 col-6">
         <!-- small box -->
-        <div class="small-box bg-primary">
+        <div class="small-box bg-default">
             <div class="inner">
                 <h3>Proveer</h3>
             </div>
             <div class="icon">
                 <i class="fa fa-store"></i>
             </div>
-            <form action="{{ route('yeipi.shop.store') }}" method="post" >
+            <button type="button" class="btn btn-black btn-lg btn-block">
+                Pronto
+            </button>
+            {{-- <form action="{{ route('yeipi.shop.store') }}" method="post" >
                 @csrf
                 <input type="hidden" name="people_id" value="{{ auth()->user()->people->id }}">
                 <button type="submit" class="btn btn-black btn-lg btn-block">
                     <i class="fas fa-arrow-circle-right"></i>
                 </button>
-            </form>
+            </form> --}}
         </div>
     </div>
     <!-- ./col -->

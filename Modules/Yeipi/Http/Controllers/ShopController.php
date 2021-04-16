@@ -4,11 +4,11 @@ namespace Modules\Yeipi\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-// use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
-use Modules\Yeipi\Entities\Order;
+//use Illuminate\Routing\Controller;
+use Modules\Yeipi\Entities\Shop;
 
-class EntregarController extends Controller
+class ShopController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class EntregarController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('customer')->whereNull(['fechaSalida', 'contract_id'])->get();
-        $data = ['apps' => $orders];
+        $shops = Shop::all();
+        $data = ['shops' => $shops];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -27,7 +27,9 @@ class EntregarController extends Controller
      */
     public function create()
     {
-        return view('yeipi::create');
+        $form = ['route' => 'yeipi.shop.store', 'method' => 'post'];
+        $data = ['form' => $form];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -37,7 +39,15 @@ class EntregarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try { 
+            $shop = Shop::create($request->all());
+
+            return redirect()->route('yeipi.shop.edit', ['shop' => $shop->id])
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -55,10 +65,10 @@ class EntregarController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit(Order $order)
+    public function edit(Shop $shop)
     {
-        $details = $order->details()->get();
-        $data = ['order' => $order, 'details' => $details];
+        $form = ['route' => 'yeipi.shop.store', 'method' => 'post'];
+        $data = ['shop' => $shop, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -68,24 +78,9 @@ class EntregarController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, Order $order)
+    public function update(Request $request, $id)
     {
-        try { 
-            dd(auth()->user()->people->delivery->orders()->whereNotNull('fechaRecepcion')->count());
-            if(auth()->user()->people->deliveries->orders()->whereNotNull('fechaRecepcion')->count() > 0){
-                return back()
-                    ->withErrors(['message' => 'Tiene entregas pendientes']);
-            }
-
-            $order->fechaRecepcion = Carbon::now();
-            $order->save();
-
-            return redirect()->route('yeipi.entregar.edit', ['order'=> $order->id])
-                ->with('success_message', 'Attribute was successfully added.');
-        } catch (Exception $exception) {
-            return back()->withInput()
-                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
-        }
+        //
     }
 
     /**

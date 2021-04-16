@@ -4,13 +4,16 @@ namespace Modules\Yeipi\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Core\Entities\People;
 use Modules\Yeipi\Entities\Shop;
 use Modules\Yeipi\Entities\Contract;
-use Modules\Core\Entities\People;
+use Modules\Yeipi\Entities\Order;
 
 class Delivery extends Model
 {
     use HasFactory;
+
+    protected $table = 'yeipi_deliveries';
 
     protected $fillable = [
         'people_id',
@@ -28,7 +31,7 @@ class Delivery extends Model
         return $this->belongsToMany(Shop::class);
     }
 
-    public function contract()
+    public function contracts()
     {
         return $this->hasMany(Contract::class);
     }
@@ -41,5 +44,15 @@ class Delivery extends Model
     public function people()
     {
         return $this->belongsTo(People::class);
+    }
+
+    /**
+     * The orders that belong to the Delivery
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, Contract::class);
     }
 }
