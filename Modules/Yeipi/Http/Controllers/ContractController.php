@@ -4,11 +4,11 @@ namespace Modules\Yeipi\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-// use Illuminate\Routing\Controller;
+//use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
-use Modules\Yeipi\Entities\Order;
+use Modules\Yeipi\Entities\Contract;
 
-class EntregarController extends Controller
+class ContractController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class EntregarController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('customer')->whereNull(['fechaSalida', 'contract_id'])->get();
-        $data = ['apps' => $orders];
+        $contracts = Contract::all();
+        $data = ['contracts' => $contracts];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -55,11 +55,9 @@ class EntregarController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit(Order $order)
+    public function edit($id)
     {
-        $details = $order->details()->get();
-        $data = ['order' => $order, 'details' => $details];
-        return view('dashboard', $this->GetInfo($data));
+        return view('yeipi::edit');
     }
 
     /**
@@ -68,24 +66,9 @@ class EntregarController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, Order $order)
+    public function update(Request $request, $id)
     {
-        try { 
-            dd(auth()->user()->people->delivery->orders()->whereNotNull('fechaRecepcion')->count());
-            if(auth()->user()->people->deliveries->orders()->whereNotNull('fechaRecepcion')->count() > 0){
-                return back()
-                    ->withErrors(['message' => 'Tiene entregas pendientes']);
-            }
-
-            $order->fechaRecepcion = Carbon::now();
-            $order->save();
-
-            return redirect()->route('yeipi.entregar.edit', ['order'=> $order->id])
-                ->with('success_message', 'Attribute was successfully added.');
-        } catch (Exception $exception) {
-            return back()->withInput()
-                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
-        }
+        //
     }
 
     /**

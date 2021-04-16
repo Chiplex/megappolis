@@ -6,19 +6,20 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 //use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
-use Modules\Yeipi\Entities\Shop;
+use Modules\Yeipi\Entities\Delivery;
+use Modules\Core\Entities\Role;
 
-class ProveerController extends Controller
+class DeliveryController extends Controller
 {
+    protected $role_name = 'YEIPI-DELIVERY';
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        $orders = auth()->user()->people()->customer()->get();
-        $data = ['apps' => $orders];
-        return view('dashboard', $this->GetInfo($data));
+        return view('yeipi::index');
     }
 
     /**
@@ -37,7 +38,19 @@ class ProveerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        try {
+            $role = Role::firstWhere('name', $this->role_name);
+            auth()->user()->roles()->syncWithoutDetaching($role->id);
+            $request->merge(['puntuacion' => 0, 'valoracion' => '']);
+            Delivery::firstOrCreate($request->except('_token'));
+
+            return redirect()->route('yeipi.entregar.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -79,12 +92,5 @@ class ProveerController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function delivery(Shop $shop)
-    {
-        $deliveries = Delivery::doesntHave('contracts')->get();
-        $data = ['shop' => $shop, 'deliveries' => $deliveries];
-        return view('dashboard', $this->GetInfo($data));
     }
 }

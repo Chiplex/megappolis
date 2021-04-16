@@ -11,6 +11,8 @@ class Contract extends Model
 {
     use HasFactory;
 
+    protected $table = 'yeipi_contracts';
+
     protected $fillable = [
         'shop_id',
         'delivery_id',

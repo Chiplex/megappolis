@@ -11,8 +11,17 @@ class Shop extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'nombre',
+        'direccion',
+        'latitud',
+        'longitud',
+        'abre',
+        'cierra',
+    ];
     
+    protected $table = 'yeipi_shops';
+
     protected static function newFactory()
     {
         return \Modules\Yeipi\Database\factories\ShopFactory::new();
@@ -23,7 +32,7 @@ class Shop extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function deliveries(): BelongsToMany
+    public function deliveries()
     {
         return $this->belongsToMany(Delivery::class);
     }
@@ -33,7 +42,7 @@ class Shop extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function contracts(): HasMany
+    public function contracts()
     {
         return $this->hasMany(Contract::class);
     }

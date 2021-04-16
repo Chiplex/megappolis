@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
 use Modules\Yeipi\Entities\Customer;
+use Modules\Yeipi\Entities\Delivery;
 
 class People extends Model
 {
@@ -52,6 +53,16 @@ class People extends Model
     public function customer()
     {
         return $this->hasOne(Customer::class);
+    }
+
+    /**
+     * Get the deliveries associated with the People
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function delivery()
+    {
+        return $this->hasOne(Delivery::class);
     }
     
 }
