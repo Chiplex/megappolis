@@ -12,6 +12,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-tools">
+                    <a class="btn btn-primary" href="{{ route('yeipi.contract.create')}}" role="button">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    </a>
+                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0" style="height: 300px;">
@@ -30,10 +35,10 @@
                         @foreach ($contracts as $contract)
                         <tr>
                             <td>{{$contract->id}}</td>
-                            <td>{{$contract->shop->name}}</td>
+                            <td>{{$contract->shop->nombre}}</td>
                             <td>{{$contract->delivery->people->getNameComplete()}}</td>
-                            <td>
-                            </td>
+                            <td>{{$contract->empieza}}</td>
+                            <td>{{$contract->acaba}}</td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -49,7 +49,7 @@ class PedirController extends Controller
             $values = $request->all();
             $order = Order::create($values);
 
-            return redirect()->route('yeipi.pedir.edti', ['order' => $order->id])
+            return redirect()->route('yeipi.pedir.edit', ['order' => $order->id])
                 ->with('success_message', 'Attribute was successfully added.');
         } catch (Exception $exception) {
             return back()->withInput()
@@ -75,7 +75,8 @@ class PedirController extends Controller
     public function edit(Order $order)
     {
         $details = $order->details()->get();
-        $data = ['order' => $order, 'details' => $details];
+        $form = ['route' => ['core.pedir.update', $order->id], 'method' => 'put'];
+        $data = ['order' => $order, 'details' => $details, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
     }
 

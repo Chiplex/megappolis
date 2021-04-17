@@ -17,7 +17,7 @@ class EntregarController extends Controller
     public function index()
     {
         $orders = Order::with('customer')->whereNull(['fechaSalida', 'contract_id'])->get();
-        $data = ['apps' => $orders];
+        $data = ['orders' => $orders];
         return view('dashboard', $this->GetInfo($data));
     }
 

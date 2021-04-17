@@ -1,40 +1,35 @@
-<div class="card card-info">
-    <form class="form-horizontal"
-        action="@if (isset($order)) {{ route('yeipi.pedir.update' , ['order' => $order->id]) }} @else {{ route('yeipi.pedir.store') }} @endif"
-        method="POST">
-        @csrf
-        @if (isset($order))
-        @method('PUT')
-        @endif
-        <div class="card-header">
-            <div class="card-tools">
-                @isset($order->fechaSolicitud)
-                <a class="btn btn-primary" href="{{ route('yeipi.pedir.index') }}" role="button">
-                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
-                </a>
-                @endisset
-                @empty($order->fechaSolicitud)
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i>
-                </button>    
-                @endempty
-            </div>
+<div class="card card-danger">
+    <div class="card-header">
+        <div class="card-tools">
+            @isset($order->fechaSolicitud)
+            <a class="btn btn-primary" href="{{ route('yeipi.pedir.index') }}" role="button">
+                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+            </a>
+            @endisset
+            @empty($order->fechaSolicitud)
+            {!! Form::open($form) !!}
+                {!! Form::submit('<i class="fas fa-save"></i>', ['class' => 'btn btn-primary']) !!}
+            {!! Form::close() !!}
+            @endempty
         </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Pedido de:</dt>
-                <dd class="col-sm-9">{{ $order->customer->people->getNameComplete() }}</dd>
-                <dt class="col-sm-3">Llevado por:</dt>
-                <dd class="col-sm-9"></dd>
-                <dt class="col-sm-3">Fecha de solicitud:</dd>
-                <dd class="col-sm-9">{{ $order->fechaSolicitud }}</dt>
-                <dt class="col-sm-3">Fecha de salida:</dt>
-                <dd class="col-sm-9">{{ $order->fechaSalida }}</dd>
-                <dt class="col-sm-3">Fecha de entrega:</dt>
-                <dd class="col-sm-9">{{ $order->fechaEntrga }}</dd>
-            </dl>
-        </div>
-    </form>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Pedido de:</dt>
+            <dd class="col-sm-9">{{ $order->customer->people->getNameComplete() }}</dd>
+            <dt class="col-sm-3">Llevado por:</dt>
+            <dd class="col-sm-9"></dd>
+            {{-- <dd class="col-sm-9">{{ $order->contract->delivery->people->getNameComplete() ?? '' }}</dd> --}}
+            <dt class="col-sm-3">Fecha de solicitud:</dd>
+            <dd class="col-sm-9">{{ $order->fechaSolicitud }}</dt>
+            <dt class="col-sm-3">Fecha de recepción:</dd>
+            <dd class="col-sm-9">{{ $order->fechaRecepcion }}</dt>
+            <dt class="col-sm-3">Fecha de salida:</dt>
+            <dd class="col-sm-9">{{ $order->fechaSalida }}</dd>
+            <dt class="col-sm-3">Fecha de entrega:</dt>
+            <dd class="col-sm-9">{{ $order->fechaEntrga }}</dd>
+        </dl>
+    </div>
 </div>
 <div class="card">
     <div class="card-header">

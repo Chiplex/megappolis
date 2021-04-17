@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 //use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
 use Modules\Yeipi\Entities\Contract;
+use Modules\Yeipi\Entities\Shop;
+use Modules\Yeipi\Entities\Delivery;
 
 class ContractController extends Controller
 {
@@ -27,7 +29,12 @@ class ContractController extends Controller
      */
     public function create()
     {
-        return view('yeipi::create');
+        $shops = Shop::pluck('nombre', 'id')->all();
+        $deliveries = Delivery::with('people')->doesntHave('contracts')->get()->pluck('people.name', 'id');
+        $form = ['route' => 'yeipi.contract.store', 'method' => 'post'];
+        $inputs = $this->getInputs($shops, $deliveries, null);
+        $data = ['shops' => $shops, 'deliveries' => $deliveries, 'form' => $form, 'collection' => $inputs];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -37,7 +44,15 @@ class ContractController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try { 
+            Contract::firstOrCreate($request->except('_token'));
+
+            return redirect()->route('yeipi.contract.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -79,5 +94,27 @@ class ContractController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getInputs($shops, $deliveries, $contract)
+    {
+        return [
+                [
+                    'tipo' => 'form.select',
+                    'elementos' => ['name' => 'shop_id', 'title' => 'Proveedor', 'list' => $shops, 'selected' => $contract->shop_id ?? null]
+                ],
+                [
+                    'tipo' => 'form.select',
+                    'elementos' => ['name' => 'delivery_id', 'title' => 'Delivery', 'list' => $deliveries, 'selected' => $contract->delivery_id ?? null]
+                ],
+                [
+                    'tipo' => 'form.date',
+                    'elementos' => ['name' => 'empieza', 'title' => 'Empieza', 'value' => $contract->empieza ?? null]
+                ],
+                [
+                    'tipo' => 'form.date',
+                    'elementos' => ['name' => 'acaba', 'title' => 'Acaba', 'value' => $contract->acaba ?? null]
+                ]
+            ];
     }
 }

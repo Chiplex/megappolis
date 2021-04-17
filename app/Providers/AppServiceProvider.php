@@ -41,18 +41,29 @@ class AppServiceProvider extends ServiceProvider
 
             $event->menu->add(...$apps);
 
-            $pages = App::firstWhere(['name' => request()->segment(1)])->pages()->where(['type' => 'submenu'])->get()->map(function (Page $page)
+            $app = App::firstWhere(['name' => request()->segment(1)]);
+            $pages = Page::where(['type' => 'menu', 'app_id' => $app->id])->get()->map(function (Page $page)
             {
-                return [
+                $menu = [
                     'text' => $page['name'],
+                    'icon' => $page['icon'],
                     'url' => $page->buildUrl(),
-                    'icon' => $page['icon']
                 ];
-            });
+                $submenus = Page::where(['type' => 'submenu', 'page_id' => $page['id']])->get()->map(function (Page $page)
+                {
+                    return [
+                        'text' => $page['name'],
+                        'icon' => $page['icon'],
+                        'url' => $page->buildUrl(),
+                    ];
+                })->toArray();
+                if (count($submenus) > 0) {
+                    $menu['submenu'] = $submenus;
+                }
+                return $menu;
+            })->toArray();
+
             $event->menu->add(...$pages);
-
-            
-
         });
     }
 }

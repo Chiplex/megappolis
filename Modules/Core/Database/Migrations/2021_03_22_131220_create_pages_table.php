@@ -16,7 +16,7 @@ class CreatePagesTable extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('app_id');
-            $table->string('controller', 200);
+            $table->string('controller', 200)->nullable();
             $table->string('action', 200)->nullable();
             $table->string('name', 200);
             $table->string('type', 20);

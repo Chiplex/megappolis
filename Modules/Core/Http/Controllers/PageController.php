@@ -28,8 +28,10 @@ class PageController extends Controller
      */
     public function create()
     {
-        $apps = App::all();
-        $data = ['apps' => $apps];
+        $apps = App::pluck('name', 'id')->all();
+        $menus = Page::type('menu')->pluck('name', 'id')->all();
+        $form = ['route' => 'core.page.store', 'method' => 'post'];
+        $data = ['apps' => $apps, 'menus' => $menus, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -72,8 +74,10 @@ class PageController extends Controller
      */
     public function edit(Page $page)
     {
-        $apps = App::all();
-        $data = ['apps' => $apps, 'page' => $page];
+        $apps = App::pluck('name', 'id')->all();
+        $menus = Page::type('menu')->pluck('name', 'id')->all();
+        $form = ['route' => ['core.page.update', $page->id], 'method' => 'put'];
+        $data = ['apps' => $apps, 'page' => $page, 'menus' => $menus, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
     }
 

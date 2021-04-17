@@ -34,7 +34,7 @@
                     <td>{{$role->id}}</td>
                     <td>{{$role->name}}</td>
                     <td>{{$role->type}}</td>
-                    <td>{{$role->app->name}}</td>
+                    <td>{{$role->app->name ?? ''}}</td>
                     <td>
                         <div class="btn-group btn-group-sm">
                             <a href="{{ url('/core/role/register/'.$role->id) }}" class="btn btn-info btn-flat">

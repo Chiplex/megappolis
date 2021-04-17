@@ -16,7 +16,7 @@ class Contract extends Model
     protected $fillable = [
         'shop_id',
         'delivery_id',
-        'comienza',
+        'empieza',
         'acaba'
     ];
     

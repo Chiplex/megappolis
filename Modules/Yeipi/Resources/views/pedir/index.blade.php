@@ -28,9 +28,9 @@
                             <th>ID</th>
                             <th>Delivery</th>
                             <th>Fecha de Solicitud</th>
+                            <th>Fecha de Recepción</th>
                             <th>Fecha de Salida</th>
                             <th>Fecha de Entrega</th>
-                            <th>Fecha de Creacion</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -40,19 +40,21 @@
                             <td>{{$order->id}}</td>
                             <td>{{$order->contract_id}}</td>
                             <td>{{$order->fechaSolicitud}}</td>
+                            <td>{{$order->fechaRecepcion}}</td>
                             <td>{{$order->fechaSalida}}</td>
                             <td>{{$order->fechaEntrega}}</td>
-                            <td>{{$order->created_at}}</td>
                             <td>
                                 <div class="btn-group btn-group-sm">
                                     <a href="{{ url('/yeipi/pedir/register/'.$order->id) }}"
                                         class="btn btn-info btn-flat">
                                         <i class="fa fa-edit"></i>
                                     </a>
+                                    @empty($order->fechaRecepcion || $order->fechaSalida || $order->fechaEntrega)
                                     <a href="{{ url('/yeipi/pedir/delete/'.$order->id) }}"
                                         class="btn btn-info btn-flat">
                                         <i class="fa fa-trash"></i>
                                     </a>
+                                    @endempty
                                 </div>
                             </td>
                         </tr>

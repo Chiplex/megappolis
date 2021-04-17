@@ -33,6 +33,26 @@ class Page extends Model
         return $this->belongsTo(App::class);
     }
 
+    /**
+     * Get all of the pages for the Page
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pages()
+    {
+        return $this->hasMany(Page::class);
+    }
+    
+    /**
+     * Get the page that owns the Page
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function page(): BelongsTo
+    {
+        return $this->belongsTo(Page::class);
+    }
+
     public function buildView()
     {
         return $this->app->name.'::'.$this->controller.'\\'.$this->action;
@@ -46,5 +66,10 @@ class Page extends Model
     public function buildUrl()
     {
         return $this->app->name.'/'.$this->controller.'/'.$this->action;
+    }
+    
+    public function scopeType($query, $type)
+    {
+        return $query->where('type', $type);
     }
 }
