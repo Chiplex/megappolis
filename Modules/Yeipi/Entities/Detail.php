@@ -17,7 +17,10 @@ class Detail extends Model
         'descripcion',
         'cantidad',
         'precio',
-        'fechaPreparacion'
+        'fechaPreparacion',
+        'fechaConseguido',
+        'fechaNoConseguido',
+        'stock_id'
     ];
     
     protected static function newFactory()

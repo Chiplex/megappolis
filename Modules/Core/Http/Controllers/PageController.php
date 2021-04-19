@@ -91,6 +91,7 @@ class PageController extends Controller
     {
         try {
             $data = $request->all();
+            $data['page_id'] = $data['page_id'] ?? 0;
             $page->update($data);
 
             return redirect()->route('core.page.index')

@@ -8,13 +8,12 @@
             <div class="icon">
                 <i class="fa fa-cart-plus" aria-hidden="true"></i>
             </div>
-            <form action="{{ route('yeipi.customer.store') }}" method="post" >
-                @csrf
-                <input type="hidden" name="people_id" value="{{ auth()->user()->people->id }}">
+            {!! Form::open(['route' => 'yeipi.customer.store', 'method' => 'post']) !!}
+                {!! Form::hidden('people_id', auth()->user()->people->id) !!}
                 <button type="submit" class="btn btn-black btn-lg btn-block">
                     <i class="fas fa-arrow-circle-right"></i>
                 </button>
-            </form>
+            {!! Form::close() !!}
         </div>
     </div>
     <!-- ./col -->

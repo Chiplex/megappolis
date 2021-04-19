@@ -17,7 +17,7 @@ class EntregarController extends Controller
      */
     public function index()
     {
-        $orders = Order::withCount('details')->whereNull(['fechaSalida', 'delivery_id'])->whereNotNull('fechaSolicitud')->get();
+        $orders = Order::withCount('details')->whereNull('fechaEntrega')->get();
         $data = ['orders' => $orders];
         return view('dashboard', $this->GetInfo($data));
     }

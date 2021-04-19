@@ -52,12 +52,12 @@
                             @isset($order->fechaRecepcion)
                             <div class="btn-group btn-group-sm">
                                 @if (empty($detail->fechaConseguido) && empty($detail->fechaNoConseguido))
-                                {!! Form::open(['route' => ['yeipi.entregar.conseguido', $detail->id ], 'method' => 'put']) !!}
-                                {!! Form::button('<i class="fa fa-check"></i> Conseguido', ['type' => 'submit', 'class' => 'btn btn-info btn-flat']) !!}
-                                {!! Form::close() !!} 
-                                {!! Form::open(['route' => ['yeipi.entregar.no-conseguido', $detail->id ], 'method' => 'put']) !!}
-                                {!! Form::button('<i class="fa fa-times"></i> No conseguido', ['type' => 'submit', 'class' => 'btn btn-info btn-flat']) !!}
-                                {!! Form::close() !!}
+                                    {!! Form::open(['route' => ['yeipi.entregar.conseguido', $detail->id ], 'method' => 'put']) !!}
+                                        {!! Form::button('<i class="fa fa-check"></i> Conseguido', ['type' => 'submit', 'class' => 'btn btn-info btn-flat']) !!}
+                                    {!! Form::close() !!} 
+                                    {!! Form::open(['route' => ['yeipi.entregar.no-conseguido', $detail->id ], 'method' => 'put']) !!}
+                                        {!! Form::button('<i class="fa fa-times"></i> No conseguido', ['type' => 'submit', 'class' => 'btn btn-info btn-flat']) !!}
+                                    {!! Form::close() !!}
                                 @else
                                     @isset($detail->fechaConseguido)
                                         <span class="badge badge-primary">Conseguido</span>
