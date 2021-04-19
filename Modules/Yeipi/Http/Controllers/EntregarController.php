@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 // use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
 use Modules\Yeipi\Entities\Order;
+use Modules\Yeipi\Entities\Detail;
 
 class EntregarController extends Controller
 {
@@ -16,7 +17,7 @@ class EntregarController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('customer')->whereNull(['fechaSalida', 'contract_id'])->get();
+        $orders = Order::withCount('details')->whereNull(['fechaSalida', 'delivery_id'])->whereNotNull('fechaSolicitud')->get();
         $data = ['orders' => $orders];
         return view('dashboard', $this->GetInfo($data));
     }
@@ -58,7 +59,31 @@ class EntregarController extends Controller
     public function edit(Order $order)
     {
         $details = $order->details()->get();
-        $data = ['order' => $order, 'details' => $details];
+        if (empty($order->fechaRecepcion) && empty($order->fechaEntrega)) {
+            $form = [
+                'route' => ['yeipi.entregar.update', $order->id], 
+                'method' => 'put', 
+                'name' => 'Recepcionar',
+                'show' => true
+            ];
+        }
+        if (isset($order->fechaRecepcion) && empty($order->fechaEntrega)) {
+            $form = [
+                'route' => ['yeipi.entregar.ahora', $order->id], 
+                'method' => 'put', 
+                'name' => 'Entregar',
+                'show' => true
+            ];
+        }
+        if (isset($order->fechaRecepcion) && isset($order->fechaEntrega)) {
+            $form = [
+                'route' => ['yeipi.entregar.ahora', $order->id], 
+                'method' => 'put', 
+                'name' => 'Entregar',
+                'show' => false
+            ];
+        }
+        $data = ['order' => $order, 'details' => $details, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -71,13 +96,13 @@ class EntregarController extends Controller
     public function update(Request $request, Order $order)
     {
         try { 
-            dd(auth()->user()->people->delivery->orders()->whereNotNull('fechaRecepcion')->count());
-            if(auth()->user()->people->deliveries->orders()->whereNotNull('fechaRecepcion')->count() > 0){
+            if(auth()->user()->people->delivery->orders()->whereNull(['fechaEntrega'])->count() > 0){
                 return back()
                     ->withErrors(['message' => 'Tiene entregas pendientes']);
             }
 
-            $order->fechaRecepcion = Carbon::now();
+            $order->delivery_id = auth()->user()->people->delivery->id;
+            $order->fechaRecepcion = \Carbon::now();
             $order->save();
 
             return redirect()->route('yeipi.entregar.edit', ['order'=> $order->id])
@@ -96,5 +121,53 @@ class EntregarController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function conseguido(Detail $detail)
+    {
+        try {
+            $detail->fechaConseguido = \Carbon::now();
+            $detail->save();
+            
+            $detail->order->fechaSalida = \Carbon::now();
+            $detail->order->save();
+
+            return redirect()->route('yeipi.entregar.edit', ['order'=> $detail->order->id])
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
+    public function noConseguido(Detail $detail)
+    {
+        try {
+            $detail->fechaNoConseguido = \Carbon::now();
+            $detail->save();
+
+            $detail->order->fechaSalida = \Carbon::now();
+            $detail->order->save();
+
+            return redirect()->route('yeipi.entregar.edit', ['order'=> $detail->order->id])
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
+    public function ahora(Request $request, Order $order)
+    {
+        try {
+            $order->fechaEntrega = \Carbon::now();
+            $order->save();
+
+            return redirect()->route('yeipi.entregar.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 }

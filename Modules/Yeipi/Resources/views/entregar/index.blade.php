@@ -29,7 +29,7 @@
                         @foreach ($orders as $order)
                         <tr>
                             <td>{{$order->id}}</td>
-                            <td></td>
+                            <td>{{$order->customer->people->getNameComplete()}}</td>
                             <td>{{$order->fechaSolicitud}}</td>
                             <td>{{$order->details_count}}</td>
                             <td>

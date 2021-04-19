@@ -34,7 +34,7 @@
                         <tr>
                             <td>{{$shop->id}}</td>
                             <td>{{$shop->nombre}}</td>
-                            <td>{{$shop->direccion}}</td>
+                            <td>{{Str::limit($shop->direccion, 50)}}</td>
                             <td>{{$shop->abre}}</td>
                             <td>{{$shop->cierra}}</td>
                             <td>
@@ -43,7 +43,7 @@
                                         class="btn btn-info btn-flat">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                    <a href="{{ url('/yeipi/pedir/delete/'.$shop->id) }}"
+                                    <a href="{{ url('/yeipi/shop/delete/'.$shop->id) }}"
                                         class="btn btn-info btn-flat">
                                         <i class="fa fa-trash"></i>
                                     </a>

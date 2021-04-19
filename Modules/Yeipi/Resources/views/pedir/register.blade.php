@@ -8,7 +8,7 @@
             @endisset
             @empty($order->fechaSolicitud)
             {!! Form::open($form) !!}
-                {!! Form::submit('<i class="fas fa-save"></i>', ['class' => 'btn btn-primary']) !!}
+                {!! Form::button('<i class="fas fa-save"></i> Solicitar', ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
             {!! Form::close() !!}
             @endempty
         </div>

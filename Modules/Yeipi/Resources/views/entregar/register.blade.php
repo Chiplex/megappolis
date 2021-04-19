@@ -1,36 +1,30 @@
-<div class="card card-info">
-    <form class="form-horizontal"
-        action="@if (isset($order)) {{ route('yeipi.entregar.update' , ['order' => $order->id]) }} @else {{ route('yeipi.pedir.store') }} @endif"
-        method="POST">
-        @csrf
-        @if (isset($order))
-        @method('PUT')
-        @endif
-        <div class="card-header">
-            <div class="card-tools">
-                <a class="btn btn-primary" href="{{ route('yeipi.entregar.index') }}" role="button">
-                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
-                </a>
-                @empty($order->fechaRecepcion)
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-sun"></i> Entregar
-                </button>    
-                @endempty
-            </div>
+<div class="card  bg-olive">
+    <div class="card-header">
+        <div class="card-tools">
+            @if ($form['show'])
+                {!! Form::open($form) !!}
+                    <a class="btn btn-primary" href="{{ route('yeipi.entregar.index') }}" role="button">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                    </a>
+                    {!! Form::button('<i class="fa fa-sun"></i>'.$form['name'], ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
+                {!! Form::close() !!}
+            @endif
         </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Pedido de:</dt>
-                <dd class="col-sm-9">{{ $order->customer->people->getNameComplete() }}</dd>
-                <dt class="col-sm-3">Fecha de solicitud:</dd>
-                <dd class="col-sm-9">{{ $order->fechaSolicitud }}</dt>
-                <dt class="col-sm-3">Fecha de salida:</dt>
-                <dd class="col-sm-9">{{ $order->fechaSalida }}</dd>
-                <dt class="col-sm-3">Fecha de entrega:</dt>
-                <dd class="col-sm-9">{{ $order->fechaEntrga }}</dd>
-            </dl>
-        </div>
-    </form>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Pedido de:</dt>
+            <dd class="col-sm-9">{{ $order->customer->people->getNameComplete() }}</dd>
+            <dt class="col-sm-3">Fecha de solicitud:</dd>
+            <dd class="col-sm-9">{{ $order->fechaSolicitud }}</dt>
+            <dt class="col-sm-3">Fecha de recepcion:</dd>
+            <dd class="col-sm-9">{{ $order->fechaRecepcion }}</dt>
+            <dt class="col-sm-3">Fecha de salida:</dt>
+            <dd class="col-sm-9">{{ $order->fechaSalida }}</dd>
+            <dt class="col-sm-3">Fecha de entrega:</dt>
+            <dd class="col-sm-9">{{ $order->fechaEntrga }}</dd>
+        </dl>
+    </div>
 </div>
 <div class="card">
     <div class="card-header">
@@ -57,14 +51,21 @@
                         <td>
                             @isset($order->fechaRecepcion)
                             <div class="btn-group btn-group-sm">
-                                <a href="{{ url('/yeipi/pedir/detail/'.$detail->id) }}"
-                                    class="btn btn-info btn-flat">
-                                    <i class="fa fa-check"></i> Conseguido
-                                </a>
-                                <a href="{{ url('/yeipi/pedir/detail/'.$detail->id) }}"
-                                    class="btn btn-info btn-flat">
-                                    <i class="fa fa-times"></i> No conseguido
-                                </a>
+                                @if (empty($detail->fechaConseguido) && empty($detail->fechaNoConseguido))
+                                {!! Form::open(['route' => ['yeipi.entregar.conseguido', $detail->id ], 'method' => 'put']) !!}
+                                {!! Form::button('<i class="fa fa-check"></i> Conseguido', ['type' => 'submit', 'class' => 'btn btn-info btn-flat']) !!}
+                                {!! Form::close() !!} 
+                                {!! Form::open(['route' => ['yeipi.entregar.no-conseguido', $detail->id ], 'method' => 'put']) !!}
+                                {!! Form::button('<i class="fa fa-times"></i> No conseguido', ['type' => 'submit', 'class' => 'btn btn-info btn-flat']) !!}
+                                {!! Form::close() !!}
+                                @else
+                                    @isset($detail->fechaConseguido)
+                                        <span class="badge badge-primary">Conseguido</span>
+                                    @endisset
+                                    @isset($detail->fechaNoConseguido)
+                                        <span class="badge badge-warning">No conseguido</span>
+                                    @endisset
+                                @endif
                             </div>
                             @endisset
                         </td>

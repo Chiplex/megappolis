@@ -18,7 +18,8 @@ class Delivery extends Model
     protected $fillable = [
         'people_id',
         'puntuacion',
-        'valoracion'
+        'valoracion',
+        'amount'
     ];
     
     protected static function newFactory()
@@ -53,6 +54,6 @@ class Delivery extends Model
      */
     public function orders()
     {
-        return $this->belongsToMany(Order::class, Contract::class);
+        return $this->hasMany(Order::class);
     }
 }

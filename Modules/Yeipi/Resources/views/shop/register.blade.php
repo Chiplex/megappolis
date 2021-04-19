@@ -6,12 +6,12 @@
         </div>
     </div>
     <div class="card-body">
-        @include('form.text', ['name' => 'nombre', 'title' => 'Nombre', 'value' => $shop->nombre ?? '', 'attributeLabel' => ['class' => 'col-sm-2 col-form-label'], 'attributeControl' => ['class' => 'form-control']])
-        @include('form.text', ['name' => 'direccion', 'title' => 'Direccion', 'value' => $shop->direccion ?? '', 'attributeLabel' => ['class' => 'col-sm-2 col-form-label'], 'attributeControl' => ['class' => 'form-control']])
-        @include('form.text', ['name' => 'latitud', 'title' => 'Latitud', 'value' => $shop->latitud ?? '', 'attributeLabel' => ['class' => 'col-sm-2 col-form-label'], 'attributeControl' => ['class' => 'form-control']])
-        @include('form.text', ['name' => 'longitud', 'title' => 'Longitud', 'value' => $shop->longitud ?? '', 'attributeLabel' => ['class' => 'col-sm-2 col-form-label'], 'attributeControl' => ['class' => 'form-control']])
-        @include('form.time', ['name' => 'abre', 'title' => 'Abre', 'value' => $shop->abre ?? '', 'attributeLabel' => ['class' => 'col-sm-2 col-form-label'], 'attributeControl' => ['class' => 'form-control']])
-        @include('form.time', ['name' => 'cierra', 'title' => 'Cierra', 'value' => $shop->cierra ?? '', 'attributeLabel' => ['class' => 'col-sm-2 col-form-label'], 'attributeControl' => ['class' => 'form-control']])
+        @include('form.text', ['name' => 'nombre', 'title' => 'Nombre', 'value' => $shop->nombre ?? ''])
+        @include('form.text', ['name' => 'direccion', 'title' => 'Direccion', 'value' => $shop->direccion ?? ''])
+        @include('form.text', ['name' => 'latitud', 'title' => 'Latitud', 'value' => $shop->latitud ?? ''])
+        @include('form.text', ['name' => 'longitud', 'title' => 'Longitud', 'value' => $shop->longitud ?? ''])
+        @include('form.time', ['name' => 'abre', 'title' => 'Abre', 'value' => $shop->abre ?? ''])
+        @include('form.time', ['name' => 'cierra', 'title' => 'Cierra', 'value' => $shop->cierra ?? ''])
     </div>
     {!! Form::close() !!}
 </div>
@@ -35,18 +35,14 @@
                 @foreach ($shop->contracts as $contract)
                     <tr>
                         <td>{{ $contract->id }}</td>
-                        <td>{{ $contract->delivery->people->getNameComplete ?? '' }}</td>
+                        <td>{{ $contract->delivery->people->getNameComplete() ?? '' }}</td>
                         <td>{{ $contract->empieza }}</td>
                         <td>{{ $contract->acaba }}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a href="{{ url('/yeipi/pedir/detail/'.$detail->id) }}"
+                                <a href="{{ url('/yeipi/shop/update/'.$contract->delivery_id) }}"
                                     class="btn btn-info btn-flat">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <a href="{{ url('/yeipi/pedir/detail/'.$detail->id) }}"
-                                    class="btn btn-info btn-flat">
-                                    <i class="fa fa-trash"></i>
+                                    <i class="fa fa-ban"></i>Quitar
                                 </a>
                             </div>
                         </td>

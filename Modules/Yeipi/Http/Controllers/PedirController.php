@@ -75,7 +75,7 @@ class PedirController extends Controller
     public function edit(Order $order)
     {
         $details = $order->details()->get();
-        $form = ['route' => ['core.pedir.update', $order->id], 'method' => 'put'];
+        $form = ['route' => ['yeipi.pedir.update', $order->id], 'method' => 'put'];
         $data = ['order' => $order, 'details' => $details, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
     }

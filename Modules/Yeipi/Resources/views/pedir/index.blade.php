@@ -38,7 +38,7 @@
                         @foreach ($orders as $order)
                         <tr>
                             <td>{{$order->id}}</td>
-                            <td>{{$order->contract_id}}</td>
+                            <td>{{$order->delivery ? $order->delivery->people->getNameComplete(): ''}}</td>
                             <td>{{$order->fechaSolicitud}}</td>
                             <td>{{$order->fechaRecepcion}}</td>
                             <td>{{$order->fechaSalida}}</td>

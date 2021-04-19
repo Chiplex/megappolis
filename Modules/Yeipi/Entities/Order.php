@@ -16,7 +16,7 @@ class Order extends Model
 
     protected $fillable = [
         'customer_id',
-        'contract_id',
+        'delivery_id',
         'fechaSolicitud',
         'fechaRecepcion',
         'fechaSalida',
@@ -43,9 +43,9 @@ class Order extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function contract()
+    public function delivery()
     {
-        return $this->belongsTo(Contract::class);
+        return $this->belongsTo(Delivery::class);
     }
 
     /**
