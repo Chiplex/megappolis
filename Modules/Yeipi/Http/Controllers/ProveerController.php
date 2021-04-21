@@ -10,6 +10,32 @@ use Modules\Yeipi\Entities\Shop;
 
 class ProveerController extends Controller
 {
+    public function preparar()
+    {
+        $provider = auth()->user()->people->provider;
+        $form = ['route' => 'yeipi.proveer.iniciar', 'method' => 'post'];
+        $data = ['provider' => $provider, 'form' => $form];
+        return view('dashboard', $this->GetInfo($data));
+    }
+
+    public function iniciar(Request $request)
+    {
+        try {
+            $customer = auth()->user()->people->customer;
+            $customer->direccion = $request->direccion;
+            $customer->latitud = $request->latitud;
+            $customer->longitud = $request->longitud;
+            $customer->save();
+
+            return redirect()->route('yeipi.pedir.index')
+                ->with('success_message', 'information was successfully added.');
+            
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -85,11 +111,6 @@ class ProveerController extends Controller
     {
         $deliveries = Delivery::doesntHave('contracts')->get();
         $data = ['shop' => $shop, 'deliveries' => $deliveries];
-        return view('dashboard', $this->GetInfo($data));
-    }
-
-    public function preparar()
-    {
         return view('dashboard', $this->GetInfo($data));
     }
 }
