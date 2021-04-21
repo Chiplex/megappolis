@@ -15,7 +15,10 @@ class Customer extends Model
     protected $table = 'yeipi_customers';
 
     protected $fillable = [
-        'people_id'
+        'people_id',
+        'direccion',
+        'latitud',
+        'longitud'
     ];
     
     protected static function newFactory()

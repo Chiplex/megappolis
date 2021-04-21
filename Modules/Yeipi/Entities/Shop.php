@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Yeipi\Entities\Delivery;
 use Modules\Yeipi\Entities\Contract;
+use Modules\Yeipi\Entities\Provider;
 
 class Shop extends Model
 {
@@ -18,6 +19,7 @@ class Shop extends Model
         'longitud',
         'abre',
         'cierra',
+        'provider_id'
     ];
     
     protected $table = 'yeipi_shops';
@@ -45,5 +47,15 @@ class Shop extends Model
     public function contracts()
     {
         return $this->hasMany(Contract::class);
+    }
+
+    /**
+     * Get the provider that owns the Shop
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class);
     }
 }

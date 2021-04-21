@@ -12,6 +12,32 @@ use Modules\Yeipi\Entities\Shop;
 
 class PedirController extends Controller
 {
+    public function preparar()
+    {
+        $customer = auth()->user()->people->customer;
+        $form = ['route' => 'yeipi.pedir.iniciar', 'method' => 'post'];
+        $data = ['customer' => $customer, 'form' => $form];
+        return view('dashboard', $this->GetInfo($data));
+    }
+
+    public function iniciar(Request $request)
+    {
+        try {
+            $customer = auth()->user()->people->customer;
+            $customer->direccion = $request->direccion;
+            $customer->latitud = $request->latitud;
+            $customer->longitud = $request->longitud;
+            $customer->save();
+
+            return redirect()->route('yeipi.pedir.index')
+                ->with('success_message', 'information was successfully added.');
+            
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -103,8 +129,6 @@ class PedirController extends Controller
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
-
-        
     }
 
     /**
@@ -116,4 +140,5 @@ class PedirController extends Controller
     {
         //
     }
+    
 }

@@ -87,4 +87,9 @@ class ProveerController extends Controller
         $data = ['shop' => $shop, 'deliveries' => $deliveries];
         return view('dashboard', $this->GetInfo($data));
     }
+
+    public function preparar()
+    {
+        return view('dashboard', $this->GetInfo($data));
+    }
 }

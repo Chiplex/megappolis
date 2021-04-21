@@ -13,13 +13,19 @@
 
 Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     Route::get('/', 'HomeController@index');
+    Route::get('/home/register/{yeipi}', 'HomeController@create')->name('yeipi.home.create');
+    Route::post('/home/register', 'HomeController@store')->name('yeipi.home.store');
 
+    Route::get('/pedir/iniciar', 'PedirController@preparar')->name('yeipi.pedir.preparar')->middleware('access:YEIPI-CUSTOMER');
+    Route::post('/pedir/iniciar', 'PedirController@iniciar')->name('yeipi.pedir.iniciar')->middleware('access:YEIPI-CUSTOMER');
     Route::get('/pedir/index', 'PedirController@index')->name('yeipi.pedir.index')->middleware('access:YEIPI-CUSTOMER');
     Route::get('/pedir/register', 'PedirController@create')->name('yeipi.pedir.create')->middleware('access:YEIPI-CUSTOMER');
     Route::post('/pedir/register', 'PedirController@store')->name('yeipi.pedir.store')->middleware('access:YEIPI-CUSTOMER');
     Route::get('/pedir/register/{order}', 'PedirController@edit')->name('yeipi.pedir.edit')->middleware('access:YEIPI-CUSTOMER');
     Route::put('/pedir/register/{order}', 'PedirController@update')->name('yeipi.pedir.update')->middleware('access:YEIPI-CUSTOMER');
 
+    Route::get('/entregar/iniciar', 'EntregarController@preparar')->name('yeipi.entregar.preparar')->middleware('access:YEIPI-CUSTOMER');
+    Route::post('/entregar/iniciar', 'EntregarController@iniciar')->name('yeipi.entregar.iniciar')->middleware('access:YEIPI-CUSTOMER');
     Route::get('/entregar/index', 'EntregarController@index')->name('yeipi.entregar.index')->middleware('access:YEIPI-DELIVERY');
     Route::get('/entregar/register', 'EntregarController@create')->name('yeipi.entregar.create')->middleware('access:YEIPI-DELIVERY');
     Route::post('/entregar/register', 'EntregarController@store')->name('yeipi.entregar.store')->middleware('access:YEIPI-DELIVERY');
@@ -29,6 +35,8 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     Route::put('/entregar/no-conseguido/{detail}', 'EntregarController@noConseguido')->name('yeipi.entregar.no-conseguido')->middleware('access:YEIPI-DELIVERY');
     Route::put('/entregar/ahora/{order}', 'EntregarController@ahora')->name('yeipi.entregar.ahora')->middleware('access:YEIPI-DELIVERY');
 
+    Route::get('/proveer/iniciar', 'ProveerController@preparar')->name('yeipi.proveer.preparar')->middleware('access:YEIPI-PROVIDER');
+    Route::post('/proveer/iniciar', 'ProveerController@iniciar')->name('yeipi.proveer.iniciar')->middleware('access:YEIPI-PROVIDER');
     Route::get('/proveer/index', 'ProveerController@index')->name('yeipi.proveer.index')->middleware('access:YEIPI-PROVIDER');
     Route::get('/proveer/register', 'ProveerController@create')->name('yeipi.proveer.create')->middleware('access:YEIPI-PROVIDER');
     Route::post('/proveer/register', 'ProveerController@store')->name('yeipi.proveer.store')->middleware('access:YEIPI-PROVIDER');

@@ -6,6 +6,11 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 //use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
+use Modules\Core\Entities\People;
+use Modules\Core\Entities\Role;
+use Modules\Yeipi\Entities\Customer;
+use Modules\Yeipi\Entities\Delivery;
+use Modules\Yeipi\Entities\Provider;
 
 class HomeController extends Controller
 {
@@ -23,9 +28,15 @@ class HomeController extends Controller
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
+    public function create($yeipi)
     {
-        return view('yeipi::create');
+        $people = auth()->user()->people;
+        $form = [
+            'route' => 'yeipi.home.store', 
+            'method' => 'post', 
+        ];
+        $data = ['people' => $people, 'action' => $yeipi, 'form' => $form];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -35,7 +46,35 @@ class HomeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try { 
+            $people = auth()->user()->people;
+            $people->phone = $request->phone;
+            $people->save();
+
+            switch ($request->action) {
+                case 'pedir':
+                    $role_name = 'YEIPI-CUSTOMER';
+                    Customer::firstOrCreate(['people_id' => $people->id]);
+                    break;
+                case 'entregar':
+                    $role_name = 'YEIPI-DELIVERY';
+                    Delivery::firstOrCreate(['people_id' => $people->id]);
+                    break;
+                case 'proveer':
+                    $role_name = 'YEIPI-PROVIDER';
+                    Provider::firstOrCreate(['people_id' => $people->id]);
+                    break;
+            }
+            $role = Role::firstWhere('name', $role_name);
+            auth()->user()->roles()->syncWithoutDetaching($role->id);
+
+            return redirect()->route('yeipi.'.$request->action.'.iniciar')
+                ->with('success_message', 'information was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+        
     }
 
     /**

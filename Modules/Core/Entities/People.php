@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
 use Modules\Yeipi\Entities\Customer;
 use Modules\Yeipi\Entities\Delivery;
+use Modules\Yeipi\Entities\Provider;
 
 class People extends Model
 {
@@ -65,4 +66,13 @@ class People extends Model
         return $this->hasOne(Delivery::class);
     }
     
+    /**
+     * Get all of the Provider for the People
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function Provider()
+    {
+        return $this->hasMany(Provider::class);
+    }
 }
