@@ -71,8 +71,8 @@ class People extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function Provider()
+    public function provider()
     {
-        return $this->hasMany(Provider::class);
+        return $this->hasOne(Provider::class);
     }
 }

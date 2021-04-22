@@ -24,11 +24,11 @@ class Provider extends Model
     }
 
     /**
-     * Get all of the Shops for the Provider
+     * Get all of the shops for the Provider
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function Shops()
+    public function shops()
     {
         return $this->hasMany(Shop::class);
     }

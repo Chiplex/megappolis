@@ -20,7 +20,13 @@ class Controller extends BaseController
     {
         $user = request()->user();
         $app = $user->apps()->where('name', request()->segment(1))->first();
-        $page = $app->pages()->where(['controller' => request()->segment(2) ?? 'home', 'action' => request()->segment(3) ?? 'index'])->first();
+        $page = $app->pages()->firstOrNew(['controller' => request()->segment(2) ?? 'home', 'action' => request()->segment(3) ?? 'index']);
+
+        if($page->isDirty()){
+            $page->name = implode('/', request()->segments());
+            $page->type = 'new';
+            $page->save();
+        }
 
         return $page;
     }

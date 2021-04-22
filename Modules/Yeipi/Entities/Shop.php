@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Yeipi\Entities\Delivery;
 use Modules\Yeipi\Entities\Contract;
 use Modules\Yeipi\Entities\Provider;
+use Modules\Yeipi\Entities\Shop;
+use Modules\Yeipi\Entities\Stock;
+use Modules\Yeipi\Entities\Product;
 
 class Shop extends Model
 {
@@ -30,26 +33,6 @@ class Shop extends Model
     }
 
     /**
-     * The deliveries that belong to the Shop
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function deliveries()
-    {
-        return $this->belongsToMany(Delivery::class);
-    }
-
-    /**
-     * Get all of the contracts for the Shop
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function contracts()
-    {
-        return $this->hasMany(Contract::class);
-    }
-
-    /**
      * Get the provider that owns the Shop
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -57,5 +40,25 @@ class Shop extends Model
     public function provider()
     {
         return $this->belongsTo(Provider::class);
+    }
+
+    /**
+     * Get all of the stocks for the Shop
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function stocks()
+    {
+        return $this->hasMany(Stock::class);
+    }
+
+    /**
+     * The products that belong to the Shop
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function products()
+    {
+        return $this->belongsToMany(Product::class);
     }
 }

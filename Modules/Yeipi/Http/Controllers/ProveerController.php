@@ -13,21 +13,24 @@ class ProveerController extends Controller
     public function preparar()
     {
         $provider = auth()->user()->people->provider;
+        $shops = $provider->shops;
+        if($shops->count() > 1){
+            //enviar al menu de shops del proveedor
+        }
         $form = ['route' => 'yeipi.proveer.iniciar', 'method' => 'post'];
-        $data = ['provider' => $provider, 'form' => $form];
+        $data = ['provider' => $provider, 'form' => $form, 'provider' => $provider, 'shop' => $shops->first()];
         return view('dashboard', $this->GetInfo($data));
     }
 
     public function iniciar(Request $request)
     {
         try {
-            $customer = auth()->user()->people->customer;
-            $customer->direccion = $request->direccion;
-            $customer->latitud = $request->latitud;
-            $customer->longitud = $request->longitud;
-            $customer->save();
+            $provider = auth()->user()->people->provider;
+            $shop = Shop::make($request->all());
+            $shop->provider_id = $provider->id;
+            $shop->save();
 
-            return redirect()->route('yeipi.pedir.index')
+            return redirect()->route('yeipi.proveer.edit', ['shop' => $shop->id])
                 ->with('success_message', 'information was successfully added.');
             
         } catch (Exception $exception) {
@@ -81,9 +84,11 @@ class ProveerController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Shop $shop)
     {
-        return view('yeipi::edit');
+        $form = ['route' => ['yeipi.proveer.update', $shop->id], 'method' => 'put'];
+        $data = ['shop' => $shop, 'form' => $form];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**

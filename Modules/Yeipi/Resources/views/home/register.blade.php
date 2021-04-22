@@ -11,13 +11,13 @@
             <label for="tipo" class="col-sm-2 col-form-label">Que Vamos a hacer</label>
             <div class="col-sm-4">
                 <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
-                    <label class="btn bg-primary">
+                    <label class="btn btn-outline-primary">
                         <input type="radio" name="action" value="pedir" @if($action == 'pedir') checked="checked" @endif><i class="fa fa-cart-plus" aria-hidden="true"></i> Pedir
                     </label>
-                    <label class="btn bg-danger">
+                    <label class="btn btn-outline-danger">
                         <input type="radio" name="action" value="entregar" @if($action == 'entregar') checked="checked" @endif><i class="fa fa-truck"></i> Entregar
                     </label>
-                    <label class="btn bg-info">
+                    <label class="btn btn-outline-info">
                         <input type="radio" name="action" value="proveer" @if($action == 'proveer') checked="checked" @endif><i class="fa fa-store"></i> Proveer
                     </label>
                 </div>
