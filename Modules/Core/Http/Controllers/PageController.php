@@ -8,17 +8,25 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Modules\Core\Entities\Page;
 use Modules\Core\Entities\App;
+use Datatables;
 
 class PageController extends Controller
 {
+    public function data()
+    {
+        $pages = Page::with('app', 'page')->select('pages.*');
+        return Datatables::of($pages)
+            ->setRowClass('{{ "context-menu" }}')
+            ->make(true);
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        $pages = Page::with('app')->orderBy('controller', 'asc')->orderBy('action', 'asc')->get()->sortBy('app.name',SORT_REGULAR,false);
-        $data = ['pages' => $pages];
+        $data = [];
         return view('dashboard', $this->GetInfo($data));
     }
 

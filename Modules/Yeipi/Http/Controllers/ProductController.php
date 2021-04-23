@@ -13,7 +13,9 @@ class ProductController extends Controller
 {
     public function data()
     {
-        return Datatables::of(Product::query())->make(true);
+        return Datatables::of(Product::query())
+            ->setRowClass('{{ "context-menu" }}')
+            ->make(true);
     }
     /**
      * Display a listing of the resource.
@@ -22,7 +24,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::All();
-        $form = ['route' => 'yeipi.product.store', 'method' => 'post'];
+        $form = ['route' => 'yeipi.product.store', 'method' => 'post', 'id' => 'frmProducto'];
         $data = ['form' => $form, 'products' => $products];
         return view('dashboard', $this->GetInfo($data));
     }
@@ -47,6 +49,10 @@ class ProductController extends Controller
         try { 
             Product::create($request->all());
 
+            if ($request->ajax()) {
+                
+                return response()->json(['success' => 'Product was successfully added.'], 200);
+            }
             return redirect()->route('yeipi.product.index')
                 ->with('success_message', 'Attribute was successfully added.');
         } catch (Exception $exception) {
@@ -81,9 +87,21 @@ class ProductController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        //
+        try { 
+            $product->update($request->all());
+
+            if ($request->ajax()) {
+                
+                return response()->json(['success' => 'Product was successfully added.'], 200);
+            }
+            return redirect()->route('yeipi.product.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**

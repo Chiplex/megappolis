@@ -48,6 +48,7 @@ Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(fu
     Route::post('/page/register', 'PageController@store')->name('core.page.store')->middleware(['app.creator']);
     Route::get('/page/register/{page}', 'PageController@edit')->name('core.page.edit')->middleware(['app.creator']);
     Route::put('/page/register/{page}', 'PageController@update')->name('core.page.update')->middleware(['app.creator']);
+    Route::get('/page/data/', 'PageController@data')->name('core.page.data');
 
     Route::get('/people/index', 'PeopleController@index')->name('core.people.index')->middleware(['app.creator']);
     Route::get('/people/register', 'PeopleController@create')->name('core.people.create')->middleware(['app.creator']);

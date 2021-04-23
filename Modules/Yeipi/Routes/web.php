@@ -76,6 +76,5 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     Route::get('/product/data/', 'ProductController@data')->name('yeipi.product.data');
 
     Route::post('/customer/store', 'CustomerController@store')->name('yeipi.customer.store');
-    Route::post('/delivery/store', 'DeliveryController@store')->name('yeipi.delivery.store');
     //Route::post('/shop/store', 'ProveerController@create')->name('yeipi.shop.store');
 });

@@ -10,6 +10,8 @@ class Page extends Model
 {
     use HasFactory;
 
+    protected $table = "pages";
+
     protected $fillable = [
         'app_id',
         'controller',
@@ -48,7 +50,7 @@ class Page extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function page(): BelongsTo
+    public function page()
     {
         return $this->belongsTo(Page::class);
     }
