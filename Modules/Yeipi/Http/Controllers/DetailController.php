@@ -47,7 +47,6 @@ class DetailController extends Controller
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
-        
     }
 
     /**

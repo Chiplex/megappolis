@@ -4,17 +4,27 @@ namespace Modules\Yeipi\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+//use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
+use Modules\Yeipi\Entities\Product;
+use Datatables;
 
 class ProductController extends Controller
 {
+    public function data()
+    {
+        return Datatables::of(Product::query())->make(true);
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('yeipi::index');
+        $products = Product::All();
+        $form = ['route' => 'yeipi.product.store', 'method' => 'post'];
+        $data = ['form' => $form, 'products' => $products];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -23,7 +33,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('yeipi::create');
+        
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -33,7 +44,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try { 
+            Product::create($request->all());
+
+            return redirect()->route('yeipi.product.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -72,8 +91,15 @@ class ProductController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        try { 
+            $product->delete();
+            return redirect()->route('yeipi.product.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 }

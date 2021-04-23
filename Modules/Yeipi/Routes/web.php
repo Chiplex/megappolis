@@ -67,6 +67,14 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     Route::get('/contract/register/{contract}', 'ContractController@edit')->name('yeipi.contract.edit');
     Route::put('/contract/register/{contract}', 'ContractController@update')->name('yeipi.contract.update');
 
+    Route::get('/product/index', 'ProductController@index')->name('yeipi.product.index');
+    Route::get('/product/register', 'ProductController@create')->name('yeipi.product.create');
+    Route::post('/product/register', 'ProductController@store')->name('yeipi.product.store');
+    Route::get('/product/register/{product}', 'ProductController@edit')->name('yeipi.product.edit');
+    Route::put('/product/register/{product}', 'ProductController@update')->name('yeipi.product.update');
+    Route::delete('/product/register/{product}', 'ProductController@destroy')->name('yeipi.product.delete');
+    Route::get('/product/data/', 'ProductController@data')->name('yeipi.product.data');
+
     Route::post('/customer/store', 'CustomerController@store')->name('yeipi.customer.store');
     Route::post('/delivery/store', 'DeliveryController@store')->name('yeipi.delivery.store');
     //Route::post('/shop/store', 'ProveerController@create')->name('yeipi.shop.store');

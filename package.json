@@ -27,5 +27,10 @@
         "tailwindcss": "^2.0.2",
         "ts-loader": "^8.1.0",
         "typescript": "^4.2.4"
+    },
+    "dependencies": {
+        "datatables.net-bs4": "^1.10.24",
+        "datatables.net-buttons-bs4": "^1.7.0",
+        "handlebars": "^4.7.7"
     }
 }

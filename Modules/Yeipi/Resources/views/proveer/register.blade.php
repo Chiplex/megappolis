@@ -1,4 +1,4 @@
-<div class="card card-info">
+<div class="card bg-info">
     {!! Form::open($form) !!}
     <div class="card-header">
         <div class="card-tools">
@@ -18,7 +18,12 @@
 @isset ($shop)
 <div class="card card-info">
     <div class="card-header">
-        Productos
+        <div class="card-title">
+            Productos
+        </div>
+        <div class="card-tools">
+            {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}
+        </div>
     </div>
     <div class="card-body table-responsive p-0">
         <table class="table table-head-fixed text-nowrap">
@@ -44,9 +49,8 @@
                         <td>{{ $stock->precio }}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a href="{{ url('/yeipi/product/update/'.$contract->delivery_id) }}"
-                                    class="btn btn-info btn-flat">
-                                    <i class="fa fa-ban"></i>Quitar
+                                <a href="{{ route('yeipi.product.edit', ['stock' => $stock->id]) }}" class="btn btn-info btn-flat">
+                                    <i class="fa fa-edit"></i>
                                 </a>
                             </div>
                         </td>
