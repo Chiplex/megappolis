@@ -22,11 +22,13 @@
             Productos
         </div>
         <div class="card-tools">
-            {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}
+            <button type="button" class="btn btn-primary" id="btnAbrirModal">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            </button>
         </div>
     </div>
-    <div class="card-body table-responsive p-0">
-        <table class="table table-head-fixed text-nowrap">
+    <div class="card-body">
+        <table class="table table-condensed" id="table" style="width:100%">
             <thead>
                 <tr>
                     <th>#</th>
@@ -38,27 +40,101 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach($shop->stocks as $stock)
-                    <tr>
-                        <td>{{ $stock->id }}</td>
-                        <td>{{ $stock->producto->descripcion }}</td>
-                        <td>{{ $stock->producto->marca }}</td>
-                        <td>{{ $stock->stock }}</td>
-                        <td>{{ $stock->medida }}</td>
-                        <td>{{ $stock->precio }}</td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="{{ route('yeipi.product.edit', ['stock' => $stock->id]) }}" class="btn btn-info btn-flat">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
         </table>
     </div>
 </div>
 @endif
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registro</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            {!! Form::open($form) !!}
+                <div class="modal-body">
+                    {!! Form::hidden('id') !!}
+                    @include('form.select', ['name' => 'product_id', 'title' => 'Producto', 'list' => $products, 'modal' => true , 'id' => 'txtProduct'])
+                    @include('form.text', ['name' => 'stock', 'title' => 'Stock', 'modal' => true])
+                    @include('form.text', ['name' => 'medida', 'title' => 'Medida', 'modal' => true])
+                    @include('form.text', ['name' => 'precio', 'title' => 'Precio', 'modal' => true])
+                </div>
+                <div class="modal-footer">
+                    {!! Form::button('<i class="fa fa-save"></i>', ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
+                </div>
+            {!! Form::close() !!}
+        </div>
+    </div>
+</div>
+
+@push('js')
+<script>
+    var modal = $("#modal");
+    var t = $('#table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route('yeipi.proveer.data', ['shop' => $shop->id]) }}',
+        columns: [
+            { data: 'id', name: 'id', "orderable": false },
+            { data: 'descripcion', name: 'producto' },
+            { data: 'marca', name: 'marca' },
+            { data: 'stock', name: 'stock' },
+            { data: 'medida', name: 'medida' },
+            { data: 'precio', name: 'precio' },
+        ],
+    });
+
+    $.contextMenu({
+        selector: ".context-menu",
+        build: function ($trigger, e) {
+            return {
+                callback: function (key, options) {
+                    var model = t.row($(options.$trigger[0]).closest('tr')).data();
+                    console.log(model);
+                    switch (key) {
+                        case "edit":
+                            AbrirModal(model);
+                            break;
+                    }
+                },
+                items: {
+                    "edit": { name: "Editar", icon: "edit", },
+                }
+            };
+        },
+    });
+ 
+    $("#frmProducto", modal).on('submit', function (e) {
+        e.preventDefault();
+        var stock = FormToJSON($(this));
+        stock.shop_id = "{{ $shop->id }}";
+        var route = "{{ route('yeipi.proveer.store') }}";
+        var url = stock.id ? route + "/" +  stock.id : route
+        $.ajax({
+            type: stock.id ? "PUT" :"POST",
+            url: url,
+            data: stock,
+        })
+        .done((r) => t.search("").draw())
+        .fail((e) => console.log(e))
+        .always(() => modal.modal("hide"))
+    });
+    $("#btnAbrirModal").on('click', function () {
+       AbrirModal();
+    });
+    //$('#txtProduct', modal).select2();
+
+    function AbrirModal(model) {
+        let nuevo = typeof model === "undefined";
+        $("#frmProducto", modal)[0].reset();
+        if (!nuevo) {
+            JSONToForm($("#frmProducto", modal)[0], model);
+        }
+        modal.modal("show");
+    }
+</script>
+@endpush
 

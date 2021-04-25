@@ -43,4 +43,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Shop::class, Stock::class);
     }
+
+    public function getDescripcionMarcaAttribute()
+    {
+        return $this->descripcion . ' (' . $this->marca . ')';
+    }
 }

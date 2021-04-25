@@ -59,6 +59,6 @@ class Shop extends Model
      */
     public function products()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsToMany(Product::class, Stock::class)->withPivot('precio', 'stock', 'medida');
     }
 }

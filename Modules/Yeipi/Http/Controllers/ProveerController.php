@@ -7,9 +7,21 @@ use Illuminate\Http\Request;
 //use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
 use Modules\Yeipi\Entities\Shop;
+use Modules\Yeipi\Entities\Stock;
+use Modules\Yeipi\Entities\Product;
+use Datatables;
 
 class ProveerController extends Controller
 {
+    public function data(Shop $shop)
+    {
+        $query = $shop->products();
+
+        return Datatables::of($query)
+            ->setRowClass('{{ "context-menu" }}')
+            ->make(true);
+    }
+
     public function preparar()
     {
         $provider = auth()->user()->people->provider;
@@ -66,7 +78,19 @@ class ProveerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try { 
+            Stock::create($request->all());
+
+            if ($request->ajax()) {
+                
+                return response()->json(['success' => 'Product was successfully added.'], 200);
+            }
+            return redirect()->route('yeipi.product.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**
@@ -86,8 +110,9 @@ class ProveerController extends Controller
      */
     public function edit(Shop $shop)
     {
-        $form = ['route' => ['yeipi.proveer.update', $shop->id], 'method' => 'put'];
-        $data = ['shop' => $shop, 'form' => $form];
+        $form = ['route' => 'yeipi.proveer.store', 'method' => 'post', 'id' => 'frmProducto'];
+        $products = Product::all()->pluck('descripcion_marca', 'id');
+        $data = ['shop' => $shop, 'form' => $form, 'products' => $products];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -97,9 +122,21 @@ class ProveerController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Stock $stock)
     {
-        //
+        try { 
+            $stock->update($request->all());
+
+            if ($request->ajax()) {
+                
+                return response()->json(['success' => 'Product was successfully added.'], 200);
+            }
+            return redirect()->route('yeipi.product.index')
+                ->with('success_message', 'Attribute was successfully added.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**

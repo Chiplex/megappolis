@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Modules\Yeipi\Entities\Order;
 use Modules\Yeipi\Entities\Shop;
+use Modules\Yeipi\Entities\Product;
+use Modules\Yeipi\Entities\Stock;
 
 class PedirController extends Controller
 {
@@ -45,8 +47,10 @@ class PedirController extends Controller
     public function index()
     {
         $customer = auth()->user()->people->customer;
-        $orders = $customer->orders()->get();
-        $data = ['customer' => $customer, 'orders' => $orders];
+        $order = $customer->orders()->lastest()->sinSolicitar()->first();
+        $details = $order ? $order->details()->get() : \collect();
+        $stocks = Stock::all();
+        $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -140,5 +144,9 @@ class PedirController extends Controller
     {
         //
     }
-    
+ 
+    public function product(Request $request)
+    {
+            
+    }
 }

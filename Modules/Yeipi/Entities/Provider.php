@@ -28,9 +28,9 @@ class Provider extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shops()
+    public function shop()
     {
-        return $this->hasMany(Shop::class);
+        return $this->hasOne(Shop::class);
     }
 
     /**
