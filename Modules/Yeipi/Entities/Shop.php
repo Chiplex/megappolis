@@ -10,6 +10,7 @@ use Modules\Yeipi\Entities\Provider;
 use Modules\Yeipi\Entities\Shop;
 use Modules\Yeipi\Entities\Stock;
 use Modules\Yeipi\Entities\Product;
+use Modules\Yeipi\Entities\Detail;
 
 class Shop extends Model
 {
@@ -60,5 +61,15 @@ class Shop extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, Stock::class)->withPivot('precio', 'stock', 'medida');
+    }
+
+    /**
+     * Get all of the sales for the Shop
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function sales()
+    {
+        return $this->hasManyThrough(Detail::class, Stock::class);
     }
 }

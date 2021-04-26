@@ -37,7 +37,6 @@
                     <th>Stock</th>
                     <th>Medida</th>
                     <th>Precio</th>
-                    <th></th>
                 </tr>
             </thead>
         </table>
@@ -79,7 +78,7 @@
         ajax: '{{ route('yeipi.proveer.data', ['shop' => $shop->id]) }}',
         columns: [
             { data: 'id', name: 'id', "orderable": false },
-            { data: 'descripcion', name: 'producto' },
+            { data: 'descripcion', name: 'descripcion' },
             { data: 'marca', name: 'marca' },
             { data: 'stock', name: 'stock' },
             { data: 'medida', name: 'medida' },
@@ -112,10 +111,9 @@
         var stock = FormToJSON($(this));
         stock.shop_id = "{{ $shop->id }}";
         var route = "{{ route('yeipi.proveer.store') }}";
-        var url = stock.id ? route + "/" +  stock.id : route
         $.ajax({
             type: stock.id ? "PUT" :"POST",
-            url: url,
+            url: route + stock.id ?? '',
             data: stock,
         })
         .done((r) => t.search("").draw())
@@ -123,7 +121,8 @@
         .always(() => modal.modal("hide"))
     });
     $("#btnAbrirModal").on('click', function () {
-       AbrirModal();
+        console.log(1);
+        AbrirModal();
     });
     //$('#txtProduct', modal).select2();
 

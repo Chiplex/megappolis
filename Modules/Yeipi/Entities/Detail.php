@@ -37,4 +37,9 @@ class Detail extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    public function scopeDelivered()
+    {
+        return $this->order()->delivered();
+    }
 }

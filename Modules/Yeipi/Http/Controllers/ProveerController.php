@@ -25,12 +25,12 @@ class ProveerController extends Controller
     public function preparar()
     {
         $provider = auth()->user()->people->provider;
-        $shops = $provider->shops;
-        if($shops->count() > 1){
+        $shops = $provider->shop;
+        if(isset($shops)){
             //enviar al menu de shops del proveedor
         }
         $form = ['route' => 'yeipi.proveer.iniciar', 'method' => 'post'];
-        $data = ['provider' => $provider, 'form' => $form, 'provider' => $provider, 'shop' => $shops->first()];
+        $data = ['provider' => $provider, 'form' => $form, 'provider' => $provider];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -38,7 +38,7 @@ class ProveerController extends Controller
     {
         try {
             $provider = auth()->user()->people->provider;
-            $shop = Shop::make($request->all());
+            $shop = Shop::firstOrNew($request->except('_token'));
             $shop->provider_id = $provider->id;
             $shop->save();
 
@@ -57,8 +57,8 @@ class ProveerController extends Controller
      */
     public function index()
     {
-        $orders = auth()->user()->people()->customer()->get();
-        $data = ['apps' => $orders];
+        $orders = auth()->user()->people->provider->shop->sales()->delivered()->get();
+        $data = ['orders' => $orders];
         return view('dashboard', $this->GetInfo($data));
     }
 
