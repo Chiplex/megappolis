@@ -34,3 +34,28 @@ function FormToJSON($form) {
     });
     return data;
 }
+
+function Service(options) {
+    return new Promise((resolve, reject) => {
+        $.ajax(options)
+        .done(function (result) {
+            resolve(result);
+        }).fail(function (error) {
+            reject(error);
+        });
+    });
+}
+
+function View(view) {
+    var html = null;
+    $.ajax({
+        async: false,
+        url: "/view/" + view,
+        type: "get"
+    }).done(function (data) {
+        html = data;
+    }).fail(function (error) {
+        console.log(error);;
+    });
+    return html;
+}

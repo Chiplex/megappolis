@@ -355,6 +355,16 @@ return [
                 ],
             ],
         ],
+        'HandleBars' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js'
+                ]
+            ]
+        ]
     ],
 
     /*

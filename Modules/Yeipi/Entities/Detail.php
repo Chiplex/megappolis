@@ -38,8 +38,13 @@ class Detail extends Model
         return $this->belongsTo(Order::class);
     }
 
-    public function scopeDelivered()
+    public function scopeOrdersDelivered()
     {
         return $this->order()->delivered();
+    }
+
+    public function scopeOrdersNoDelivered()
+    {
+        return $this->order()->noDelivered();
     }
 }

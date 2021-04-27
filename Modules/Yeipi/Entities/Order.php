@@ -63,7 +63,7 @@ class Order extends Model
         return $this->orderBy('created_at', 'desc');
     }
 
-    public function scopeNoDeliveries()
+    public function scopeNoDelivered()
     {
         return $this->whereNull('fechaEntrega');
     }

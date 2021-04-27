@@ -45,8 +45,8 @@
                 <div class="row gy2">
                     @foreach ($stocks as $stock)
                     <div class="col-sm-3">
-                        {!! Form::open(['route' => 'yeipi.pedir.producto']) !!}
-                        {!! Form::hidden('product_id', $stock->id) !!}
+                        {!! Form::open() !!}
+                        {!! Form::hidden('id', $stock->product->id) !!}
                         {!! Form::submit($stock->product->descripcion, ['class' => 'btn btn-app bg-white btn-block']) !!}
                         {!! Form::close() !!}
                     </div>
@@ -59,17 +59,41 @@
 
 @push('js')
 <script>
+    var modal, view, templateModal, dataTemplate = {};
+
     $("form").on('submit', function (e) {
         e.preventDefault();
-        var detail = FormToJSON($(this));
-        // $.ajax({
-        //     type: stock.id ? "PUT" :"POST",
-        //     url: url,
-        //     data: stock,
-        // })
-        // .done((r) => t.search("").draw())
-        // .fail((e) => console.log(e))
-        // .always(() => modal.modal("hide"))
+        var product = FormToJSON($(this));
+        PrepararModal(product);
+    });
+
+    function PrepararModal(product) {
+        view = View("pedir.modal.shops");
+        templateModal = Handlebars.compile(view);
+        $.when(FillDataHtml(product)).done(() => AbrirModal(product));
+    }
+
+    function FillDataHtml(product) {
+        var options = {
+            type: "get",
+            url: "{{ url('yeipi/pedir/shop') }}" + "/" + product.id,
+        };
+        return Service(options)
+            .then(data => dataTemplate.shops = data.shops)
+            .catch(error => console.log(error));
+    }
+
+    function AbrirModal(product) {
+        dataTemplate.product_id = product.id;
+        console.log(dataTemplate);
+        modal =  $(templateModal(dataTemplate));
+        modal.modal('show');
+    }
+
+    $("#frmPedir", modal).on('submit', function (e) {
+        e.preventDefault();
+        var pedir = FormToJSON($(this));
+        console.log(pedir);
     });
 </script>
 @endpush

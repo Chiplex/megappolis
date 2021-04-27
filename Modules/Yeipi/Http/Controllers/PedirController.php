@@ -34,7 +34,7 @@ class PedirController extends Controller
             return redirect()->route('yeipi.pedir.index')
                 ->with('success_message', 'information was successfully added.');
             
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
@@ -81,7 +81,7 @@ class PedirController extends Controller
 
             return redirect()->route('yeipi.pedir.edit', ['order' => $order->id])
                 ->with('success_message', 'Attribute was successfully added.');
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
@@ -129,7 +129,7 @@ class PedirController extends Controller
 
             return redirect()->route('yeipi.pedir.index')
                 ->with('success_message', 'Attribute was successfully added.');
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
@@ -148,5 +148,13 @@ class PedirController extends Controller
     public function product(Request $request)
     {
             
+    }
+
+    public function shop(Product $product)
+    {
+        if(request()->ajax()){
+            $shops = $product->shops()->wherePivot('stock', '>', '0')->get();
+            return response()->json(['success' => 'Product was successfully added.', 'shops' => $shops], 200);
+        }
     }
 }

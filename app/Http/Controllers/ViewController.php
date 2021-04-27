@@ -11,25 +11,27 @@ use App\Models\User;
 
 class ViewController extends Controller
 {
-    public function show($view){
-        
-        if (count(request()->segments()) > 2) {
+    public function show($view)
+    {
+        $referer = request()->headers->get('referer');
+        $parseUrl = parse_url($referer, PHP_URL_PATH);
+        $segments = explode('/', $parseUrl);
+        if (count($segments) < 2) {
             $appName = 'main';
-            $controller = \request()->segment(1);
-            $action = \request()->segment(2);
+            $controller = $segments[1];
+            $action = $segments[2];
         } else {
-            $appName = \request()->segment(1);
-            $controller = \request()->segment(2);
-            $action = \request()->segment(3);
+            $appName = $segments[1];
+            $controller = $segments[2];
+            $action = $segments[3];
         }
 
-        $app = App::find(['name' => $appName, 'user_id' => 1 ])->first();
-        $page = Page::where(['app_id'=> $appName->id, 'controller' => 'page', 'action' => 'index'])->first();
+        $app = App::firstWhere(['name' => $appName]);
+        $page = Page::where(['app_id'=> $app->id, 'controller' => $controller, 'action' => $action])->first();
 
-        $permissions = GetPermisos($page);
+        $permissions = "ver"; //GetPermisos($page);
         
         $result = ['result' => true, 'data' => $permissions];
-        //return view('core::'.$app."\'".$view, compact($permissions->toArray()));
-        return view('core::app\shared\viewIndex', compact('result'))->render();
+        return view($app->name . '::' . $view, compact('result'));
     }
 }

@@ -57,8 +57,9 @@ class ProveerController extends Controller
      */
     public function index()
     {
-        $orders = auth()->user()->people->provider->shop->sales()->delivered()->get();
-        $data = ['orders' => $orders];
+        $ordersDelivered = auth()->user()->people->provider->shop->sales()->ordersDelivered()->get();
+        $ordersNoDelivered = auth()->user()->people->provider->shop->sales()->ordersNoDelivered()->get();
+        $data = compact('ordersDelivered', 'ordersNoDelivered');
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -98,8 +99,11 @@ class ProveerController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(Product $product)
     {
+        if($request->ajax()){
+            return $product->shop()->wherePivot('stock', '>', '0')->get();
+        }
         return view('yeipi::show');
     }
 
@@ -155,4 +159,6 @@ class ProveerController extends Controller
         $data = ['shop' => $shop, 'deliveries' => $deliveries];
         return view('dashboard', $this->GetInfo($data));
     }
+
+    
 }
