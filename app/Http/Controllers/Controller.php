@@ -16,10 +16,17 @@ class Controller extends BaseController
 
     protected $role = "CORE-MEGAPPOLIS";
 
+    public function GetInfo($data)
+    {
+        $page = $this->GetPages();
+        $permission = $this->GetPermissions($page);
+        return ['view' => $page, 'permissions' => $permission, 'data'=> $data];
+    }
+
     public function GetPages()
     {
         $user = request()->user();
-        $app = $user->apps()->where('name', request()->segment(1))->first();
+        $app = $user->apps()->where('name', request()->segment(1) ?? 'core')->first();
         $page = $app->pages()->firstOrNew(['controller' => request()->segment(2) ?? 'home', 'action' => request()->segment(3) ?? 'index']);
 
         if($page->isDirty()){
@@ -39,12 +46,5 @@ class Controller extends BaseController
         return $permissions = $roles->where('name', $this->role)->exists() 
             ? Permission::where('page_id', $page->id)->select('name')->orderBy('name')->groupBy('name')->get()
             : $roles->permissions()->select('name')->orderBy('name')->groupBy('name')->get();
-    }
-
-    public function GetInfo($data)
-    {
-        $page = $this->GetPages();
-        $permission = $this->GetPermissions($page);
-        return ['view' => $page, 'permissions' => $permission, 'data'=> $data];
     }
 }

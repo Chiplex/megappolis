@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ViewController;
-use App\Http\Controllers\AccessController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,13 +15,7 @@ use App\Http\Controllers\AccessController;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('register');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::middleware(['auth'])->get('/', [HomeController::class, 'index']);
 
 Route::get('/view/{view}', [ViewController::class, 'show']);
 
