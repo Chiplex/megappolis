@@ -9,14 +9,11 @@
             </div>
             {!! Form::open(['route' => 'yeipi.pedir.producto', 'method' => 'post', 'id' => 'frmPedir']) !!}
             <div class="modal-body">
-                <input type="hidden" name="product_id" value="@{{product_id}}">
+                <input type="hidden" name="product_id">
                 <div class="form-group row">
                     <label for="shop" class="col-sm-4">Proveedor</label>
                     <div class="col-sm-8">
-                        <select class="custom-select form-control-border" id="" name="shop_id">
-                            @{{#shops}}
-                                <option value="@{{id}}">@{{nombre}}</option>
-                            @{{/shops}}
+                        <select class="custom-select form-control-border" id="drpShops" name="shop_id">
                         </select>
                     </div>
                 </div>
@@ -26,11 +23,17 @@
                         <input class="form-control" placeholder="Cantidad" name="cantidad" type="text" id="cantidad">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label for="descripcion" class="col-sm-4 col-form-label">Descripción</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" placeholder="Cantidad" name="descripcion" type="text" id="descripcion">
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary"><i class="fa fa-save" aria-hidden="true"></i></button>
+                {!! Form::button('<i class="fa fa-save" aria-hidden="true"></i>', ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
             </div>
-            {!! Form::open() !!}
+            {!! Form::close() !!}
         </div>
     </div>
 </div>

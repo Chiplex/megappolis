@@ -46,7 +46,7 @@
                     @foreach ($stocks as $stock)
                     <div class="col-sm-3">
                         {!! Form::open() !!}
-                        {!! Form::hidden('id', $stock->product->id) !!}
+                        {!! Form::hidden('product_id', $stock->product->id) !!}
                         {!! Form::submit($stock->product->descripcion, ['class' => 'btn btn-app bg-white btn-block']) !!}
                         {!! Form::close() !!}
                     </div>
@@ -59,41 +59,52 @@
 
 @push('js')
 <script>
-    var modal, view, templateModal, dataTemplate = {};
+    var mPedido, vPedido;
+    vPedido = View("pedir.modal.shops");
+    mPedido = $(vPedido);
 
     $("form").on('submit', function (e) {
         e.preventDefault();
-        var product = FormToJSON($(this));
-        PrepararModal(product);
+        var dataForm = FormToJSON($(this));
+        AbrirModal(dataForm);
     });
 
-    function PrepararModal(product) {
-        view = View("pedir.modal.shops");
-        templateModal = Handlebars.compile(view);
-        $.when(FillDataHtml(product)).done(() => AbrirModal(product));
-    }
-
-    function FillDataHtml(product) {
-        var options = {
+    function AbrirModal(dataForm) {
+        JSONToForm(mPedido, dataForm);
+        Service({
             type: "get",
-            url: "{{ url('yeipi/pedir/shop') }}" + "/" + product.id,
-        };
-        return Service(options)
-            .then(data => dataTemplate.shops = data.shops)
-            .catch(error => console.log(error));
+            url: "{{ url('yeipi/pedir/shop') }}" + "/" + dataForm.product_id,
+        })
+        .then(data => FillDrop(data.shops))
+
+        mPedido.modal('show');
     }
 
-    function AbrirModal(product) {
-        dataTemplate.product_id = product.id;
-        console.log(dataTemplate);
-        modal =  $(templateModal(dataTemplate));
-        modal.modal('show');
+    function FillDrop(shops) {
+        select = $("#drpShops", mPedido).empty();
+        option = $("<option>");
+        for (const key in shops) {
+            let shop = shops[key];
+            option.clone().val(shop.id).text(shop.nombre).appendTo(select);
+        }
     }
 
-    $("#frmPedir", modal).on('submit', function (e) {
+    $("#frmPedir", mPedido).on('submit', function (e) {
         e.preventDefault();
-        var pedir = FormToJSON($(this));
-        console.log(pedir);
+        var pedido = FormToJSON($(this));
+        GuardarPedido(pedido);
     });
+
+    function GuardarPedido(pedido) {
+        Service({
+            type: "post",
+            url: "{{ route('yeipi.pedir.store') }}",
+            data: pedido
+        })
+        .then(data => {
+            mPedido.modal("hide");
+            $("#spnCartCount").text(data.details_count);
+        })
+    }
 </script>
 @endpush

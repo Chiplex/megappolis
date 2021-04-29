@@ -11,6 +11,7 @@ use Modules\Yeipi\Entities\Order;
 use Modules\Yeipi\Entities\Shop;
 use Modules\Yeipi\Entities\Product;
 use Modules\Yeipi\Entities\Stock;
+use Modules\Yeipi\Entities\Detail;
 
 class PedirController extends Controller
 {
@@ -72,15 +73,32 @@ class PedirController extends Controller
     public function store(Request $request)
     {
         try { 
-            if (auth()->user()->people->customer->orders()->noDeliveries()->count() > 0) {
-                return back()
-                    ->withErrors(['message' => 'Tiene una orden pendiente']);           
-            }
-            $values = $request->all();
-            $order = Order::create($values);
+            
+            if ($request->ajax()) {
+                $customer = auth()->user()->people->customer;
+                $order = $customer->orders()->noDelivered()->firstOrCreate(['customer_id' => $customer->id]);
+                $stock = Stock::firstWhere($request->except(['_token', 'cantidad', 'descripcion']));
 
-            return redirect()->route('yeipi.pedir.edit', ['order' => $order->id])
-                ->with('success_message', 'Attribute was successfully added.');
+                $detail = Detail::preparando()->firstOrNew(['order_id' => $order->id, 'stock_id' => $stock->id]);
+                $detail->cantidad = $request->cantidad;
+                $detail->descripcion = $request->descripcion ?? '';
+                $detail->precio = $stock->precio;
+                $detail->save();
+
+                $data = ['success' => 'Detail was successfully added.', 'details_count' => $order->details()->count()];
+                return response()->json($data);
+            }
+
+
+            // if (auth()->user()->people->customer->orders()->noDeliveries()->count() > 0) {
+            //     return back()
+            //         ->withErrors(['message' => 'Tiene una orden pendiente']);           
+            // }
+            // $values = $request->all();
+            // $order = Order::create($values);
+
+            // return redirect()->route('yeipi.pedir.edit', ['order' => $order->id])
+            //     ->with('success_message', 'Attribute was successfully added.');
         } catch (\Exception $exception) {
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
@@ -145,9 +163,9 @@ class PedirController extends Controller
         //
     }
  
-    public function product(Request $request)
+    public function producto(Request $request)
     {
-            
+        dd($request);
     }
 
     public function shop(Product $product)

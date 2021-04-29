@@ -47,4 +47,9 @@ class Detail extends Model
     {
         return $this->order()->noDelivered();
     }
+
+    public function scopePreparando()
+    {
+        return $this->whereNull(['fechaConseguido', 'fechaNoConseguido']);
+    }
 }

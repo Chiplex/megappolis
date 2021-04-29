@@ -41,6 +41,7 @@ function Service(options) {
         .done(function (result) {
             resolve(result);
         }).fail(function (error) {
+            console.log(error);
             reject(error);
         });
     });
