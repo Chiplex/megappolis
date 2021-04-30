@@ -26,7 +26,7 @@
                 <div class="form-group row">
                     <label for="descripcion" class="col-sm-4 col-form-label">Descripción</label>
                     <div class="col-sm-8">
-                        <input class="form-control" placeholder="Cantidad" name="descripcion" type="text" id="descripcion">
+                        <input class="form-control" placeholder="Descripcion" name="descripcion" type="text" id="descripcion">
                     </div>
                 </div>
             </div>

@@ -5,6 +5,7 @@ namespace Modules\Yeipi\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Yeipi\Entities\Order;
+use Modules\Yeipi\Entities\Stock;
 
 class Detail extends Model
 {
@@ -36,6 +37,11 @@ class Detail extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function stock()
+    {
+        return $this->belongsTo(Stock::class);
     }
 
     public function scopeOrdersDelivered()

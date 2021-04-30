@@ -1,4 +1,4 @@
-<div class="card card-danger">
+<div class="card bg-gradient-primary">
     <div class="card-header">
         <div class="card-tools">
             @isset($order->fechaSolicitud)
@@ -33,46 +33,64 @@
 </div>
 <div class="card">
     <div class="card-header">
-        Detalles
-        <div class="card-tools">
-            @empty($order->fechaSolicitud)
-                <a href="{{ route('yeipi.detail.create') }}" class="btn btn-primary" href="#" role="button"><i class="fa fa-plus"></i></a>
-            @endempty
+        <div class="card-title">
+            Detalles
         </div>
     </div>
-    <div class="card-body table-responsive p-0">
-        <table class="table table-head-fixed text-nowrap">
+    <div class="card-body">
+        <table class="table" id="table">
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Tienda</th>
+                    <th>Direccion</th>
+                    <th>Producto</th>
                     <th>Descripción</th>
                     <th>Cantidad</th>
                     <th>Precio</th>
-                    <th></th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach ($order->details as $detail)
-                    <tr>
-                        <td>{{ $detail->id }}</td>
-                        <td>{{ $detail->descripcion }}</td>
-                        <td>{{ $detail->cantidad }}</td>
-                        <td>{{ $detail->precio }}</td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="{{ url('/yeipi/pedir/detail/'.$detail->id) }}"
-                                    class="btn btn-info btn-flat">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <a href="{{ url('/yeipi/pedir/detail/'.$detail->id) }}"
-                                    class="btn btn-info btn-flat">
-                                    <i class="fa fa-trash"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
         </table>
     </div>
 </div>
+
+
+@push('js')
+<script>
+        var t = $('#table').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: "{{ route('yeipi.pedir.data', ['order' => $order->id]) }}",
+    columns: [
+        { data: 'id', name: 'id', "orderable": false },
+        { data: 'stock.shop.nombre', name: 'stock.shop.nombre' },
+        { data: 'stock.shop.direccion', name: 'stock.shop.direccion' },
+        { data: 'stock.product.descripcion', name: 'stock.product.descripcion' },
+        { data: 'descripcion', name: 'descripcion' },
+        { data: 'cantidad', name: 'cantidad' },
+        { data: 'precio', name: 'precio' }
+    ],
+});
+
+$.contextMenu({
+    selector: ".context-menu",
+    build: function ($trigger, e) {
+        return {
+            callback: function (key, options) {
+                var tr = $(options.$trigger[0]).closest('tr');
+                var row = t.row(tr);
+                var model = row.data();
+                switch (key) {
+                    case "edit":
+                        AbrirModal(model);
+                        break;
+                }
+            },
+            items: {
+                "edit": { name: "Editar", icon: "edit", },
+            }
+        };
+    },
+});
+</script>
+@endpush

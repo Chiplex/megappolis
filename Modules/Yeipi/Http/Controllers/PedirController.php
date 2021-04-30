@@ -12,9 +12,18 @@ use Modules\Yeipi\Entities\Shop;
 use Modules\Yeipi\Entities\Product;
 use Modules\Yeipi\Entities\Stock;
 use Modules\Yeipi\Entities\Detail;
+use Datatables;
 
 class PedirController extends Controller
 {
+    public function data(Order $order)
+    {
+        $details = $order->details()->with(['stock.product','stock.shop']);
+        return Datatables::of($details)
+            ->setRowClass('{{ "context-menu" }}')
+            ->make(true);
+    }
+
     public function preparar()
     {
         $customer = auth()->user()->people->customer;
@@ -51,7 +60,7 @@ class PedirController extends Controller
         $order = $customer->orders()->lastest()->sinSolicitar()->first();
         $details = $order ? $order->details()->get() : \collect();
         $stocks = Stock::all();
-        $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks];
+        $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks, 'order' => $order];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -85,7 +94,7 @@ class PedirController extends Controller
                 $detail->precio = $stock->precio;
                 $detail->save();
 
-                $data = ['success' => 'Detail was successfully added.', 'details_count' => $order->details()->count()];
+                $data = ['success' => 'Detail was successfully added.', 'detail' => $detail->load('stock.product')];
                 return response()->json($data);
             }
 
@@ -174,5 +183,21 @@ class PedirController extends Controller
             $shops = $product->shops()->wherePivot('stock', '>', '0')->get();
             return response()->json(['success' => 'Product was successfully added.', 'shops' => $shops], 200);
         }
+    }
+
+    public function count()
+    {
+        $customer = auth()->user()->people->customer;
+        $order = $customer->orders()->noDelivered()->firstOrCreate(['customer_id' => $customer->id]);
+        $data = ['details_count' => $order->details()->count()];
+        return response()->json($data);
+    }
+
+    public function history()
+    {
+        $customer = auth()->user()->people->customer;
+        $orders = $customer->orders()->get();
+        $data = ['customer' => $customer, 'orders' => $orders];
+        return view('dashboard', $this->GetInfo($data));
     }
 }

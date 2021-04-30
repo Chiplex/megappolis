@@ -26,6 +26,9 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     Route::get('/pedir/entregas', 'PedirController@entregas')->name('yeipi.pedir.entregas')->middleware('access:YEIPI-CUSTOMER');
     Route::post('/pedir/producto', 'PedirController@producto')->name('yeipi.pedir.producto')->middleware('access:YEIPI-CUSTOMER');
     Route::get('/pedir/shop/{product}', 'PedirController@shop')->name('yeipi.pedir.shop')->middleware('access:YEIPI-CUSTOMER');
+    Route::get('/pedir/count', 'PedirController@count')->name('yeipi.pedir.count')->middleware('access:YEIPI-CUSTOMER');
+    Route::get('/pedir/history', 'PedirController@history')->name('yeipi.pedir.history')->middleware('access:YEIPI-CUSTOMER');
+    Route::get('/pedir/data/{order}', 'PedirController@data')->name('yeipi.pedir.data')->middleware('access:YEIPI-CUSTOMER');
 
     Route::get('/entregar/iniciar', 'EntregarController@preparar')->name('yeipi.entregar.preparar')->middleware('access:YEIPI-CUSTOMER');
     Route::post('/entregar/iniciar', 'EntregarController@iniciar')->name('yeipi.entregar.iniciar')->middleware('access:YEIPI-CUSTOMER');
