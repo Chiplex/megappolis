@@ -21,6 +21,36 @@ class PedirController extends Controller
         $details = $order->details()->with(['stock.product','stock.shop']);
         return Datatables::of($details)
             ->setRowClass('{{ "context-menu" }}')
+            ->addColumn('subtotal', function ($detail){
+                return $detail->cantidad * $detail->precio;
+            })
+            ->make(true);
+    }
+
+    public function dataHistory()
+    {
+        $customer = auth()->user()->people->customer;
+        $orders = $customer->orders();
+        return Datatables::of($orders)
+            ->setRowClass('{{ "context-menu" }}')
+            ->addColumn('delivery', function ($order){
+                return $order->delivery? $order->delivery->people->getNameComplete():'';
+            })
+            ->addColumn('products', function ($order){
+                $product = '';
+                $details = $order->details;
+                $first = $details->first();
+                $last = $details->last();
+                foreach ($details as $detail) {
+                    if ($detail->is($first)) $product = $product . $detail->stock->product->descripcion;
+                    else if($detail->is($last))  $product = $product . ', ' . $detail->stock->product->descripcion;
+                    else $product = $product . ', ' . $detail->stock->product->descripcion;
+                }
+                return $product;
+            })
+            ->addColumn('total', function ($order){
+                return $order->details()->count();
+            })
             ->make(true);
     }
 
@@ -57,7 +87,7 @@ class PedirController extends Controller
     public function index()
     {
         $customer = auth()->user()->people->customer;
-        $order = $customer->orders()->lastest()->sinSolicitar()->first();
+        $order = $customer->orders()->lastest()->sinSolicitar()->firstOrCreate(['customer_id' => $customer->id]);
         $details = $order ? $order->details()->get() : \collect();
         $stocks = Stock::all();
         $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks, 'order' => $order];

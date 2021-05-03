@@ -21,8 +21,8 @@
                 </div>
             </div>
             <!-- /.card-header -->
-            <div class="card-body table-responsive p-0" style="height: 300px;">
-                <table class="table table-head-fixed text-nowrap">
+            <div class="card-body">
+                <table class="table" id="table" style="width: 100%">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -31,35 +31,9 @@
                             <th>Fecha de Recepción</th>
                             <th>Fecha de Salida</th>
                             <th>Fecha de Entrega</th>
-                            <th></th>
+                            <th>Productos</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($orders as $order)
-                        <tr>
-                            <td>{{$order->id}}</td>
-                            <td>{{$order->delivery ? $order->delivery->people->getNameComplete(): ''}}</td>
-                            <td>{{$order->fechaSolicitud}}</td>
-                            <td>{{$order->fechaRecepcion}}</td>
-                            <td>{{$order->fechaSalida}}</td>
-                            <td>{{$order->fechaEntrega}}</td>
-                            <td>
-                                <div class="btn-group btn-group-sm">
-                                    <a href="{{ url('/yeipi/pedir/register/'.$order->id) }}"
-                                        class="btn btn-info btn-flat">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    @empty($order->fechaRecepcion || $order->fechaSalida || $order->fechaEntrega)
-                                    <a href="{{ url('/yeipi/pedir/delete/'.$order->id) }}"
-                                        class="btn btn-info btn-flat">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                    @endempty
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
                 </table>
             </div>
             <!-- /.card-body -->
@@ -67,3 +41,43 @@
         <!-- /.card -->
     </div>
 </div>
+@push('js')
+<script>
+    var total = 0;
+    var t = $('#table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('yeipi.pedir.data.history') }}",
+        columns: [
+            { data: 'id', name: 'id', "orderable": false },
+            { data: 'delivery', name: 'delivery', orderable: false, searchable: false, defaultContent: "", },
+            { data: 'fechaSolicitud', name: 'fechaSolicitud' },
+            { data: 'fechaRecepcion', name: 'fechaRecepcion' },
+            { data: 'fechaSalida', name: 'fechaSalida' },
+            { data: 'fechaEntrega', name: 'fechaEntrega' },
+            { data: 'products', name: 'products', orderable: false, searchable: false, defaultContent: "", },
+        ],
+    });
+    
+    $.contextMenu({
+        selector: ".context-menu",
+        build: function ($trigger, e) {
+            return {
+                callback: function (key, options) {
+                    var tr = $(options.$trigger[0]).closest('tr');
+                    var row = t.row(tr);
+                    var model = row.data();
+                    switch (key) {
+                        case "edit":
+                            AbrirModal(model);
+                            break;
+                    }
+                },
+                items: {
+                    "edit": { name: "Editar", icon: "edit", },
+                }
+            };
+        },
+    });
+</script>
+@endpush

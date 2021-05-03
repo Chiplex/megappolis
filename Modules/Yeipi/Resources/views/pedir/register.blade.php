@@ -48,8 +48,23 @@
                     <th>Descripción</th>
                     <th>Cantidad</th>
                     <th>Precio</th>
+                    <th>Subtotal</th>
                 </tr>
             </thead>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right">
+                        <strong>Total:</strong>
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>
@@ -57,9 +72,11 @@
 
 @push('js')
 <script>
-        var t = $('#table').DataTable({
+var total = 0;
+var t = $('#table').DataTable({
     processing: true,
     serverSide: true,
+    "pageLength": 500,
     ajax: "{{ route('yeipi.pedir.data', ['order' => $order->id]) }}",
     columns: [
         { data: 'id', name: 'id', "orderable": false },
@@ -68,8 +85,19 @@
         { data: 'stock.product.descripcion', name: 'stock.product.descripcion' },
         { data: 'descripcion', name: 'descripcion' },
         { data: 'cantidad', name: 'cantidad' },
-        { data: 'precio', name: 'precio' }
+        { data: 'precio', name: 'precio' },
+        { data: 'subtotal', name: 'subtotal', orderable: false, searchable: false },
     ],
+    "createdRow": (row, data, index) => {
+        total = data.subtotal + total;
+        $('td', row).eq(7).addClass("text-right");
+        $('td', row).eq(6).addClass("text-right");
+        $('td', row).eq(5).addClass("text-right");
+        $('tfoot td:eq(7)').addClass("text-right").html(number_format(total, 2));
+    },
+    "drawCallback": function (settings) {
+        total = 0;
+    }
 });
 
 $.contextMenu({
@@ -93,4 +121,5 @@ $.contextMenu({
     },
 });
 </script>
+
 @endpush
