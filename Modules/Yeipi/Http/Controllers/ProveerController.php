@@ -57,8 +57,10 @@ class ProveerController extends Controller
      */
     public function index()
     {
-        $ordersDelivered = auth()->user()->people->provider->shop->sales()->ordersDelivered()->get();
-        $ordersNoDelivered = auth()->user()->people->provider->shop->sales()->ordersNoDelivered()->get();
+        $shop = auth()->user()->people->provider->shop;
+        $ordersDelivered = $shop->sales()->ordersDelivered()->get();
+        $ordersNoDelivered = $shop->sales()->ordersNoDelivered()->get();
+        $totalSales = $shop->sales();
         $data = compact('ordersDelivered', 'ordersNoDelivered');
         return view('dashboard', $this->GetInfo($data));
     }
