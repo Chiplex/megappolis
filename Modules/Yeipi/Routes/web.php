@@ -49,7 +49,9 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     Route::post('/proveer/register', 'ProveerController@store')->name('yeipi.proveer.store')->middleware('access:YEIPI-PROVIDER');
     Route::get('/proveer/register/{shop}', 'ProveerController@edit')->name('yeipi.proveer.edit')->middleware('access:YEIPI-PROVIDER');
     Route::put('/proveer/register/{stock}', 'ProveerController@update')->name('yeipi.proveer.update')->middleware('access:YEIPI-PROVIDER');
-    Route::get('/proveer/data/{shop}', 'ProveerController@data')->name('yeipi.proveer.data');
+    //Route::get('/proveer/data/{shop}', 'ProveerController@data')->name('yeipi.proveer.data');
+    Route::get('/proveer/data/stock', 'ProveerController@dataStock')->name('yeipi.proveer.data.stock');
+    Route::get('/proveer/data/customer', 'ProveerController@datacustomer')->name('yeipi.proveer.data.customer');
 
     Route::get('/detail/index', 'DetailController@index')->name('yeipi.detail.index')->middleware('access:YEIPI-CUSTOMER');
     Route::get('/detail/register', 'DetailController@create')->name('yeipi.detail.create')->middleware('access:YEIPI-CUSTOMER');

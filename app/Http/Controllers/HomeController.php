@@ -10,4 +10,14 @@ class HomeController extends Controller
     {
         return view('dashboard', $this->GetInfo([]));
     }
+
+    public function create()
+    {
+        return view('passport');
+    }
+
+    public function store()
+    {
+        return view('dashboard', $this->GetInfo([]));
+    }
 }

@@ -22,6 +22,36 @@ class ProveerController extends Controller
             ->make(true);
     }
 
+    public function dataStock()
+    {
+        $provider = auth()->user()->people->provider;
+        $shops = $provider->shop;
+        $stocks = $shops->stocks()->with('product');
+
+        return Datatables::of($stocks)
+            ->setRowClass('{{ "context-menu-stock" }}')
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+    public function dataCustomer()
+    {
+        $provider = auth()->user()->people->provider;
+        $shops = $provider->shop;
+        $orders = $shops->sales()->ordersDelivered()->with(['customer.people', 'delivery.people']);
+
+        return Datatables::of($orders)
+            ->setRowClass('{{ "context-menu-customer" }}')
+            ->addColumn('customer', function ($order){
+                return $order->delivery? $order->delivery->people->getNameComplete():'';
+            })
+            ->addColumn('delivery', function ($order){
+                return $order->customer? $order->customer->people->getNameComplete():'';
+            })
+            ->addIndexColumn()
+            ->make(true);
+    }
+
     public function preparar()
     {
         $provider = auth()->user()->people->provider;
@@ -60,8 +90,8 @@ class ProveerController extends Controller
         $shop = auth()->user()->people->provider->shop;
         $ordersDelivered = $shop->sales()->ordersDelivered()->get();
         $ordersNoDelivered = $shop->sales()->ordersNoDelivered()->get();
-        $totalSales = $shop->sales();
-        $data = compact('ordersDelivered', 'ordersNoDelivered');
+        $totalSales = $this->totalSales($shop->sales()->ordersDelivered());
+        $data = compact('ordersDelivered', 'ordersNoDelivered', 'totalSales');
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -162,5 +192,14 @@ class ProveerController extends Controller
         return view('dashboard', $this->GetInfo($data));
     }
 
+    public function totalSales($details)
+    {
+        $total = 0;
+        foreach ($details as $detail) {
+            $subtotal = ($detail->cantidad * $detail->precio);
+            $total = $total + $subtotal;
+        }
+        return $total;
+    }
     
 }

@@ -1,25 +1,6 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <div class="input-group">
-                        <input type="text" name="table_search" class="form-control" placeholder="Search" />
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-default">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-tools">
-                    <form action="{{ route('yeipi.pedir.store')}}" method="post">
-                        @csrf
-                        <input type="hidden" name="customer_id" value="{{ $customer->id }}">
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i></button>
-                    </form>
-                </div>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
                 <table class="table" id="table" style="width: 100%">
