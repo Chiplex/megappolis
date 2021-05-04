@@ -13,7 +13,8 @@ class HomeController extends Controller
 
     public function create()
     {
-        return view('passport');
+        $form = ['route' => 'passport.store', 'method' => 'post', 'files' => true];
+        return view('passport', \compact('form'));
     }
 
     public function store()
