@@ -25,7 +25,7 @@ class Controller extends BaseController
 
     public function GetPages()
     {
-        $user = request()->user();
+        $user = auth()->user();
         $app = $user->apps()->where('name', request()->segment(1) ?? 'core')->first();
         $page = $app->pages()->firstOrNew(['controller' => request()->segment(2) ?? 'home', 'action' => request()->segment(3) ?? 'index']);
 

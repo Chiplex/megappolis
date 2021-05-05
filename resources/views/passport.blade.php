@@ -4,29 +4,17 @@
 
 @section('auth_body')
 {!! Form::open($form) !!}
-    @include('form.input-group.text', ['name' => 'name', 'placeholder' => 'Nombre'])
-    @include('form.input-group.text', ['name' => 'otherName', 'placeholder' => 'Otros Nombres'])
-    @include('form.input-group.text', ['name' => 'lastName', 'placeholder' => 'Apellidos'])
-    @include('form.input-group.text', ['name' => 'dateBirth', 'placeholder' => 'Otros Apellidos'])
-    @include('form.input-group.text', ['name' => 'country', 'placeholder' => 'Pais'])
-    @include('form.input-group.text', ['name' => 'city', 'placeholder' => 'Ciudad'])
-    @include('form.input-group.text', ['name' => 'phone', 'placeholder' => 'Celular - Incluir código de país'])
-    @include('form.input-group.text', ['name' => 'sex', 'placeholder' => 'Sexo'])
-    @include('form.input-group.text', ['name' => 'documentoNumero', 'placeholder' => 'Numero de Documento CI / DNI'])
-    <div class="mb-3">
-        <label for="formFile" class="form-label">Foto de Perfil</label>
-        {!! Form::file('nroCarnet', ['class' => 'form-control', 'id' => 'formFile']) !!}
-    </div>
-    <div class="mb-3">
-        <label for="formFile" class="form-label">Foto de CI / DNI Anverso</label>
-        {!! Form::file('anverso', ['class' => 'form-control', 'id' => 'formFile']) !!}
-    </div>
-    <div class="mb-3">
-        <label for="formFile" class="form-label">Foto de CI / DNI Reverso</label>
-        {!! Form::file('reverso', ['class' => 'form-control', 'id' => 'formFile']) !!}
-    </div>
-    <button type="submit" class="btn btn-block btn-flat btn-primary">
-        <span class="fas fa-save"></span> Guardar
-    </button>
+    @include('form.input-group.text', ['options' => collect(['name' => 'name', 'placeholder' => 'Nombre', 'required' => true])])
+    @include('form.input-group.text', ['options' => collect(['name' => 'otherName', 'placeholder' => 'Otros Nombres', 'required' => true])])
+    @include('form.input-group.text', ['options' => collect(['name' => 'lastName', 'placeholder' => 'Apellidos', 'required' => true])])
+    @include('form.input-group.text', ['options' => collect(['name' => 'otherLastName', 'placeholder' => 'Otros Apellidos', 'required' => true])])
+    @include('form.input-group.date', ['options' => collect(['name' => 'dateBirth', 'placeholder' => 'Fecha de Nacimiento', 'required' => true, 'title' => 'Fecha de Nacimiento'])])
+    @include('form.input-group.text', ['options' => collect(['name' => 'country', 'placeholder' => 'Pais', 'required' => true])])
+    @include('form.input-group.text', ['options' => collect(['name' => 'city', 'placeholder' => 'Ciudad', 'required' => true])])
+    @include('form.input-group.text', ['options' => collect(['name' => 'phone', 'placeholder' => 'Celular - Incluir código de país', 'required' => true])])
+    @include('form.input-group.select', ['options' => collect(['name' => 'sex', 'placeholder' => 'Sexo', 'required' => true, 'list' => ['M' => 'Masculino', 'F' => 'Femenino']])])
+    @include('form.input-group.text', ['options' => collect(['name' => 'documentoNumero', 'placeholder' => 'Numero de Documento CI / DNI', 'required' => true])])
+    
+    {!! Form::button('<i class="fas fa-save"></i> Guardar', ['class' => 'btn btn-block btn-flat btn-primary', 'type' => 'submit']) !!}
 {!! Form::close() !!}
 @stop

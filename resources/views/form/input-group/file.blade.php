@@ -5,7 +5,7 @@
     if (!$options->has('class')) $options->put('class','form-control');
 @endphp
 <div class="input-group mb-3">
-    {!! Form::text($options->get('name'), $options->get('value', old($options->get('name'))), $options->except(['name', 'value'])->all()) !!}
+    {!! Form::file($options->get('name'), $options->except(['name', 'title'])->all()) !!}
     <div class="input-group-append">
         <div class="input-group-text">
             <span class="fa fa-{{ $options->get('icon', 'circle') }}"></span>

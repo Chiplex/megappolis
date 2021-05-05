@@ -26,6 +26,7 @@ class People extends Model
         'city',
         'phone',
         'sex',
+        'documentNumber',
     ];
     
     protected static function newFactory()
