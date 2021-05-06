@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Modules\Core\Entities\App;
 use Modules\Core\Entities\Page;
 use Modules\Core\Entities\Permission;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -25,8 +26,8 @@ class Controller extends BaseController
 
     public function GetPages()
     {
-        $user = auth()->user();
-        $app = $user->apps()->where('name', request()->segment(1) ?? 'core')->first();
+        $user = Auth::user();
+        $app = $user->apps()->where('name', request()->segment(1) ?? 'core')->first() ?? App::where('name', request()->segment(1) ?? 'core')->first();
         $page = $app->pages()->firstOrNew(['controller' => request()->segment(2) ?? 'home', 'action' => request()->segment(3) ?? 'index']);
 
         if($page->isDirty()){
@@ -42,9 +43,8 @@ class Controller extends BaseController
     {
         $user = Auth::user();
         $roles = $user->roles();
-        
-        return $permissions = $roles->where('name', $this->role)->exists() 
+        return $roles->where('name', $this->role)->exists() 
             ? Permission::where('page_id', $page->id)->select('name')->orderBy('name')->groupBy('name')->get()
-            : $roles->permissions()->select('name')->orderBy('name')->groupBy('name')->get();
+            : $roles->firstWhere('app_id', $page->app->id)->permissions()->select('name')->orderBy('name')->groupBy('name')->get();
     }
 }

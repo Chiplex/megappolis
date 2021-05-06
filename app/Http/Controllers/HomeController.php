@@ -3,18 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Core\Entities\App;
 use Modules\Core\Entities\People;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-        $app = $user->apps()->where('name', request()->segment(1) ?? 'core')->first();
-        if($app == null){
-            return 'no aprobo su email';
-        }
-        return view('dashboard', $this->GetInfo([]));
+        $apps = App::all();
+        return view('welcome', compact('apps'));
     }
 
     public function create()

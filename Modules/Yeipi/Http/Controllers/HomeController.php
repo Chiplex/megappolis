@@ -20,8 +20,16 @@ class HomeController extends Controller
      */
     public function index()
     {
+        
+        if(auth()->user()->roles()->count() == 0)
+        {
+            $role = Role::firstWhere('name', 'YEIPI-GUEST');
+            auth()->user()->roles()->syncWithoutDetaching($role->id);
+        }  
+        
+        
         $data = [];
-        return view('dashboard', $this->GetInfo($data));
+        return view('yeipi::home.index');
     }
 
     /**

@@ -12,7 +12,7 @@
 */
 
 Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(function() {
-    Route::get('/', 'HomeController@index')->name('core.index');
+    Route::get('/', 'HomeController@index')->name('core');
     
     Route::get('/user/index', 'UserController@index')->name('core.user.index')->middleware(['app.creator']);
     Route::get('/user/register', 'UserController@create')->name('core.user.create')->middleware(['app.creator']);

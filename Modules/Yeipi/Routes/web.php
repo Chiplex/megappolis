@@ -12,7 +12,7 @@
 */
 
 Route::prefix('yeipi')->middleware(['auth'])->group(function() {
-    Route::get('/', 'HomeController@index');
+    Route::get('/', 'HomeController@index')->name('yeipi');
     Route::get('/home/register/{yeipi}', 'HomeController@create')->name('yeipi.home.create');
     Route::post('/home/register', 'HomeController@store')->name('yeipi.home.store');
 
