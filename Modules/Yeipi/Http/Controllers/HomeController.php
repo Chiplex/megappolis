@@ -20,15 +20,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        
         if(auth()->user()->roles()->count() == 0)
         {
             $role = Role::firstWhere('name', 'YEIPI-GUEST');
-            auth()->user()->roles()->syncWithoutDetaching($role->id);
-        }  
-        
-        
-        $data = [];
+            auth()->user()->roles()->sync($role->id);
+        }
+
         return view('yeipi::home.index');
     }
 
@@ -55,9 +52,18 @@ class HomeController extends Controller
     public function store(Request $request)
     {
         try { 
-            $people = auth()->user()->people;
+            $people = auth()->user()->people ?? People::firstOrNew($request->except(['_token', 'action', 'profile', 'anverso', 'reverso']));
+
+            if($people->isDirty()) $people->tipo = 'HUM';
             $people->phone = $request->phone;
             $people->save();
+
+            if(auth()->user()->people == null)
+            {
+                $user = auth()->user();
+                $user->people_id = $people->id;
+                $user->save();
+            }
 
             switch ($request->action) {
                 case 'pedir':
@@ -82,47 +88,5 @@ class HomeController extends Controller
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
-        
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('yeipi::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('yeipi::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

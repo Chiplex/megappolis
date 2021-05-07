@@ -23,11 +23,19 @@
                 </div>
             </div>
         </div>
-        @include('form.text', ['name' => 'name', 'title' => 'Nombre', 'value' => $people->name ?? '', 'disabled' => true])
-        @include('form.text', ['name' => 'otheName', 'title' => 'Otros Nombres', 'value' => $people->otherName ?? '', 'disabled' => true])
-        @include('form.text', ['name' => 'lastName', 'title' => 'Apellidos', 'value' => $people->lastName ?? '', 'disabled' => true])
-        @include('form.text', ['name' => 'otherLastName', 'title' => 'Otros Apellidos', 'value' => $people->otherLastName ?? '', 'disabled' => true])
-        @include('form.text', ['name' => 'phone', 'title' => 'Celular', 'value' => $people->phone ?? ''])
+        @include('form.input-group.text', ['options' => collect(['name' => 'name', 'value' => $people->name ?? '', 'placeholder' => 'Nombre', 'required' => true])])
+        @include('form.input-group.text', ['options' => collect(['name' => 'otherName', 'value' => $people->otherName ?? '', 'placeholder' => 'Otros Nombres', 'required' => true])])
+        @include('form.input-group.text', ['options' => collect(['name' => 'lastName', 'value' => $people->lastName ?? '', 'placeholder' => 'Apellidos', 'required' => true])])
+        @include('form.input-group.text', ['options' => collect(['name' => 'otherLastName', 'value' => $people->otherLastName ?? '', 'placeholder' => 'Otros Apellidos', 'required' => true])])
+        @include('form.input-group.date', ['options' => collect(['name' => 'dateBirth', 'value' => $people->dateBirth ?? '', 'placeholder' => 'Fecha de Nacimiento', 'required' => true, 'title' => 'Fecha de Nacimiento'])])
+        @include('form.input-group.text', ['options' => collect(['name' => 'country', 'value' => $people->country ?? '', 'placeholder' => 'Pais', 'required' => true])])
+        @include('form.input-group.text', ['options' => collect(['name' => 'city', 'value' => $people->city ?? '', 'placeholder' => 'Ciudad', 'required' => true])])
+        @include('form.input-group.text', ['options' => collect(['name' => 'phone', 'value' => $people->phone ?? '', 'placeholder' => 'Celular - Incluir código de país', 'required' => true])])
+        @include('form.input-group.select', ['options' => collect(['name' => 'sex', 'value' => $people->sex ?? '', 'placeholder' => 'Sexo', 'required' => true, 'list' => ['M' => 'Masculino', 'F' => 'Femenino']])])
+        @include('form.input-group.text', ['options' => collect(['name' => 'documentNumber', 'value' => $people->documentNumber ?? '', 'placeholder' => 'Numero de Documento CI / DNI', 'required' => true])])
+        @include('form.input-group.file', ['options' => collect(['name' => 'profile', 'title' => 'Foto de Perfil', 'required' => true])])
+        @include('form.input-group.file', ['options' => collect(['name' => 'anverso', 'title' => 'Foto de CI / DNI Anverso', 'required' => true])])
+        @include('form.input-group.file', ['options' => collect(['name' => 'reverso', 'title' => 'Foto de CI / DNI Reverso', 'required' => true])])
     </div>
     {!! Form::close() !!}
 </div>

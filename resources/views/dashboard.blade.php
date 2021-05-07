@@ -5,9 +5,7 @@
 @section('content_top_nav_right')
     @if (Route::has('login'))
         <li class="nav-item">
-            @auth
-                <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
-            @else
+            @guest
                 <a href="{{ route('login') }}" class="nav-link">Log in</a>
 
                 @if (Route::has('register'))

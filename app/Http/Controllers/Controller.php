@@ -41,10 +41,22 @@ class Controller extends BaseController
 
     public function GetPermissions(Page $page)
     {
-        $user = Auth::user();
-        $roles = $user->roles();
-        return $roles->where('name', $this->role)->exists() 
-            ? Permission::where('page_id', $page->id)->select('name')->orderBy('name')->groupBy('name')->get()
-            : $roles->firstWhere('app_id', $page->app->id)->permissions()->select('name')->orderBy('name')->groupBy('name')->get();
+        if(Auth::user()->roles()->where('name', $this->role)->exists()){
+            return Permission::where('page_id', $page->id)
+                ->select('name')
+                ->orderBy('name')
+                ->groupBy('name')
+                ->get();
+        }
+        else {
+            return Auth::user()
+                ->roles()
+                ->firstWhere('app_id', $page->app->id)
+                ->permissions()
+                ->select('name')
+                ->orderBy('name')
+                ->groupBy('name')
+                ->get();
+        }
     }
 }
