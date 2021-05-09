@@ -37,6 +37,10 @@
 
 @section('content')
 @include($view->buildView(), $data)
+@if ($permissions->contains('name', 'view'))
+@else
+    No tiene permisos para ver esta pagina   
+@endif
 @stop
 
 @section('css')

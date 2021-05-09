@@ -10,6 +10,7 @@
             {!! Form::open(['route' => 'yeipi.pedir.producto', 'method' => 'post', 'id' => 'frmPedir']) !!}
             <div class="modal-body">
                 <input type="hidden" name="product_id">
+                <input type="hidden" name="order_id">
                 <div class="form-group row">
                     <label for="shop" class="col-sm-4">Proveedor</label>
                     <div class="col-sm-8">

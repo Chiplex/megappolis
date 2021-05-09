@@ -16,20 +16,24 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     Route::get('/home/register/{yeipi}', 'HomeController@create')->name('yeipi.home.create');
     Route::post('/home/register', 'HomeController@store')->name('yeipi.home.store');
 
-    Route::get('/pedir/iniciar', 'PedirController@preparar')->name('yeipi.pedir.preparar')->middleware('access:YEIPI-CUSTOMER');
-    Route::post('/pedir/iniciar', 'PedirController@iniciar')->name('yeipi.pedir.iniciar')->middleware('access:YEIPI-CUSTOMER');
-    Route::get('/pedir/index', 'PedirController@index')->name('yeipi.pedir.index')->middleware('access:YEIPI-CUSTOMER');
-    Route::get('/pedir/data/index/{order}', 'PedirController@data')->name('yeipi.pedir.data')->middleware('access:YEIPI-CUSTOMER');
-    Route::get('/pedir/register', 'PedirController@create')->name('yeipi.pedir.create')->middleware('access:YEIPI-CUSTOMER');
-    Route::post('/pedir/register', 'PedirController@store')->name('yeipi.pedir.store')->middleware('access:YEIPI-CUSTOMER');
-    Route::get('/pedir/register/{order}', 'PedirController@edit')->name('yeipi.pedir.edit')->middleware('access:YEIPI-CUSTOMER');
-    Route::put('/pedir/register/{order}', 'PedirController@update')->name('yeipi.pedir.update')->middleware('access:YEIPI-CUSTOMER');
+    // Rutas Pedir
+    Route::middleware(['access:YEIPI-CUSTOMER'])->group(function () {
+        Route::get('/pedir/data/detail/{order}', 'PedirController@dataDetail')->name('yeipi.pedir.data.detail');
+        Route::get('/pedir/data/history', 'PedirController@dataHistory')->name('yeipi.pedir.data.history');
+        Route::get('/pedir/iniciar', 'PedirController@preparar')->name('yeipi.pedir.preparar');
+        Route::post('/pedir/iniciar', 'PedirController@iniciar')->name('yeipi.pedir.iniciar');
+        Route::get('/pedir/index', 'PedirController@index')->name('yeipi.pedir.index');
+        Route::post('/pedir/register', 'PedirController@store')->name('yeipi.pedir.store');
+        Route::get('/pedir/register/{order}', 'PedirController@edit')->name('yeipi.pedir.edit');
+        Route::post('/pedir/solicitar', 'PedirController@solicitar')->name('yeipi.pedir.solicitar');
+        
+    });
+
     Route::get('/pedir/entregas', 'PedirController@entregas')->name('yeipi.pedir.entregas')->middleware('access:YEIPI-CUSTOMER');
     Route::post('/pedir/producto', 'PedirController@producto')->name('yeipi.pedir.producto')->middleware('access:YEIPI-CUSTOMER');
     Route::get('/pedir/shop/{product}', 'PedirController@shop')->name('yeipi.pedir.shop')->middleware('access:YEIPI-CUSTOMER');
     Route::get('/pedir/count', 'PedirController@count')->name('yeipi.pedir.count')->middleware('access:YEIPI-CUSTOMER');
     Route::get('/pedir/history', 'PedirController@history')->name('yeipi.pedir.history')->middleware('access:YEIPI-CUSTOMER');
-    Route::get('/pedir/data/history', 'PedirController@dataHistory')->name('yeipi.pedir.data.history')->middleware('access:YEIPI-CUSTOMER');
 
     Route::get('/entregar/iniciar', 'EntregarController@preparar')->name('yeipi.entregar.preparar')->middleware('access:YEIPI-CUSTOMER');
     Route::post('/entregar/iniciar', 'EntregarController@iniciar')->name('yeipi.entregar.iniciar')->middleware('access:YEIPI-CUSTOMER');

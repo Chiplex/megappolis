@@ -84,9 +84,11 @@ class PermissionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Permission $permission)
     {
-        //
+        $permission->update($request->all());
+        return redirect()->route('core.permission.index')
+        ->with('success_message', 'Attribute was successfully added.');
     }
 
     /**

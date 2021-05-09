@@ -83,3 +83,20 @@ function number_format(amount, decimals) {
 
     return amount_parts.join('.');
 }
+
+function OpenWindow(uri) {
+    var win = window.open(uri, "_blank");
+    var interval = window.setInterval(function () {
+        try {
+            if (win == null || win.closed) {
+                window.clearInterval(interval);
+                //closeCallback(win);
+                tblFichaMedica.search("").draw();
+            }
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }, 1000);
+    return win;
+}

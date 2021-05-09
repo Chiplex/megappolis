@@ -30,7 +30,7 @@
         serverSide: true,
         ajax: "{{ route('yeipi.pedir.data.history') }}",
         columns: [
-            { data: 'id', name: 'id', "orderable": false },
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', "orderable": false, searchable: false },
             { data: 'delivery', name: 'delivery', orderable: false, searchable: false, defaultContent: "", },
             { data: 'fechaSolicitud', name: 'fechaSolicitud' },
             { data: 'fechaRecepcion', name: 'fechaRecepcion' },
@@ -50,12 +50,16 @@
                     var model = row.data();
                     switch (key) {
                         case "edit":
+                            var win = OpenWindow("{{ url('/yeipi/pedir/register') }}/" + model.id);
+                            break;
+                        case "delete":
                             AbrirModal(model);
                             break;
                     }
                 },
                 items: {
-                    "edit": { name: "Editar", icon: "edit", },
+                    "edit": { name: "Editar", icon: "edit", disabled: {{ $permissions->contains('name', 'edit') ? 'false' : 'true' }} },
+                    "delete": { name: "Borrar", icon: "delete", disabled: {{ $permissions->contains('name', 'delete') ? 'false' : 'true' }} },
                 }
             };
         },

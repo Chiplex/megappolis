@@ -37,7 +37,7 @@
             serverSide: true,
             ajax: '{{ route('core.page.data') }}',
             columns: [
-                { data: 'id', name: 'id' },
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', "orderable": false, searchable: false },
                 { data: 'icon', name: 'icon' },
                 { data: 'app.name', name: 'name' },
                 { data: 'controller', name: 'controller' },
@@ -52,22 +52,21 @@
     $.contextMenu({
         selector: '.context-menu',
         build: function ($trigger, e) {
-            // this callback is executed every time the menu is to be shown
-            // its results are destroyed every time the menu is hidden
-            // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
             return {
                 callback: function (key, options) {
-                    var m = "clicked: " + key;
-                    window.console && console.log(m) || alert(m);
+                    var tr = $(options.$trigger[0]).closest('tr');
+                    var row = t.row(tr);
+                    var model = row.data();
+                    switch (key) {
+                        case "edit":
+                            var win = OpenWindow("{{ url('/core/page/register') }}/" + model.id)
+                            AbrirModal(model);
+                            break;
+                    }
                 },
                 items: {
-                    "edit": { name: "Edit", icon: "edit" },
-                    "cut": { name: "Cut", icon: "cut" },
-                    "copy": { name: "Copy", icon: "copy" },
-                    "paste": { name: "Paste", icon: "paste" },
-                    "delete": { name: "Delete", icon: "delete" },
-                    "sep1": "---------",
-                    "quit": { name: "Quit", icon: function ($element, key, item) { return 'context-menu-icon context-menu-icon-quit'; } }
+                    "edit": { name: "Editar", icon: "edit" },
+                    "delete": { name: "Borrar", icon: "delete" },
                 }
             };
         }

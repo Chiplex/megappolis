@@ -35,12 +35,26 @@ class HomeController extends Controller
      */
     public function create($yeipi)
     {
+        switch ($yeipi) {
+            case 'pedir':
+                $action = 'bg-primary';
+                break;
+            case 'entregar':
+                $action = 'bg-danger';
+                break;
+            case 'proveer':
+                $action = 'bg-info';
+                break;
+            default:
+                $action = 'bg-default';
+                break;
+        }
         $people = auth()->user()->people;
         $form = [
             'route' => 'yeipi.home.store', 
             'method' => 'post', 
         ];
-        $data = ['people' => $people, 'action' => $yeipi, 'form' => $form];
+        $data = ['people' => $people, 'action' => $action, 'form' => $form, 'yeipi' => $yeipi];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -53,9 +67,10 @@ class HomeController extends Controller
     {
         try { 
             $people = auth()->user()->people ?? People::firstOrNew($request->except(['_token', 'action', 'profile', 'anverso', 'reverso']));
-
             if($people->isDirty()) $people->tipo = 'HUM';
+            $people->sex = $request->sex;
             $people->phone = $request->phone;
+            $people->documentNumber = $request->documentNumber;
             $people->save();
 
             if(auth()->user()->people == null)
@@ -72,7 +87,7 @@ class HomeController extends Controller
                     break;
                 case 'entregar':
                     $role_name = 'YEIPI-DELIVERY';
-                    Delivery::firstOrCreate(['people_id' => $people->id]);
+                    Delivery::firstOrCreate(['people_id' => $people->id, 'puntuacion' => '3', 'valoracion' => '']);
                     break;
                 case 'proveer':
                     $role_name = 'YEIPI-PROVIDER';

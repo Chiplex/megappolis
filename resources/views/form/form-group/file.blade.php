@@ -6,7 +6,7 @@
         {!! Form::label($options->get('name'), $options->get('title'), ['class' => 'col-form-label col-sm-4']) !!}
     @endif
     <div class="col-sm-8">
-        {!! Form::text($options->get('name'), $options->get('value', old($options->get('name'))), $options->except(['name', 'value'])->all()) !!}
+        {!! Form::file($options->get('name'), $options->except(['name', 'value'])->all()) !!}
     </div>
 </div>
 @error($options->get('name'))

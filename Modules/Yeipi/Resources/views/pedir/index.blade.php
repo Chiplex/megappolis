@@ -40,6 +40,7 @@
                     <div class="col">
                         {!! Form::open() !!}
                             {!! Form::hidden('product_id', $stock->product->id) !!}
+                            {!! Form::hidden('order_id', $order->id) !!}
                             <div class="card bg-white text-center">
                                 <img src="#" class="card-img-top" alt="...">
                                 <div class="card-body">

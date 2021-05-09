@@ -8,6 +8,7 @@
             @endisset
             @empty($order->fechaSolicitud)
             {!! Form::open($form) !!}
+                {!! Form::hidden('order_id', $order->id) !!}
                 {!! Form::button('<i class="fas fa-save"></i> Solicitar', ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
             {!! Form::close() !!}
             @endempty
@@ -38,7 +39,7 @@
         </div>
     </div>
     <div class="card-body">
-        <table class="table" id="table">
+        <table class="table" id="table" style="width: 100%">
             <thead>
                 <tr>
                     <th>#</th>
@@ -77,7 +78,7 @@ var t = $('#table').DataTable({
     processing: true,
     serverSide: true,
     "pageLength": 500,
-    ajax: "{{ route('yeipi.pedir.data', ['order' => $order->id]) }}",
+    ajax: "{{ route('yeipi.pedir.data.detail', ['order' => $order->id]) }}",
     columns: [
         { data: 'id', name: 'id', "orderable": false },
         { data: 'stock.shop.nombre', name: 'stock.shop.nombre' },
@@ -115,11 +116,10 @@ $.contextMenu({
                 }
             },
             items: {
-                "edit": { name: "Editar", icon: "edit", },
+                "edit": { name: "Editar", icon: "edit", disabled: {{ isset($order->fechaSolicitud) ? 'true': 'false'}} },
             }
         };
     },
 });
 </script>
-
 @endpush

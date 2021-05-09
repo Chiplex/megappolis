@@ -17,6 +17,7 @@ class PageController extends Controller
         $pages = Page::with('app', 'page')->select('pages.*');
         return Datatables::of($pages)
             ->setRowClass('{{ "context-menu" }}')
+            ->addIndexColumn()
             ->make(true);
     }
 
@@ -97,6 +98,7 @@ class PageController extends Controller
      */
     public function update(Request $request,  Page $page)
     {
+        dd(1);
         try {
             $data = $request->all();
             $data['page_id'] = $data['page_id'] ?? 0;

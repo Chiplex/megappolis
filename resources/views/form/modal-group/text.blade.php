@@ -1,6 +1,3 @@
-@php
-    if(!$options->has('class')) $options->put('class', 'form-control')
-@endphp
 <div class="form-group row">
     @if($options->has('title'))
         {!! Form::label($options->get('name'), $options->get('title'), ['class' => 'col-form-label col-sm-4']) !!}
