@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterDetailTable extends Migration
+class AlterDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class AlterDetailTable extends Migration
     public function up()
     {
         Schema::table('yeipi_details', function (Blueprint $table) {
-            $table->foreignId('stock_id')->nullable();
+            $table->date('fechaConseguido')->nullable();
+            $table->date('fechaNoConseguido')->nullable();
         });
     }
 
@@ -25,8 +26,6 @@ class AlterDetailTable extends Migration
      */
     public function down()
     {
-        Schema::table('yeipi_details', function (Blueprint $table) {
-            $table->dropColumn('stock_id');
-        });
+        //
     }
 }
