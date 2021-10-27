@@ -80,7 +80,16 @@ class ShopController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $shop = Shop::findOrFail($id);
+            $shop->update($request->all());
+
+            return redirect()->route('yeipi.shop.edit', ['shop' => $shop->id])
+                ->with('success_message', 'Attribute was successfully updated.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     /**

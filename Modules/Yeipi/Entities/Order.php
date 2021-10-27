@@ -68,7 +68,7 @@ class Order extends Model
         return $this->whereNull('fechaEntrega');
     }
 
-    public function scopeSinSolicitar(){
+    public function scopeWithoutRequest(){
         $sinSolicitar = ['fechaSolicitud', 'fechaRecepcion', 'fechaSalida', 'fechaEntrega'];
         return $this->whereNull($sinSolicitar);
     }

@@ -73,7 +73,8 @@ class PageController extends Controller
      */
     public function show(Page $page)
     {
-        
+        $data = ['page' => $page];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -98,7 +99,6 @@ class PageController extends Controller
      */
     public function update(Request $request,  Page $page)
     {
-        dd(1);
         try {
             $data = $request->all();
             $data['page_id'] = $data['page_id'] ?? 0;

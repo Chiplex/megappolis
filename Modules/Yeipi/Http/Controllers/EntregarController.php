@@ -38,7 +38,7 @@ class EntregarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**

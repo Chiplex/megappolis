@@ -118,7 +118,7 @@ class PedirController extends Controller
     public function index()
     {
         $customer = auth()->user()->people->customer;
-        $order = $customer->orders()->lastest()->sinSolicitar()->firstOrCreate(['customer_id' => $customer->id]);
+        $order = $customer->orders()->lastest()->withoutRequest()->firstOrCreate(['customer_id' => $customer->id]);
         $details = $order ? $order->details()->get() : \collect();
         $stocks = Stock::all();
         $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks, 'order' => $order];
