@@ -11,7 +11,7 @@ class HomeController extends Controller
     public function index()
     {
         $apps = App::all();
-        return view('welcome', compact('apps'));
+        return view('home', compact('apps'));
     }
 
     public function create()

@@ -11,7 +11,7 @@
                 <table class="table table-condensed" style="width: 100%" id="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>#</th>
                             <th>Icon</th>
                             <th>App</th>
                             <th>Controller</th>
@@ -37,9 +37,9 @@
             serverSide: true,
             ajax: '{{ route('core.page.data') }}',
             columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', "orderable": false, searchable: false },
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', "orderable": false, "searchable": false },
                 { data: 'icon', name: 'icon' },
-                { data: 'app.name', name: 'name' },
+                { data: 'app.name', name: 'app.name' },
                 { data: 'controller', name: 'controller' },
                 { data: 'action', name: 'action' },
                 { data: 'name', name: 'name' },
@@ -65,8 +65,8 @@
                     }
                 },
                 items: {
-                    "edit": { name: "Editar", icon: "edit" },
-                    "delete": { name: "Borrar", icon: "delete" },
+                    "edit": { name: "Editar", icon: "fa fa-edit" },
+                    "delete": { name: "Borrar", icon: "fa fa-delete" },
                 }
             };
         }

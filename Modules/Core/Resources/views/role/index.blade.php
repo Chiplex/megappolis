@@ -40,7 +40,7 @@
                             <a href="{{ url('/core/role/register/'.$role->id) }}" class="btn btn-info btn-flat">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="{{ url('/core/role/user-page-permissions/'.$role->id) }}" class="btn btn-info btn-flat">
+                            <a href="{{ url('/core/role/user/'.$role->id) }}" class="btn btn-info btn-flat">
                                 <i class="fas fa-user"></i>
                             </a>
                         </div>

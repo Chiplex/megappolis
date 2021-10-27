@@ -16,6 +16,7 @@ use App\Http\Controllers\HomeController;
 */
 
 Route::middleware(['auth'])->get('/', [HomeController::class, 'index']);
+
 Route::get('/passport', [HomeController::class, 'create'])->name('passport.create');
 Route::post('/passport', [HomeController::class, 'store'])->name('passport.store');
 

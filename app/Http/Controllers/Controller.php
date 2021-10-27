@@ -21,7 +21,7 @@ class Controller extends BaseController
     {
         $page = $this->GetPages();
         $permission = $this->GetPermissions($page);
-        return ['view' => $page, 'permissions' => $permission, 'data'=> $data];
+        return ['page' => $page, 'permissions' => $permission, 'data'=> $data];
     }
 
     public function GetPages()

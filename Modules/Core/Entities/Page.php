@@ -5,6 +5,8 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Core\Entities\App;
+use Modules\Core\Entities\Permission;
+use Modules\Core\Entities\Role;
 
 class Page extends Model
 {
@@ -53,6 +55,22 @@ class Page extends Model
     public function page()
     {
         return $this->belongsTo(Page::class);
+    }
+
+    /**
+     * Get the persmisions that owns the Page
+     */
+    public function permissions()
+    {
+        return $this->hasMany(Permission::class);
+    }
+
+    /**
+     * Get the roles that owns the Page
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
     }
 
     public function buildView()

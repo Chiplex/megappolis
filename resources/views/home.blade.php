@@ -17,6 +17,7 @@
     @endif
 @endsection
 
+{{-- Aqui deberia ir los erroes en notificaciones --}}
 @section('content_header')
     @if (\Session::has('message'))
         <div class="alert alert-danger alert-dismissible">

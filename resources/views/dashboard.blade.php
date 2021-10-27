@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', $view->buildTitle())
+@section('title', $page->buildTitle())
 
 @section('content_top_nav_right')
     @if (Route::has('login'))
@@ -25,7 +25,7 @@
             {!! \Session::get('message') !!}
         </div>
     @endif
-    <h1>{{$view->name}}</h1>
+    <h1>{{$page->name}}</h1>
     @if ($errors->any())
         <ul class="alert alert-danger">
             @foreach ($errors->all() as $error)
@@ -36,11 +36,13 @@
 @stop
 
 @section('content')
-@include($view->buildView(), $data)
+
 @if ($permissions->contains('name', 'view'))
+    @include($page->buildView(), $data)
 @else
-    No tiene permisos para ver esta pagina   
+    No tiene permisos para ver esta pagina
 @endif
+
 @stop
 
 @section('css')
