@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Yeipi\Entities\Product;
 use Modules\Yeipi\Entities\Shop;
+use Modules\Yeipi\Entities\Detail;
 
 class Stock extends Model
 {
@@ -45,5 +46,15 @@ class Stock extends Model
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    /**
+     * Get the details that owns the Stock
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function details()
+    {
+        return $this->hasMany(Detail::class);
     }
 }

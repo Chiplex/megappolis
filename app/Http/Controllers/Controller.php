@@ -49,7 +49,8 @@ class Controller extends BaseController
                 ->get();
         }
         else {
-            return Auth::user()
+            return auth()
+                ->user()
                 ->roles()
                 ->firstWhere('app_id', $page->app->id)
                 ->permissions()

@@ -35,7 +35,7 @@
 @stop
 
 @section('content')
-<div class="row justify-content-md-center">
+<div class="row justify-content-md-center mt-5">
     <div class="col-lg-3 col-6">
         <!-- small box -->
         <div class="small-box bg-primary">

@@ -43,6 +43,8 @@
     $.contextMenu({
         selector: ".context-menu",
         build: function ($trigger, e) {
+            var id = $($trigger[0]).attr('data-id');
+            console.log(id);
             return {
                 callback: function (key, options) {
                     var tr = $(options.$trigger[0]).closest('tr');

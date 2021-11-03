@@ -15,7 +15,7 @@ use Modules\Yeipi\Entities\Provider;
 class HomeController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a list of services of the application.
      * @return Renderable
      */
     public function index()
@@ -30,7 +30,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for registering a new user.
      * @return Renderable
      */
     public function create($yeipi)
@@ -72,6 +72,11 @@ class HomeController extends Controller
             $people->phone = $request->phone;
             $people->documentNumber = $request->documentNumber;
             $people->save();
+
+            // Guardar la Foto de perfil y carnet
+            //$request->profile->storeAs('public/profile', $people->id.'.jpg');
+            //$request->anverso->storeAs('public/carnet', $people->id.'.jpg');
+            //$request->reverso->storeAs('public/carnet', $people->id.'.jpg');
 
             if(auth()->user()->people == null)
             {

@@ -17,6 +17,62 @@ use Datatables;
 class PedirController extends Controller
 {
     /**
+     * @Get("/pedir/iniciar", "yeipi.pedir.preparar", 'access:YEIPI-CUSTOMER')
+     * 
+     * Muestra un formulario de ubicación del consumidor
+     * @return Renderable
+     */
+    public function preparar()
+    {
+        $customer = auth()->user()->people->customer;
+        $form = ['route' => 'yeipi.pedir.iniciar', 'method' => 'post'];
+        $data = ['customer' => $customer, 'form' => $form];
+        return view('dashboard', $this->GetInfo($data));
+    }
+
+    /**
+     * @Post("/pedir/iniciar", "yeipi.pedir.iniciar", 'access:YEIPI-CUSTOMER')
+     * 
+     * Actualiza la ubicacion del consumidor
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function iniciar(Request $request)
+    {
+        try {
+            $customer = auth()->user()->people->customer;
+            $customer->direccion = $request->direccion;
+            $customer->latitud = $request->latitud;
+            $customer->longitud = $request->longitud;
+            $customer->save();
+
+            return redirect()->route('yeipi.pedir.index')
+                ->with('success_message', 'information was successfully added.');
+            
+        } catch (\Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
+    /**
+     * @Get("/pedir/index", "yeipi.pedir.index", 'access:YEIPI-CUSTOMER')
+     * 
+     * Muestra lista de stock de productos que el usuario puede pedir
+     * @return Renderable
+     */
+    public function index()
+    {
+        $customer = auth()->user()->people->customer;
+        $order = $customer->orders()->lastest()->withoutRequest()->firstOrCreate(['customer_id' => $customer->id]);
+        $details = $order ? $order->details()->get() : collect();
+        $stocks = Stock::all();
+        $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks, 'order' => $order];
+        return view('dashboard', $this->GetInfo($data));
+    }
+
+
+    /**
      * @Get("/pedir/data/index/{order}", "yeipi.pedir.data.detail", 'access:YEIPI-CUSTOMER')
      * 
      * Retorna los detalles de los pedidos como Datatables
@@ -33,6 +89,20 @@ class PedirController extends Controller
             })
             ->addIndexColumn()
             ->make(true);
+    }
+
+    /**
+     * @Get("/pedir/history", "yeipi.pedir.history", 'access:YEIPI-CUSTOMER')
+     * 
+     * Muestra el historial de pedidos
+     * @return Renderable
+     */
+    public function history()
+    {
+        $customer = auth()->user()->people->customer;
+        $orders = $customer->orders()->get();
+        $data = ['customer' => $customer, 'orders' => $orders];
+        return view('dashboard', $this->GetInfo($data));
     }
 
     /**
@@ -71,61 +141,6 @@ class PedirController extends Controller
     }
 
     /**
-     * @Get("/pedir/iniciar", "yeipi.pedir.preparar", 'access:YEIPI-CUSTOMER')
-     * 
-     * Muestra un formulario de ubicación del consumidor
-     * @return Renderable
-     */
-    public function preparar()
-    {
-        $customer = auth()->user()->people->customer;
-        $form = ['route' => 'yeipi.pedir.iniciar', 'method' => 'post'];
-        $data = ['customer' => $customer, 'form' => $form];
-        return view('dashboard', $this->GetInfo($data));
-    }
-
-    /**
-     * @Post("/pedir/iniciar", "yeipi.pedir.iniciar", 'access:YEIPI-CUSTOMER')
-     * 
-     * Actualiza la ubicacion del consumidor
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function iniciar(Request $request)
-    {
-        try {
-            $customer = auth()->user()->people->customer;
-            $customer->direccion = $request->direccion;
-            $customer->latitud = $request->latitud;
-            $customer->longitud = $request->longitud;
-            $customer->save();
-
-            return redirect()->route('yeipi.pedir.index')
-                ->with('success_message', 'information was successfully added.');
-            
-        } catch (\Exception $exception) {
-            return back()->withInput()
-                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
-        }
-    }
-    
-    /**
-     * @Get("/pedir/index", "yeipi.pedir.index", 'access:YEIPI-CUSTOMER')
-     * 
-     * Muestra lista de stock de productos que el usuario puede pedir
-     * @return Renderable
-     */
-    public function index()
-    {
-        $customer = auth()->user()->people->customer;
-        $order = $customer->orders()->lastest()->withoutRequest()->firstOrCreate(['customer_id' => $customer->id]);
-        $details = $order ? $order->details()->get() : \collect();
-        $stocks = Stock::all();
-        $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks, 'order' => $order];
-        return view('dashboard', $this->GetInfo($data));
-    }
-
-    /**
      * @Post("/pedir/register", "yeipi.pedir.store", 'access:YEIPI-CUSTOMER')
      * 
      * Actualiza la ubicacion del consumidor
@@ -159,7 +174,7 @@ class PedirController extends Controller
         }
     }
 
-     /**
+    /**
      * @Get("/pedir/register/{order}", "yeipi.pedir.edit", 'access:YEIPI-CUSTOMER')
      * 
      * Muestra los detalles del pedido del consumidor
@@ -259,13 +274,7 @@ class PedirController extends Controller
         return response()->json($data);
     }
 
-    public function history()
-    {
-        $customer = auth()->user()->people->customer;
-        $orders = $customer->orders()->get();
-        $data = ['customer' => $customer, 'orders' => $orders];
-        return view('dashboard', $this->GetInfo($data));
-    }
+    
 
     /**
      * Show the form for creating a new resource.
