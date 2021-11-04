@@ -1,3 +1,94 @@
+var modalTypes = {
+    Success: "success",
+    Warning: "warning",
+    Error: "error",
+};
+
+var modalTemplate = {
+    title: "",
+    body: "",
+    footer: ""
+};
+
+var modalFuntions = {
+    success: function (title, body, footer) {
+        modalTemplate.title = title;
+        modalTemplate.body = body;
+        modalTemplate.footer = footer;
+        $("#modal-title").html(modalTemplate.title);
+        $("#modal-body").html(modalTemplate.body);
+        $("#modal-footer").html(modalTemplate.footer);
+        $("#modal-container").modal("show");
+    },
+    warning: function (title, body, footer) {
+        modalTemplate.title = title;
+        modalTemplate.body = body;
+        modalTemplate.footer = footer;
+        $("#modal-title").html(modalTemplate.title);
+        $("#modal-body").html(modalTemplate.body);
+        $("#modal-footer").html(modalTemplate.footer);
+        $("#modal-container").modal("show");
+    },
+    error: function (title, body, footer) {
+        modalTemplate.title = title;
+        modalTemplate.body = body;
+        modalTemplate.footer = footer;
+        $("#modal-title").html(modalTemplate.title);
+        $("#modal-body").html(modalTemplate.body);
+        $("#modal-footer").html(modalTemplate.footer);
+        $("#modal-container").modal("show");
+    },
+    close: function () {
+        $("#modal-container").modal("hide");
+    }
+};
+
+var modalHtml = {
+    success: function (title, body, footer) {
+        return '<div class="modal fade" id="modal-container" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+            '<h4 class="modal-title" id="modal-title">' + title + '</h4>' +
+            '</div>' +
+            '<div class="modal-body" id="modal-body">' + body + '</div>' +
+            '<div class="modal-footer" id="modal-footer">' + footer + '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+    },
+    warning: function (title, body, footer) {
+        return '<div class="modal fade" id="modal-container" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+            '<h4 class="modal-title" id="modal-title">' + title + '</h4>' +
+            '</div>' +
+            '<div class="modal-body" id="modal-body">' + body + '</div>' +
+            '<div class="modal-footer" id="modal-footer">' + footer + '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+    },
+    error: function (title, body, footer) {
+        return '<div class="modal fade" id="modal-container" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+            '<h4 class="modal-title" id="modal-title">' + title + '</h4>' +
+            '</div>' +
+            '<div class="modal-body" id="modal-body">' + body + '</div>' +
+            '<div class="modal-footer" id="modal-footer">' + footer + '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+    }
+};
+
+
 function JSONToForm(form, data) {
     $.each(data, function (key, value) {
         var control = $('[name=' + key + ']', form);
@@ -35,13 +126,19 @@ function FormToJSON($form) {
     return data;
 }
 
+/**
+ * 
+ * Concentra todos los solicitudes API en una sola funcion
+ * 
+ * @param {var} options 
+ * @returns Promise
+ */
 function Service(options) {
     return new Promise((resolve, reject) => {
         $.ajax(options)
-        .done(function (result) {
-            resolve(result);
-        }).fail(function (error) {
-            console.log(error);
+        .done((result) => resolve(result) )
+        .fail((error) => {
+            modal.error("Error", error.responseText, "Cerrar");
             reject(error);
         });
     });

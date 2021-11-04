@@ -13,6 +13,66 @@ use Datatables;
 
 class ProveerController extends Controller
 {
+    /**
+     * @Get("/proveer/iniciar", "yeipi.proveer.preparar", 'access:YEIPI-CUSTOMER')
+     * 
+     * Muestra un formulario que prepara la ubicación del proveedor para la compra de productos
+     * @return Renderable
+     */
+    public function preparar()
+    {
+        $provider = auth()->user()->people->provider;
+        $shop = $provider->shop;
+        if(isset($shop)){
+            return redirect()->route('yeipi.proveer.index');
+        }
+        $form = ['route' => 'yeipi.proveer.iniciar', 'method' => 'post'];
+        $data = ['provider' => $provider, 'form' => $form, 'provider' => $provider];
+        return view('dashboard', $this->GetInfo($data));
+    }
+
+    /**
+     * @Post("/proveer/iniciar", "yeipi.proveer.iniciar", 'access:YEIPI-CUSTOMER')
+     * 
+     * Crea o actualiza una tienda para el proveedor
+     * @return Renderable
+     */
+    public function iniciar(Request $request)
+    {
+        try {
+            $provider = auth()->user()->people->provider;
+            $shop = Shop::firstOrNew($request->except('_token'));
+            $shop->provider_id = $provider->id;
+            $shop->save();
+
+            return redirect()->route('yeipi.proveer.index');
+            
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
+    /**
+     * @Get("/proveer/index", "yeipi.proveer.index", 'access:YEIPI-CUSTOMER')
+     * 
+     * Muestra una lista de productos que se pueden comprar solo si el proveedor tiene una tienda
+     * @return Renderable
+     */
+    public function index()
+    {
+        $shop = auth()->user()->people->provider->shop;
+        if(!isset($shop)){
+            return redirect()->route('yeipi.proveer.preparar');
+        }
+        $ordersDelivered = $shop->sales()->ordersDelivered()->get();
+        $ordersNoDelivered = $shop->sales()->ordersNoDelivered()->get();
+        $totalSales = $this->totalSales($shop->sales()->ordersDelivered());
+        $stock = $shop->stock()->get();
+        $data = compact('shop', 'ordersDelivered', 'ordersNoDelivered', 'totalSales', 'stock');
+        return view('dashboard', $this->GetInfo($data));
+    }
+
     public function data(Shop $shop)
     {
         $query = $shop->products();
@@ -52,48 +112,9 @@ class ProveerController extends Controller
             ->make(true);
     }
 
-    public function preparar()
-    {
-        $provider = auth()->user()->people->provider;
-        $shops = $provider->shop;
-        if(isset($shops)){
-            //enviar al menu de shops del proveedor
-        }
-        $form = ['route' => 'yeipi.proveer.iniciar', 'method' => 'post'];
-        $data = ['provider' => $provider, 'form' => $form, 'provider' => $provider];
-        return view('dashboard', $this->GetInfo($data));
-    }
+    
 
-    public function iniciar(Request $request)
-    {
-        try {
-            $provider = auth()->user()->people->provider;
-            $shop = Shop::firstOrNew($request->except('_token'));
-            $shop->provider_id = $provider->id;
-            $shop->save();
-
-            return redirect()->route('yeipi.proveer.edit', ['shop' => $shop->id])
-                ->with('success_message', 'information was successfully added.');
-            
-        } catch (Exception $exception) {
-            return back()->withInput()
-                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
-        }
-    }
-
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
-    {
-        $shop = auth()->user()->people->provider->shop;
-        $ordersDelivered = $shop->sales()->ordersDelivered()->get();
-        $ordersNoDelivered = $shop->sales()->ordersNoDelivered()->get();
-        $totalSales = $this->totalSales($shop->sales()->ordersDelivered());
-        $data = compact('ordersDelivered', 'ordersNoDelivered', 'totalSales');
-        return view('dashboard', $this->GetInfo($data));
-    }
+    
 
     /**
      * Show the form for creating a new resource.

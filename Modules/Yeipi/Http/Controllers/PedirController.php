@@ -58,7 +58,7 @@ class PedirController extends Controller
     /**
      * @Get("/pedir/index", "yeipi.pedir.index", 'access:YEIPI-CUSTOMER')
      * 
-     * Muestra lista de stock de productos que el usuario puede pedir sobre un pedido
+     * Muestra lista de stock de productos unicos de multiples shops donde el usuario puede pedir
      * @return Renderable
      */
     public function index()
@@ -66,7 +66,7 @@ class PedirController extends Controller
         $customer = auth()->user()->people->customer;
         $order = $customer->orders()->lastest()->withoutRequest()->firstOrCreate(['customer_id' => $customer->id]);
         $details = $order ? $order->details()->get() : collect();
-        $stocks = Stock::all();
+        $stocks = Stock::whereNotIn('shop_id', $details->pluck('id'))->select('product_id')->groupBy('product_id')->get();
         $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks, 'order' => $order];
         return view('dashboard', $this->GetInfo($data));
     }
@@ -74,7 +74,7 @@ class PedirController extends Controller
     /**
      * @Post("/pedir/register", "yeipi.pedir.store", 'access:YEIPI-CUSTOMER')
      * 
-     * Almacena un pedido
+     * Almacena un detalle de pedido
      * @param Request $request
      * @return RedirectResponse
      */
@@ -86,9 +86,9 @@ class PedirController extends Controller
                 $order = Order::where(['id' => $request->order_id, 'customer_id' => $customer->id])
                     ->firstOrCreate(['customer_id' => $customer->id]);
                 $stock = Stock::firstWhere($request->except(['_token', 'cantidad', 'descripcion', 'order_id']));
-
+                
                 // Validar que no se pueda pedir más de lo que hay en stock
-                if ($stock->cantidad < $request->cantidad) {
+                if ($stock->stock < $request->cantidad) {
                     return response()->json(['error' => 'No hay suficiente stock para realizar el pedido.']);
                 }
 
@@ -300,6 +300,8 @@ class PedirController extends Controller
         $data = ['order' => $order, 'details' => $details, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
     }
+
+
 
     
     /**
