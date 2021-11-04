@@ -91,7 +91,7 @@ class PedirController extends Controller
                 if ($stock->cantidad < $request->cantidad) {
                     return response()->json(['error' => 'No hay suficiente stock para realizar el pedido.']);
                 }
-                
+
                 // Validar que no se puede pedir mas de 5 productos
                 if ($order->details()->count() >= 5) {
                     return response()->json(['error' => 'No puedes pedir más de 5 productos.']);
@@ -241,13 +241,13 @@ class PedirController extends Controller
     }
     
     /**
-     * @Post("/pedir/current", "yeipi.pedir.current", 'access:YEIPI-CUSTOMER')
+     * @Get("/pedir/current", "yeipi.pedir.current", 'access:YEIPI-CUSTOMER')
      * 
      * Retorna el pedido actual
      * @param Request $request
      * @return Renderable
      */
-    public function current(Request $request)
+    public function current()
     {
         try { 
             $customer = auth()->user()->people->customer;
@@ -259,8 +259,32 @@ class PedirController extends Controller
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
     }
-    
 
+    /**
+     * @Get("/pedir/data/current", "yeipi.pedir.data.current", 'access:YEIPI-CUSTOMER')
+     * 
+     * Retorna los detalles del pedido actual como Datatables
+     * @param Request $request
+     * @return Datatables
+     */
+    public function dataCurrent()
+    {
+        try { 
+            $customer = auth()->user()->people->customer;
+            $order = Order::where(['customer_id' => $customer->id, 'fechaSolicitud' => null])->firstOrFail();
+            $details = $order->details()->with(['stock.product','stock.shop']);
+            return Datatables::of($details)
+                ->setRowClass('{{ "context-menu" }}')
+                ->addColumn('subtotal', function ($detail){
+                    return $detail->cantidad * $detail->precio;
+                })
+                ->addIndexColumn()
+                ->make(true);
+        } catch (\Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
 
     /**
      * @Get("/pedir/register/{order}", "yeipi.pedir.edit", 'access:YEIPI-CUSTOMER')
