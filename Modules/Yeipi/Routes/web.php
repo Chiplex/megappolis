@@ -22,23 +22,25 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
         Route::post('/iniciar', 'PedirController@iniciar')->name('yeipi.pedir.iniciar');
 
         Route::get('/index', 'PedirController@index')->name('yeipi.pedir.index');
+
         Route::get('/history', 'PedirController@history')->name('yeipi.pedir.history');
         Route::get('/data/history', 'PedirController@dataHistory')->name('yeipi.pedir.data.history');
 
         Route::get('/register/{order}', 'PedirController@edit')->name('yeipi.pedir.edit');
         Route::post('/register', 'PedirController@store')->name('yeipi.pedir.store');
+        Route::get('/data/detail/{order}', 'PedirController@dataDetail')->name('yeipi.pedir.data.detail');
 
         Route::post('/solicitar', 'PedirController@solicitar')->name('yeipi.pedir.solicitar');
         Route::post('/cancelar', 'PedirController@cancelar')->name('yeipi.pedir.cancelar');
 
-        Route::get('/data/detail/{order}', 'PedirController@dataDetail')->name('yeipi.pedir.data.detail');
+        Route::get('/current/{order}', 'PedirController@current')->name('yeipi.pedir.current');
         
+        Route::get('/count', 'PedirController@count')->name('yeipi.pedir.count')->middleware('access:YEIPI-CUSTOMER');
     });
 
     Route::get('/pedir/entregas', 'PedirController@entregas')->name('yeipi.pedir.entregas')->middleware('access:YEIPI-CUSTOMER');
     Route::post('/pedir/producto', 'PedirController@producto')->name('yeipi.pedir.producto')->middleware('access:YEIPI-CUSTOMER');
     Route::get('/pedir/shop/{product}', 'PedirController@shop')->name('yeipi.pedir.shop')->middleware('access:YEIPI-CUSTOMER');
-    Route::get('/pedir/count', 'PedirController@count')->name('yeipi.pedir.count')->middleware('access:YEIPI-CUSTOMER');
 
     Route::get('/entregar/iniciar', 'EntregarController@preparar')->name('yeipi.entregar.preparar')->middleware('access:YEIPI-CUSTOMER');
     Route::post('/entregar/iniciar', 'EntregarController@iniciar')->name('yeipi.entregar.iniciar')->middleware('access:YEIPI-CUSTOMER');
@@ -100,3 +102,6 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     Route::post('/customer/store', 'CustomerController@store')->name('yeipi.customer.store');
     //Route::post('/shop/store', 'ProveerController@create')->name('yeipi.shop.store');
 });
+
+
+//Crear una ruta para controlar los pedidos actuales

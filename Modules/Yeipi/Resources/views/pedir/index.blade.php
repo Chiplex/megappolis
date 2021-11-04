@@ -17,21 +17,27 @@
                         <i class="fa fa-history" aria-hidden="true"></i> Ver pedidos anteriores
                     </a>
                     <div class="btn-group btn-group-lg">
-                        <a type="button" class="btn btn-default" href="{{route('yeipi.pedir.edit', ['order' => $order->id ])}}">
-                            <i class="fas fa-cart-plus mr-1"></i>
-                            <span class="badge badge-warning navbar-badge" id="spnCartCount"></span>
-                        </a>
-                        <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            @foreach ($details as $detail)
-                                <p class="dropdown-item">{{ $detail->cantidad }} {{ $detail->stock->product->descripcion }}</p>
-                            @endforeach
-                        </div>
+                        {{-- Si tiene un pedido en curso, redirecciona al pedido en curso caso contrario registra el pedido --}}
+                        @if(!$order->fechaSolicitud || $order->fechaSolicitud == null)
+                            <a href="{{route('yeipi.pedir.edit', $order->id)}}" class="btn btn-lg btn-default">
+                                <i class="fa fa-shopping-cart" aria-hidden="true"></i> Ver pedido en curso
+                            </a>
+                        @else
+                            <a type="button" class="btn btn-default" href="{{route('yeipi.pedir.edit', ['order' => $order->id ])}}">
+                                <i class="fas fa-cart-plus mr-1"></i>
+                                <span class="badge badge-warning navbar-badge" id="spnCartCount"></span>
+                            </a>
+                            <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                @foreach ($details as $detail)
+                                    <p class="dropdown-item">{{ $detail->cantidad }} {{ $detail->stock->product->descripcion }}</p>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
-
                 </div>
             </div>
             <div class="card-body">
@@ -120,5 +126,7 @@
             $("#spnCartCount").text(data.details_count);
         })
     }
+
+    
 </script>
 @endpush

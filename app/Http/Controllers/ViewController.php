@@ -13,6 +13,7 @@ class ViewController extends Controller
 {
     public function show($view)
     {
+        
         $referer = request()->headers->get('referer');
         $parseUrl = parse_url($referer, PHP_URL_PATH);
         $segments = explode('/', $parseUrl);
