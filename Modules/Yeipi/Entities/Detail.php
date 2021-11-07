@@ -18,7 +18,6 @@ class Detail extends Model
         'descripcion',
         'cantidad',
         'precio',
-        'fechaPreparacion',
         'fechaConseguido',
         'fechaNoConseguido',
         'stock_id'
@@ -39,22 +38,22 @@ class Detail extends Model
         return $this->belongsTo(Order::class);
     }
 
+    /**
+     * Get the stock that owns the Detail
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function stock()
     {
         return $this->belongsTo(Stock::class);
     }
 
-    public function scopeOrdersDelivered()
-    {
-        return $this->order()->delivered();
-    }
-
-    public function scopeOrdersNoDelivered()
-    {
-        return $this->order()->noDelivered();
-    }
-
-    public function scopePreparando()
+    /**
+     * Scope a query to only include details that are in preparation 
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeInPreparation()
     {
         return $this->whereNull(['fechaConseguido', 'fechaNoConseguido']);
     }

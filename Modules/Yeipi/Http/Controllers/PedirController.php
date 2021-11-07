@@ -8,18 +8,29 @@ use Carbon\Carbon;
 //use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
 use Modules\Yeipi\Entities\Order;
-use Modules\Yeipi\Entities\Shop;
-use Modules\Yeipi\Entities\Product;
-use Modules\Yeipi\Entities\Stock;
 use Modules\Yeipi\Entities\Detail;
+use Modules\Yeipi\Entities\Shop;
+use Modules\Yeipi\Entities\Stock;
+use Modules\Yeipi\Entities\Product;
 use Datatables;
 
 class PedirController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //$this->middleware('auth');
+    }
+
     /**
      * @Get("/pedir/iniciar", "yeipi.pedir.preparar", 'access:YEIPI-CUSTOMER')
      * 
-     * Muestra un formulario que prepara la ubicación del consumidor para realizar un pedido
+     * Muestra un formulario que solicita la ubicación del consumidor para realizar una orden
      * @return Renderable
      */
     public function preparar()
@@ -33,7 +44,7 @@ class PedirController extends Controller
     /**
      * @Post("/pedir/iniciar", "yeipi.pedir.iniciar", 'access:YEIPI-CUSTOMER')
      * 
-     * Actualiza la ubicación del consumidor para realizar un pedido
+     * Actualiza la ubicación del consumidor para realizar una orden
      * @param Request $request
      * @return RedirectResponse
      */
@@ -58,13 +69,13 @@ class PedirController extends Controller
     /**
      * @Get("/pedir/index", "yeipi.pedir.index", 'access:YEIPI-CUSTOMER')
      * 
-     * Muestra lista de stock de productos unicos de multiples shops donde el usuario puede pedir
+     * Muestra lista de stock de productos unicos de multiples shops donde el consumidor puede pedir
      * @return Renderable
      */
     public function index()
     {
         $customer = auth()->user()->people->customer;
-        $order = $customer->orders()->lastest()->withoutRequest()->firstOrCreate(['customer_id' => $customer->id]);
+        $order = $customer->orders()->lastest()->Undelivered()->firstOrCreate(['customer_id' => $customer->id]);
         $details = $order ? $order->details()->get() : collect();
         $stocks = Stock::whereNotIn('shop_id', $details->pluck('id'))->select('product_id')->groupBy('product_id')->get();
         $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks, 'order' => $order];
@@ -72,19 +83,37 @@ class PedirController extends Controller
     }
 
     /**
+     * @Get("/pedir/search/{buscar}", "yeipi.pedir.search", 'access:YEIPI-CUSTOMER')
+     * 
+     * Busca atraves de una solicitud AJAX productos unicos de multiples shops donde el consumidor puede pedir 
+     * @param String $buscar
+     * @return Renderable
+     */
+    public function search($buscar)
+    {
+        if ($buscar == '*') {
+            $stocks = Stock::select('product_id')->groupBy('product_id')->get();
+        } else {
+            $stocks = Stock::where(function($query) use ($buscar) {
+                $query->product()->where('name', 'like', '%' . $buscar . '%')
+                    ->orWhere('description', 'like', '%' . $buscar . '%');
+            })->select('product_id')->groupBy('product_id')->get();
+        }
+    }
+
+    /**
      * @Post("/pedir/register", "yeipi.pedir.store", 'access:YEIPI-CUSTOMER')
      * 
-     * Almacena un detalle de pedido
+     * Almacena un detalle de la orden actual atraves de una peticion Ajax
      * @param Request $request
-     * @return RedirectResponse
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
         try { 
             if ($request->ajax()) {
                 $customer = auth()->user()->people->customer;
-                $order = Order::where(['id' => $request->order_id, 'customer_id' => $customer->id])
-                    ->firstOrCreate(['customer_id' => $customer->id]);
+                $order = $customer->orders()->lastest()->Undelivered()->firstOrCreate(['customer_id' => $customer->id]);
                 $stock = Stock::firstWhere($request->except(['_token', 'cantidad', 'descripcion', 'order_id']));
                 
                 // Validar que no se pueda pedir más de lo que hay en stock
@@ -97,7 +126,7 @@ class PedirController extends Controller
                     return response()->json(['error' => 'No puedes pedir más de 5 productos.']);
                 }
 
-                $detail = Detail::preparando()->firstOrNew(['order_id' => $order->id, 'stock_id' => $stock->id]);
+                $detail = $order->details()->inPreparation()->firstOrNew(['order_id' => $order->id, 'stock_id' => $stock->id]);
                 $detail->cantidad = $request->cantidad;
                 $detail->descripcion = $request->descripcion ?? '';
                 $detail->precio = $stock->precio;
@@ -116,9 +145,23 @@ class PedirController extends Controller
     }
 
     /**
+     * @get("/pedir/count", "yeipi.pedir.count", 'access:YEIPI-CUSTOMER')
+     * 
+     * Retorna la cantidad de productos que tiene el consumidor en el carrito
+     * @return JsonResponse
+     */
+    public function count()
+    {
+        $customer = auth()->user()->people->customer;
+        $order = $customer->orders()->lastest()->Undelivered()->firstOrCreate(['customer_id' => $customer->id]);
+        $data = ['details_count' => $order->details()->count()];
+        return response()->json($data);
+    }
+
+    /**
      * @Get("/pedir/history", "yeipi.pedir.history", 'access:YEIPI-CUSTOMER')
      * 
-     * Muestra el historial de pedidos
+     * Muestra el historial de las ordenes del consumidor
      * @return Renderable
      */
     public function history()
@@ -132,7 +175,7 @@ class PedirController extends Controller
     /**
      * @Get("/pedir/data/history", "yeipi.pedir.data.history", 'access:YEIPI-CUSTOMER')
      * 
-     * Retorna el historico de los pedidos como Datatables
+     * Retorna el historico de las ordenes como Datatables
      * @param Order $Order
      * @return Datatables
      */
@@ -165,14 +208,54 @@ class PedirController extends Controller
     }
 
     /**
+     * @Get("/pedir/current", "yeipi.pedir.current", 'access:YEIPI-CUSTOMER')
+     * 
+     * Retorna la orden actual
+     * @param Request $request
+     * @return Renderable
+     */
+    public function current()
+    {
+        try { 
+            $customer = auth()->user()->people->customer;
+            $order = $customer->orders()->lastest()->Undelivered()->firstOrFail();
+            $details = $order->details()->get();
+
+            // Si no ha solicitado ningun producto, redireccionar a index
+            if ($details->count() == 0) {
+                return redirect()->route('yeipi.pedir.index');
+            }
+            
+            // Si no solicitó un pedido, generar formulario de solicitud
+            if ($order->fechaSolicitud == null) {
+                $form = ['route' => 'yeipi.pedir.solicitar', 'method' => 'post'];
+                $text = 'Solicitar';
+            }
+            // Si ya solicitó un pedido, generar formulario de cancelacion
+            else {
+                $form = ['route' => 'yeipi.pedir.cancelar', 'method' => 'delete'];
+                $text = 'Cancelar';
+            }
+
+            $data = ['order' => $order, 'details' => $details, 'form' => $form, 'text' => $text];
+            return view('dashboard', $this->GetInfo($data));
+        } catch (\Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
+    /**
      * @Get("/pedir/data/index/{order}", "yeipi.pedir.data.detail", 'access:YEIPI-CUSTOMER')
      * 
-     * Retorna los detalles de los pedidos como Datatables
+     * Retorna los detalles de las ordenes como Datatables
      * @param Order $Order
      * @return Datatables
      */
-    public function dataDetail(Order $order)
+    public function dataCurrent()
     {
+        $customer = auth()->user()->people->customer;
+        $order = $customer->orders()->lastest()->Undelivered()->firstOrFail();
         $details = $order->details()->with(['stock.product','stock.shop']);
         return Datatables::of($details)
             ->setRowClass('{{ "context-menu" }}')
@@ -186,7 +269,7 @@ class PedirController extends Controller
     /**
      * @Post("/pedir/solicitar", "yeipi.pedir.solicitar", 'access:YEIPI-CUSTOMER')
      * 
-     * Solicita el pedido para el delivery
+     * Solicita la orden para el delivery
      * @param Request $request
      * @return Renderable
      */
@@ -194,11 +277,12 @@ class PedirController extends Controller
     {
         try { 
             $customer = auth()->user()->people->customer;
-            $order = Order::where(['id' => $request->order_id, 'customer_id' => $customer->id])->firstOrFail();
+            $order = $customer->orders()->lastest()->Undelivered()->firstOrFail();
 
+            // Si la orden no tiene productos, redireccionar a index con un mensaje de error
             if ($order->details()->count() == 0) {
                 return back()
-                    ->withErrors(['message' => 'No tiene nada que pedir']);           
+                    ->withErrors(['unexpected_error' => 'No se puede solicitar un pedido sin productos.']);
             }
 
             $order->fechaSolicitud = Carbon::now();
@@ -211,7 +295,7 @@ class PedirController extends Controller
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
     }
-
+   
     /**
      * @Post("/pedir/cancelar", "yeipi.pedir.cancelar", 'access:YEIPI-CUSTOMER')
      * 
@@ -241,140 +325,96 @@ class PedirController extends Controller
     }
     
     /**
-     * @Get("/pedir/current", "yeipi.pedir.current", 'access:YEIPI-CUSTOMER')
+     * @Update("/pedir/register", "yeipi.pedir.register", 'access:YEIPI-CUSTOMER')
      * 
-     * Retorna el pedido actual
+     * Actualiza un detalle del pedido actual atraves de una peticion Ajax
      * @param Request $request
      * @return Renderable
      */
-    public function current()
+    public function update(Request $request)
     {
-        try { 
-            $customer = auth()->user()->people->customer;
-            $order = Order::where(['customer_id' => $customer->id, 'fechaSolicitud' => null])->firstOrFail();
-            $data = ['order' => $order];
-            return view('dashboard', $this->GetInfo($data));
+        try {
+            if ($request->ajax()) {
+                $customer = auth()->user()->people->customer;
+                $order = $customer->orders()->lastest()->Undelivered()->firstOrFail();
+                $detail = $order->details()->where('id', $request->detail_id)->firstOrFail();
+                $detail->cantidad = $request->cantidad;
+                $detail->precio = $request->precio;
+                $detail->save();
+                return response()->json(['success' => 'Pedido actualizado']);
+            }
         } catch (\Exception $exception) {
-            return back()->withInput()
-                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+            return response()->json(['error' => 'error']);
         }
     }
 
     /**
-     * @Get("/pedir/data/current", "yeipi.pedir.data.current", 'access:YEIPI-CUSTOMER')
+     * @Delete("/pedir/register", "yeipi.pedir.register", 'access:YEIPI-CUSTOMER')
      * 
-     * Retorna los detalles del pedido actual como Datatables
+     * Actualiza un detalle del pedido actual atraves de una peticion Ajax
      * @param Request $request
-     * @return Datatables
+     * @return Renderable
      */
-    public function dataCurrent()
+    public function delete(Request $request)
     {
-        try { 
-            $customer = auth()->user()->people->customer;
-            $order = Order::where(['customer_id' => $customer->id, 'fechaSolicitud' => null])->firstOrFail();
-            $details = $order->details()->with(['stock.product','stock.shop']);
-            return Datatables::of($details)
-                ->setRowClass('{{ "context-menu" }}')
-                ->addColumn('subtotal', function ($detail){
-                    return $detail->cantidad * $detail->precio;
-                })
-                ->addIndexColumn()
-                ->make(true);
+        try {
+            if ($request->ajax()) {
+                $customer = auth()->user()->people->customer;
+                $order = $customer->orders()->lastest()->Undelivered()->firstOrFail();
+                $detail = $order->details()->where('id', $request->detail_id)->firstOrFail();
+                $detail->delete();
+
+                // Devolver el stock
+                $stock = $detail->stock;
+                $stock->cantidad = $stock->cantidad + $detail->cantidad;
+                $stock->save();
+
+                // Si no quedan detalles, eliminar la orden
+                if ($order->details()->count() == 0) {
+                    $order->delete();
+                }
+                
+                return response()->json(['success' => 'Detalle eliminado']);
+            }
         } catch (\Exception $exception) {
-            return back()->withInput()
-                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+            return response()->json(['error' => 'error']);
         }
     }
 
     /**
-     * @Get("/pedir/register/{order}", "yeipi.pedir.edit", 'access:YEIPI-CUSTOMER')
+     * @Get("/pedir/qualify", "yeipi.pedir.qualify", 'access:YEIPI-CUSTOMER')
      * 
-     * Muestra los detalles del pedido del consumidor
-     * @param Order $Order
+     * Retorna la vista de calificacion de un pedido
      * @return Renderable
      */
-    public function edit(Order $order)
+    public function qualify()
     {
-        $details = $order->details()->get();
-        $form = ['route' => 'yeipi.pedir.solicitar', 'method' => 'post'];
-        $data = ['order' => $order, 'details' => $details, 'form' => $form];
+        $customer = auth()->user()->people->customer;
+        $order = $customer->orders()->lastest()->Delivered()->firstOrFail();
+        $form = ['route' => 'yeipi.pedir.qualify', 'method' => 'post'];
+        $data = ['customer' => $customer, 'form' => $form, 'order' => $order];
         return view('dashboard', $this->GetInfo($data));
     }
 
-
-
-    
     /**
-     * Update the specified resource in storage.
+     * @Post("/pedir/qualify", "yeipi.pedir.qualify", 'access:YEIPI-CUSTOMER')
+     * 
+     * Guarda la calificacion de un pedido
      * @param Request $request
-     * @param Order $order
      * @return Renderable
      */
-    public function update(Request $request, Order $order)
+    public function qualifyStore(Request $request)
     {
-        try { 
-            if ($order->details()->count() == 0) {
-                return back()
-                    ->withErrors(['message' => 'No tiene nada que pedir']);           
-            }
-
-            $order->fechaSolicitud = Carbon::now();
+        try {
+            $customer = auth()->user()->people->customer;
+            $order = $customer->orders()->lastest()->Delivered()->firstOrFail();
+            $order->calificacion = $request->calificacion;
             $order->save();
-
-            return redirect()->route('yeipi.pedir.index')
+            return redirect()->route('yeipi.pedir.history')
                 ->with('success_message', 'Attribute was successfully added.');
         } catch (\Exception $exception) {
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
-    }
- 
-    public function producto(Request $request)
-    {
-        dd($request);
-    }
-
-    public function shop(Product $product)
-    {
-        if(request()->ajax()){
-            $shops = $product->shops()->wherePivot('stock', '>', '0')->get();
-            return response()->json(['success' => 'Product was successfully added.', 'shops' => $shops], 200);
-        }
-    }
-
-    public function count()
-    {
-        $customer = auth()->user()->people->customer;
-        $order = $customer->orders()->noDelivered()->firstOrCreate(['customer_id' => $customer->id]);
-        $data = ['details_count' => $order->details()->count()];
-        return response()->json($data);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        $data = [];
-        return view('dashboard', $this->GetInfo($data));
-    }
-
-    
 }
-
-
-// 
-// solo se puede pedir si la ultima orden ha sido entregada
-// crear modal para editar el pedido 
-// lo mejor seria que una vez solicitada solamente puede ver el estado de su pedido y no pedir

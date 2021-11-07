@@ -18,12 +18,12 @@
                     </a>
                     <div class="btn-group btn-group-lg">
                         {{-- Si tiene un pedido en curso, redirecciona al pedido en curso caso contrario registra el pedido --}}
-                        @if($order->fechaSolicitud != null)
-                            <a href="{{route('yeipi.pedir.edit', $order->id)}}" class="btn btn-lg btn-default">
+                        @if($order->fechaRecepcion != null)
+                            <a href="{{route('yeipi.pedir.current')}}" class="btn btn-lg btn-default">
                                 <i class="fa fa-shopping-cart" aria-hidden="true"></i> Ver pedido en curso
                             </a>
                         @else
-                            <a type="button" class="btn btn-default" href="{{route('yeipi.pedir.edit', ['order' => $order->id ])}}">
+                            <a type="button" class="btn btn-default" href="{{route('yeipi.pedir.current')}}">
                                 <i class="fas fa-cart-plus mr-1"></i>
                                 <span class="badge badge-warning navbar-badge" id="spnCartCount"></span>
                             </a>

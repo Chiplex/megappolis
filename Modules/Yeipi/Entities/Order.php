@@ -58,24 +58,63 @@ class Order extends Model
         return $this->hasMany(Detail::class);
     }
 
+    /**
+     * Scope a query to only include last orders.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeLastest()
     {
         return $this->orderBy('created_at', 'desc');
     }
 
-    public function scopeNoDelivered()
+    /**
+     * Scope a query to only include unsolicited orders 
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnsolicited()
     {
-        return $this->whereNull('fechaEntrega');
+        return $this->where('fechaSolicitud', null);
     }
 
-    public function scopeWithoutRequest(){
-        $sinSolicitar = ['fechaSolicitud', 'fechaRecepcion', 'fechaSalida', 'fechaEntrega'];
-        return $this->whereNull($sinSolicitar);
+    /**
+     * Scope a query to only include orders not received
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNotReceived()
+    {
+        return $this->where('fechaRecepcion', null);
     }
 
+    /**
+     * Scope a query to only include non-exit orders 
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNonExit()
+    {
+        return $this->where('fechaSalida', null);
+    }
+
+    /**
+     * Scope a query to only include undelivered orders
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUndelivered()
+    {
+        return $this->where('fechaEntrega', null);
+    }
+
+    /**
+     * Scope a query to only include delivered orders
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeDelivered()
     {
-        $entregados = ['fechaSolicitud', 'fechaRecepcion', 'fechaSalida', 'fechaEntrega'];
-        return $this->whereNotNull($entregados);
+        return $this->where('fechaEntrega', '!=', null);
     }
 }
