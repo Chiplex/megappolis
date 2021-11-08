@@ -1,13 +1,16 @@
 <div class="card bg-gradient-primary">
     <div class="card-header">
         <div class="card-tools">
-            {!! Form::open($form) !!}
-                @if ($order->fechaEntrega != null)
-                    <input type="number" name="Calificacion" class="form-control" placeholder="Calificacion" min="0" max="5" value="{{ $order->calificacion }}">                    
-                @else
-                    <input type="number" name="Calificacion" class="form-control" placeholder="Calificacion" min="0" max="5" value="{{ $order->calificacion }}" disabled>
-                @endif
-                {!! Form::button('<i class="fas fa-save"></i> '.$text, ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
+            {!! Form::open($formPedido) !!}
+            @if ($order->fechaEntrega != null)
+            <input type="number" name="Calificacion" class="form-control" placeholder="Calificacion" min="0" max="5"
+                value="{{ $order->calificacion }}">
+            @else
+            <input type="number" name="Calificacion" class="form-control" placeholder="Calificacion" min="0" max="5"
+                value="{{ $order->calificacion }}" disabled>
+            @endif
+            {!! Form::button('<i class="fas fa-save"></i> '.$text, ['class' => 'btn btn-primary', 'type' => 'submit'])
+            !!}
             {!! Form::close() !!}
         </div>
     </div>
@@ -67,18 +70,56 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registro de Detalle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {!! Form::open($formDetalle) !!}
+            <div class="modal-body">
+                <input type="hidden" name="order_id">
+                <input type="hidden" name="stock_id">
+                <div class="form-group row">
+                    <label for="shop" class="col-sm-4">Descripcion</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="descripcion" class="form-control" placeholder="Descripcion" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="cantidad" class="col-sm-4 col-form-label">Cantidad</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" placeholder="Cantidad" name="cantidad" type="text" id="cantidad">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="descripcion" class="col-sm-4 col-form-label">Precio</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" placeholder="Precio" name="precio" type="text" id="precio" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                {!! Form::button('<i class="fa fa-save" aria-hidden="true"></i>', ['class' => 'btn btn-primary', 'type'
+                => 'submit']) !!}
+            </div>
+            {!! Form::close() !!}
+        </div>
+    </div>
+</div>
 
 @push('js')
 <script>
-var mPedido, vPedido;
-var vPedido = View("pedir.modal.detail");
-var mPedido = $(vPedido);
+    var mPedido = $("#modal");
 var total = 0;
 var t = $('#table').DataTable({
     processing: true,
     serverSide: true,
     "pageLength": 500,
-    ajax: "{{ route('yeipi.pedir.data.current') }}",
+    ajax: "{{ $routes['dataCurrent'] }}",
     columns: [
         { data: 'id', name: 'id', "orderable": false },
         { data: 'stock.product.descripcion', name: 'stock.product.descripcion' },
@@ -114,7 +155,7 @@ $.contextMenu({
                         AbrirModal(model);
                         break;
                     case "delete":
-                        Eliminar(model);
+                        EliminarDetalle(model);
                         break;
                 }
             },
@@ -126,12 +167,43 @@ $.contextMenu({
     },
 });
 
+$("#form-product").submit(function (e) {
+    e.preventDefault();
+    GuardarDetalle();
+});
+
 function AbrirModal(model) {
     JSONToForm(model, mPedido);
     mPedido.modal('show');
 }
 
-function Eliminar(model) {
+function GuardarDetalle() {
+    var form = $("#form-product");
+    var data = FormToJSON(form);
+    var url = form.attr('action');
+    var method = "PUT";
+    if (data.id == 0) {
+        method = "POST";
+    }
+    $.ajax({
+        url: url,
+        method: method,
+        data: data,
+        success: function (response) {
+            if (response.success) {
+                mPedido.modal('hide');
+                t.ajax.reload();
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function (response) {
+            alert(response.message);
+        }
+    });
+}
+
+function EliminarDetalle(model) {
     Swal.fire({
         title: '¿Estás seguro?',
         text: "¡No podrás revertir esto!",

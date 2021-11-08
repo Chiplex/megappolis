@@ -49,11 +49,11 @@ function Service(options) {
         .done((result) => resolve(result) )
         .fail((error) => {
             // Mostrar error como alerta
-            swal({
-                title: "Error",
-                text: error.error,
-                icon: "error",
-                button: "Aceptar"
+            Swal.fire({
+                title: 'Error',
+                text: error.responseJSON.error,
+                type: 'warning',
+                confirmButtonText: 'Aceptar'                
             });
             reject(error);
         });

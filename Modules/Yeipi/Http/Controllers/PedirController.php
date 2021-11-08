@@ -77,27 +77,38 @@ class PedirController extends Controller
         $order = $customer->orders()->lastest()->Undelivered()->firstOrCreate(['customer_id' => $customer->id]);
         $details = $order ? $order->details()->get() : collect();
         $stocks = Stock::whereNotIn('shop_id', $details->pluck('id'))->select('product_id')->groupBy('product_id')->get();
-        $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks, 'order' => $order];
+        $routes = [
+            'localization' => route('yeipi.pedir.preparar'),
+            'history' => route('yeipi.pedir.history'),
+            'current' => route('yeipi.pedir.current'),
+            'shop' => url('yeipi/pedir/shop'),
+            'count' => route('yeipi.pedir.count'),
+        ];
+        $form = ['route' => 'yeipi.pedir.store', 'method' => 'post', 'id' => 'form-pedir'];
+        $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks, 'order' => $order, 'routes' => $routes, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
     }
 
     /**
-     * @Get("/pedir/search/{buscar}", "yeipi.pedir.search", 'access:YEIPI-CUSTOMER')
+     * @Get("/pedir/search/{search}", "yeipi.pedir.search", 'access:YEIPI-CUSTOMER')
      * 
-     * Busca atraves de una solicitud AJAX productos unicos de multiples shops donde el consumidor puede pedir 
-     * @param String $buscar
-     * @return Renderable
+     * Busca los productos atraves de una solicitud AJAX y retorna una lista de productos 
+     * @param String $search
+     * @return JsonResponse
      */
-    public function search($buscar)
+    public function search($search)
     {
-        if ($buscar == '*') {
+        if ($search == '*') {
             $stocks = Stock::select('product_id')->groupBy('product_id')->get();
         } else {
-            $stocks = Stock::where(function($query) use ($buscar) {
-                $query->product()->where('name', 'like', '%' . $buscar . '%')
-                    ->orWhere('description', 'like', '%' . $buscar . '%');
+            $stocks = Stock::where(function($query) use ($search) {
+                $query->product()->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
             })->select('product_id')->groupBy('product_id')->get();
         }
+
+        $products = Product::whereIn('id', $stocks->pluck('product_id'))->get();
+        return response()->json($products);
     }
 
     /**
@@ -116,7 +127,7 @@ class PedirController extends Controller
     }
 
     /**
-     * @Post("/pedir/register", "yeipi.pedir.store", 'access:YEIPI-CUSTOMER')
+     * @Post("/pedir/product", "yeipi.pedir.store", 'access:YEIPI-CUSTOMER')
      * 
      * Almacena un detalle de la orden actual a traves de una peticion Ajax
      * @param Request $request
@@ -132,12 +143,12 @@ class PedirController extends Controller
                 
                 // Validar que no se pueda pedir más de lo que hay en stock
                 if ($stock->stock < $request->cantidad) {
-                    return response()->json(['error' => 'No hay suficiente stock para realizar el pedido.']);
+                    return response()->json(['error' => 'No hay suficiente stock para realizar el pedido.'], 422);
                 }
 
                 // Validar que no se puede pedir mas de 5 productos
                 if ($order->details()->count() >= 5) {
-                    return response()->json(['error' => 'No puedes pedir más de 5 productos.']);
+                    return response()->json(['error' => 'No puedes pedir más de 5 productos.'], 422);
                 }
 
                 $detail = $order->details()->inPreparation()->firstOrNew(['order_id' => $order->id, 'stock_id' => $stock->id]);
@@ -246,21 +257,28 @@ class PedirController extends Controller
             
             // Si no solicitó un pedido, generar formulario de solicitud
             if ($order->fechaSolicitud == null) {
-                $form = ['route' => 'yeipi.pedir.solicitar', 'method' => 'post'];
+                $formPedido = ['route' => 'yeipi.pedir.solicitar', 'method' => 'post'];
                 $text = 'Solicitar';
             }
             // Si ya solicitó un pedido, generar formulario de cancelacion
             else {
-                $form = ['route' => 'yeipi.pedir.cancelar', 'method' => 'delete'];
+                $formPedido = ['route' => 'yeipi.pedir.cancelar', 'method' => 'delete'];
                 $text = 'Cancelar';
             }
             // Si ya se completo el pedido, generar formulario de calificacion de servicio
             if ($order->fechaEntrega != null) {
-                $form = ['route' => 'yeipi.pedir.calificar', 'method' => 'post'];
+                $formPedido = ['route' => 'yeipi.pedir.calificar', 'method' => 'post'];
                 $text = 'Calificar';
             }
 
-            $data = ['order' => $order, 'details' => $details, 'form' => $form, 'text' => $text];
+            $formDetalle = ['route' => 'yeipi.pedir.product', 'method' => 'post', 'id' => 'form-product'];
+
+            $routes = [
+                'dataCurrent' => route('yeipi.pedir.data.current'),
+                'current' => route('yeipi.pedir.current'),
+            ];
+
+            $data = ['order' => $order, 'details' => $details, 'form' => $formPedido, 'text' => $text];
             return view('dashboard', $this->GetInfo($data));
         } catch (\Exception $exception) {
             return back()->withInput()
@@ -292,9 +310,9 @@ class PedirController extends Controller
     /**
      * @Post("/pedir/solicitar", "yeipi.pedir.solicitar", 'access:YEIPI-CUSTOMER')
      * 
-     * Solicita la orden para el delivery
+     * Solicita la orden completa para el delivery
      * @param Request $request
-     * @return Renderable
+     * @return RedirectResponse
      */
     public function solicitar(Request $request)
     {
