@@ -11,9 +11,13 @@ use App\Models\User;
 
 class ViewController extends Controller
 {
+    /**
+     * Display a view.
+     *
+     * @return Illuminate\View\View
+     */
     public function show($view)
     {
-        
         $referer = request()->headers->get('referer');
         $parseUrl = parse_url($referer, PHP_URL_PATH);
         $segments = explode('/', $parseUrl);
@@ -33,6 +37,6 @@ class ViewController extends Controller
         $permissions = "ver"; //GetPermisos($page);
         
         $result = ['result' => true, 'data' => $permissions];
-        return view($app->name . '::' . $view, compact('result'));
+        return view($app->name . '::' . $view, compact('result'))->render();
     }
 }

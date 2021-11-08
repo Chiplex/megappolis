@@ -18,6 +18,10 @@ class Product extends Model
         'descripcion',
         'marca',
     ];
+
+    protected $appends = [
+        'descripcion_marca',
+    ];
     
     protected static function newFactory()
     {
@@ -44,8 +48,13 @@ class Product extends Model
         return $this->belongsToMany(Shop::class, Stock::class);
     }
 
+    /**
+     * Get the Description and the Brand of the Product as attributes
+     *
+     * @return string
+     */
     public function getDescripcionMarcaAttribute()
     {
-        return $this->descripcion . ' (' . $this->marca . ')';
+        return $this->descripcion . ' - ' . $this->marca;
     }
 }

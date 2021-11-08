@@ -14,7 +14,7 @@ use Datatables;
 class ProveerController extends Controller
 {
     /**
-     * @Get("/proveer/iniciar", "yeipi.proveer.preparar", 'access:YEIPI-CUSTOMER')
+     * @Get("/proveer/iniciar", "yeipi.proveer.preparar", 'access:YEIPI-PROVIDER')
      * 
      * Muestra un formulario que prepara la ubicación del proveedor para la compra de productos
      * @return Renderable
@@ -32,9 +32,9 @@ class ProveerController extends Controller
     }
 
     /**
-     * @Post("/proveer/iniciar", "yeipi.proveer.iniciar", 'access:YEIPI-CUSTOMER')
+     * @Post("/proveer/iniciar", "yeipi.proveer.iniciar", 'access:YEIPI-PROVIDER')
      * 
-     * Crea o actualiza una tienda para el proveedor
+     * Actualiza la ubicacion del shop del proveedor
      * @return Renderable
      */
     public function iniciar(Request $request)
@@ -54,7 +54,7 @@ class ProveerController extends Controller
     }
 
     /**
-     * @Get("/proveer/index", "yeipi.proveer.index", 'access:YEIPI-CUSTOMER')
+     * @Get("/proveer/index", "yeipi.proveer.index", 'access:YEIPI-PROVIDER')
      * 
      * Muestra una lista de productos que se pueden comprar solo si el proveedor tiene una tienda
      * @return Renderable
@@ -65,23 +65,62 @@ class ProveerController extends Controller
         if(!isset($shop)){
             return redirect()->route('yeipi.proveer.preparar');
         }
-        $ordersDelivered = $shop->sales()->ordersDelivered()->get();
-        $ordersNoDelivered = $shop->sales()->ordersNoDelivered()->get();
-        $totalSales = $this->totalSales($shop->sales()->ordersDelivered());
-        $stock = $shop->stock()->get();
-        $data = compact('shop', 'ordersDelivered', 'ordersNoDelivered', 'totalSales', 'stock');
+        
+        // Trer las ordenes entregadas y no entregadas solo si el proveedor tiene una ventas
+        if($shop->sales->isEmpty()){
+            $ordersDelivered = collect();
+            $ordersUndelivered = collect();
+            $totalSales = 0;
+        }else{
+            $ordersDelivered =  $shop->sales->order()->delivered()->get();
+            $ordersUndelivered = $shop->sales->order()->unDelivered()->get();
+            $totalSales = $this->totalSales($shop->sales()->orders()->delivered());
+        }
+        
+        $stock = $shop->stocks;
+
+        // Generar un formulario para agregar un producto
+        $form = ['route' => 'yeipi.proveer.stock.store', 'method' => 'POST', 'id' => 'frmProducto'];
+        $data = compact('shop', 'ordersDelivered', 'ordersUndelivered', 'totalSales', 'stock', 'form');
         return view('dashboard', $this->GetInfo($data));
     }
 
-    public function data(Shop $shop)
+    /**
+     * Obtiene el total de las ventas
+     * @return int
+     */
+    private function totalSales($sales)
     {
-        $query = $shop->products();
-
-        return Datatables::of($query)
-            ->setRowClass('{{ "context-menu" }}')
-            ->make(true);
+        $total = 0;
+        foreach ($sales as $sale) {
+            $subtotal = ($sale->cantidad * $sale->precio);
+            $total = $total + $subtotal;
+        }
+        return $total;
     }
 
+    /**
+     * @Get("/proveer/product", "yeipi.pedir.product", 'access:YEIPI-PROVIDER')
+     * 
+     * Muestra una lista de productos que se agregaran al stock del proveedor
+     * @return JsonResponse
+     */
+    public function product()
+    {
+        if(request()->ajax()){
+            $shop = auth()->user()->people->provider->shop;
+            $stock = $shop->stocks;
+            $products = Product::all();
+            return response()->json(['success' => 'Resource loaded.', 'products' => $products]);
+        }
+    }
+
+    /**
+     * @Get("/proveer/data/stock", "yeipi.proveer.data.stock", 'access:YEIPI-PROVIDER')
+     * 
+     * Retorna una lista de productos en stock como DataTable
+     * @return Datatables
+     */
     public function dataStock()
     {
         $provider = auth()->user()->people->provider;
@@ -89,44 +128,45 @@ class ProveerController extends Controller
         $stocks = $shops->stocks()->with('product');
 
         return Datatables::of($stocks)
-            ->setRowClass('{{ "context-menu-stock" }}')
+            ->setRowClass('context-menu-stock')
             ->addIndexColumn()
             ->make(true);
     }
 
+    /**
+     * @Get("/proveer/data/customer", "yeipi.proveer.data.customer", 'access:YEIPI-PROVIDER')
+     * 
+     * Retorna una lista de clientes con el delivery y su estado como DataTable
+     * @return Datatables
+     */
     public function dataCustomer()
     {
         $provider = auth()->user()->people->provider;
         $shops = $provider->shop;
-        $orders = $shops->sales()->ordersDelivered()->with(['customer.people', 'delivery.people']);
+
+        // Trer las ordenes entregadas y no entregadas solo si el proveedor tiene una ventas
+        if($shops->sales->isEmpty()){
+            $orders = collect();
+        }else{
+            $orders = $shops->sales->order()->delivered()->with(['customer.people', 'delivery.people']);
+        }
 
         return Datatables::of($orders)
-            ->setRowClass('{{ "context-menu-customer" }}')
+            ->setRowClass('context-menu-customer')
             ->addColumn('customer', function ($order){
-                return $order->delivery? $order->delivery->people->getNameComplete():'';
+                return $order->delivery? $order->delivery->people->getNameComplete(): '';
             })
             ->addColumn('delivery', function ($order){
-                return $order->customer? $order->customer->people->getNameComplete():'';
+                return $order->customer? $order->customer->people->getNameComplete(): '';
             })
             ->addIndexColumn()
             ->make(true);
     }
 
-    
-
-    
-
     /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('yeipi::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * @Post("/proveer/stock", "yeipi.proveer.stock", 'access:YEIPI-PROVIDER')
+     * 
+     * Agrega un producto al stock del proveedor
      * @param Request $request
      * @return Renderable
      */
@@ -135,92 +175,41 @@ class ProveerController extends Controller
         try { 
             Stock::create($request->all());
 
-            if ($request->ajax()) {
-                
+            if ($request->ajax()) 
                 return response()->json(['success' => 'Product was successfully added.'], 200);
-            }
-            return redirect()->route('yeipi.product.index')
-                ->with('success_message', 'Attribute was successfully added.');
+            
+            return redirect()->route('yeipi.product.index');
         } catch (Exception $exception) {
+            if ($request->ajax()) 
+                return response()->json(['error' => 'Unexpected error occurred while trying to process your request.'], 500);
+            
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
+     * @Put("/proveer/stock/{stock}", "yeipi.proveer.stock", 'access:YEIPI-PROVIDER')
+     * 
+     * Actualiza un producto del stock del proveedor
+     * @param Stock $stock
      * @return Renderable
      */
-    public function show(Product $product)
-    {
-        if($request->ajax()){
-            return $product->shop()->wherePivot('stock', '>', '0')->get();
-        }
-        return view('yeipi::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit(Shop $shop)
-    {
-        $form = ['route' => 'yeipi.proveer.store', 'method' => 'post', 'id' => 'frmProducto'];
-        $products = Product::all()->pluck('descripcion_marca', 'id');
-        $data = ['shop' => $shop, 'form' => $form, 'products' => $products];
-        return view('dashboard', $this->GetInfo($data));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, Stock $stock)
+    public function update(Stock $stock, Request $request)
     {
         try { 
             $stock->update($request->all());
 
-            if ($request->ajax()) {
-                
-                return response()->json(['success' => 'Product was successfully added.'], 200);
-            }
-            return redirect()->route('yeipi.product.index')
-                ->with('success_message', 'Attribute was successfully added.');
+            if ($request->ajax()) 
+                return response()->json(['success' => 'Product was successfully updated.'], 200);
+            
+            return redirect()->route('yeipi.product.index');
         } catch (Exception $exception) {
+            if ($request->ajax()) 
+                return response()->json(['error' => 'Unexpected error occurred while trying to process your request.'], 500);
+            
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    public function delivery(Shop $shop)
-    {
-        $deliveries = Delivery::doesntHave('contracts')->get();
-        $data = ['shop' => $shop, 'deliveries' => $deliveries];
-        return view('dashboard', $this->GetInfo($data));
-    }
-
-    public function totalSales($details)
-    {
-        $total = 0;
-        foreach ($details as $detail) {
-            $subtotal = ($detail->cantidad * $detail->precio);
-            $total = $total + $subtotal;
-        }
-        return $total;
-    }
-    
 }

@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            {!! Form::open(['route' => 'yeipi.pedir.producto', 'method' => 'post', 'id' => 'frmPedir']) !!}
+            {!! Form::open(['route' => 'yeipi.pedir.store', 'method' => 'post', 'id' => 'frmPedir']) !!}
             <div class="modal-body">
                 <input type="hidden" name="product_id">
                 <input type="hidden" name="order_id">

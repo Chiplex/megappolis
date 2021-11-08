@@ -50,7 +50,7 @@
                             <div class="card bg-white text-center">
                                 <img src="#" class="card-img-top" alt="...">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ $stock->product->descripcion }} <small>Bs. {{ $stock->precio }}</small></h5>
+                                    <h5 class="card-title">{{ $stock->product->descripcion }}</h5>
                                     {!! Form::submit('Agregar al carrito', ['class' => 'btn bg-primary btn-block']) !!}
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
         option = $("<option>");
         for (const key in shops) {
             let shop = shops[key];
-            option.clone().val(shop.id).text(shop.nombre).appendTo(select);
+            option.clone().val(shop.id).text(`Bs. ${shop.pivot.precio} en ${shop.nombre}`).appendTo(select);
         }
     }
 

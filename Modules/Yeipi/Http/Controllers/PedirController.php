@@ -57,8 +57,7 @@ class PedirController extends Controller
             $customer->longitud = $request->longitud;
             $customer->save();
 
-            return redirect()->route('yeipi.pedir.index')
-                ->with('success_message', 'information was successfully added.');
+            return redirect()->route('yeipi.pedir.index');
             
         } catch (\Exception $exception) {
             return back()->withInput()
@@ -102,9 +101,24 @@ class PedirController extends Controller
     }
 
     /**
+     * @Get("/pedir/shop/{product}", "yeipi.pedir.shop", 'access:YEIPI-CUSTOMER')
+     * 
+     * Muestra lista de shops quienes ofrecen el producto solicitado
+     * @param Product $product
+     * @return JsonResponse
+     */
+    public function shop(Product $product)
+    {
+        if(request()->ajax()){
+            $shops = $product->shops()->wherePivot('stock', '>', '0')->withPivot('precio')->get();
+            return response()->json(['success' => 'Resource loaded.', 'shops' => $shops]);
+        }
+    }
+
+    /**
      * @Post("/pedir/register", "yeipi.pedir.store", 'access:YEIPI-CUSTOMER')
      * 
-     * Almacena un detalle de la orden actual atraves de una peticion Ajax
+     * Almacena un detalle de la orden actual a traves de una peticion Ajax
      * @param Request $request
      * @return JsonResponse
      */
@@ -131,6 +145,10 @@ class PedirController extends Controller
                 $detail->descripcion = $request->descripcion ?? '';
                 $detail->precio = $stock->precio;
                 $detail->save();
+
+                // Actualizar el stock
+                $stock->stock -= $request->cantidad;
+                $stock->save();
 
                 $data = ['success' => 'Detail was successfully added.', 'detail' => $detail->load('stock.product')];
                 return response()->json($data);
@@ -236,6 +254,11 @@ class PedirController extends Controller
                 $form = ['route' => 'yeipi.pedir.cancelar', 'method' => 'delete'];
                 $text = 'Cancelar';
             }
+            // Si ya se completo el pedido, generar formulario de calificacion de servicio
+            if ($order->fechaEntrega != null) {
+                $form = ['route' => 'yeipi.pedir.calificar', 'method' => 'post'];
+                $text = 'Calificar';
+            }
 
             $data = ['order' => $order, 'details' => $details, 'form' => $form, 'text' => $text];
             return view('dashboard', $this->GetInfo($data));
@@ -314,8 +337,14 @@ class PedirController extends Controller
                     ->withErrors(['message' => 'No se puede cancelar un pedido que ya fue entregado']);           
             }
 
-            //$order->fechaCancelacion = Carbon::now();
-
+            // Actualizar el stock de los productos solicitados
+            $details = $order->details()->get();
+            foreach ($details as $detail) {
+                $stock = $detail->stock;
+                $stock->cantidad = $stock->cantidad + $detail->cantidad;
+                $stock->save();
+            }
+            
             return redirect()->route('yeipi.pedir.history')
                 ->with('success_message', 'Attribute was successfully added.');
         } catch (\Exception $exception) {

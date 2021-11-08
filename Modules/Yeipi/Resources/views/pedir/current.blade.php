@@ -2,6 +2,11 @@
     <div class="card-header">
         <div class="card-tools">
             {!! Form::open($form) !!}
+                @if ($order->fechaEntrega != null)
+                    <input type="number" name="Calificacion" class="form-control" placeholder="Calificacion" min="0" max="5" value="{{ $order->calificacion }}">                    
+                @else
+                    <input type="number" name="Calificacion" class="form-control" placeholder="Calificacion" min="0" max="5" value="{{ $order->calificacion }}" disabled>
+                @endif
                 {!! Form::button('<i class="fas fa-save"></i> '.$text, ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
             {!! Form::close() !!}
         </div>
