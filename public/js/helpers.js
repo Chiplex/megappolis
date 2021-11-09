@@ -1,20 +1,35 @@
+/**
+ * Convierte Json a Formulario HTML
+ * Con la capacidad de explorar un objeto 
+ * 
+ * @param {*} form 
+ * @param {*} data 
+ */
 function JSONToForm(form, data) {
     $.each(data, function (key, value) {
-        var control = $('[name=' + key + ']', form);
-        switch (control.prop("type")) {
-            case "radio": case "checkbox":
-                control.each(function () {
+        var element = $('[name=' + key + ']', form);
+        var data = $(element).attr('data');
+
+        switch (element.prop("type")) {
+            case "radio":
+            case "checkbox":
+                element.each(function () {
                     if ($(this).attr('value') == value) $(this).attr("checked", value);
                 });
                 break;
             case "date":
-                control.val(JsonDateControl(value));
+                element.val(moment(value).format('YYYY-MM-DD'));
                 break;
             case "time":
-                control.val(JsonTimeControl(value));
+                element.val(moment(value).format('HH:mm:ss'));
                 break;
             default:
-                control.val(value);
+                if(typeof value === 'object' && value !== null) {
+                    element.val(eval('value.' + data));
+                }else{
+                    element.val(value);
+                }
+                break;
         }
     });
 }
@@ -43,20 +58,20 @@ function FormToJSON($form) {
  * @returns Promise
  */
 function Service(options) {
-    
+
     return new Promise((resolve, reject) => {
         $.ajax(options)
-        .done((result) => resolve(result) )
-        .fail((error) => {
-            // Mostrar error como alerta
-            Swal.fire({
-                title: 'Error',
-                text: error.responseJSON.error,
-                type: 'warning',
-                confirmButtonText: 'Aceptar'                
+            .done((result) => resolve(result))
+            .fail((error) => {
+                // Mostrar error como alerta
+                Swal.fire({
+                    title: 'Error',
+                    text: error.responseJSON.error,
+                    type: 'warning',
+                    confirmButtonText: 'Aceptar'
+                });
+                reject(error);
             });
-            reject(error);
-        });
     });
 }
 
@@ -106,8 +121,7 @@ function OpenWindow(uri) {
                 //closeCallback(win);
                 tblFichaMedica.search("").draw();
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
     }, 1000);

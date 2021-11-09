@@ -22,6 +22,7 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
         Route::post('/iniciar', 'PedirController@iniciar')->name('yeipi.pedir.iniciar');
 
         Route::get('/index', 'PedirController@index')->name('yeipi.pedir.index');
+        Route::get('/cart', 'PedirController@cart')->name('yeipi.pedir.cart');
         Route::get('/search/{search}', 'PedirController@search')->name('yeipi.pedir.search');
         Route::get('/shop/{product}', 'PedirController@shop')->name('yeipi.pedir.shop');
         Route::post('/product', 'PedirController@store')->name('yeipi.pedir.store');

@@ -5,9 +5,6 @@
             @if ($order->fechaEntrega != null)
             <input type="number" name="Calificacion" class="form-control" placeholder="Calificacion" min="0" max="5"
                 value="{{ $order->calificacion }}">
-            @else
-            <input type="number" name="Calificacion" class="form-control" placeholder="Calificacion" min="0" max="5"
-                value="{{ $order->calificacion }}" disabled>
             @endif
             {!! Form::button('<i class="fas fa-save"></i> '.$text, ['class' => 'btn btn-primary', 'type' => 'submit'])
             !!}
@@ -86,7 +83,7 @@
                 <div class="form-group row">
                     <label for="shop" class="col-sm-4">Descripcion</label>
                     <div class="col-sm-8">
-                        <input type="text" name="descripcion" class="form-control" placeholder="Descripcion" required>
+                        <input type="text" name="descripcion" data="descripcion" data="stock.product.descripcion" class="form-control" placeholder="Descripcion" required>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -113,7 +110,7 @@
 
 @push('js')
 <script>
-    var mPedido = $("#modal");
+var mPedido = $("#modal");
 var total = 0;
 var t = $('#table').DataTable({
     processing: true,
@@ -152,7 +149,7 @@ $.contextMenu({
                 var model = row.data();
                 switch (key) {
                     case "edit":
-                        AbrirModal(model);
+                        AbrirModalDetalle(model);
                         break;
                     case "delete":
                         EliminarDetalle(model);
@@ -172,8 +169,9 @@ $("#form-product").submit(function (e) {
     GuardarDetalle();
 });
 
-function AbrirModal(model) {
-    JSONToForm(model, mPedido);
+function AbrirModalDetalle(model) {
+    console.log(model);
+    JSONToForm(mPedido, model);
     mPedido.modal('show');
 }
 
@@ -182,7 +180,7 @@ function GuardarDetalle() {
     var data = FormToJSON(form);
     var url = form.attr('action');
     var method = "PUT";
-    if (data.id == 0) {
+    if (data.id) {
         method = "POST";
     }
     $.ajax({

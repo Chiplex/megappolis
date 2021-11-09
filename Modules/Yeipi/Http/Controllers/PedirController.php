@@ -83,10 +83,26 @@ class PedirController extends Controller
             'current' => route('yeipi.pedir.current'),
             'shop' => url('yeipi/pedir/shop'),
             'count' => route('yeipi.pedir.count'),
+            'cart' => route('yeipi.pedir.cart'),
         ];
         $form = ['route' => 'yeipi.pedir.store', 'method' => 'post', 'id' => 'form-pedir'];
         $data = ['customer' => $customer, 'details' => $details, 'stocks' => $stocks, 'order' => $order, 'routes' => $routes, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
+    }
+
+    /**
+     * @Get("/pedir/cart", "yeipi.pedir.cart", 'access:YEIPI-CUSTOMER')
+     * 
+     * Muestra lista de productos que ha solicitado el consumidor a travez de una solicitud en Ajax
+     * @return JsonResponse
+     */
+    public function cart()
+    {
+        $customer = auth()->user()->people->customer;
+        $order = $customer->orders()->lastest()->Undelivered()->firstOrCreate(['customer_id' => $customer->id]);
+        $details = $order ? $order->details()->with('stock.product')->get() : collect();
+        $data = ['details' => $details];
+        return response()->json($data);
     }
 
     /**
@@ -265,20 +281,20 @@ class PedirController extends Controller
                 $formPedido = ['route' => 'yeipi.pedir.cancelar', 'method' => 'delete'];
                 $text = 'Cancelar';
             }
-            // Si ya se completo el pedido, generar formulario de calificacion de servicio
+            // Si ya se completó el pedido, generar formulario de calificación de servicio
             if ($order->fechaEntrega != null) {
                 $formPedido = ['route' => 'yeipi.pedir.calificar', 'method' => 'post'];
                 $text = 'Calificar';
             }
 
-            $formDetalle = ['route' => 'yeipi.pedir.product', 'method' => 'post', 'id' => 'form-product'];
+            $formDetalle = ['url' => '/yeipi/pedir/product', 'method' => 'post', 'id' => 'form-product'];
 
             $routes = [
                 'dataCurrent' => route('yeipi.pedir.data.current'),
                 'current' => route('yeipi.pedir.current'),
             ];
 
-            $data = ['order' => $order, 'details' => $details, 'form' => $formPedido, 'text' => $text];
+            $data = ['order' => $order, 'details' => $details, 'formPedido' => $formPedido, 'text' => $text, 'formDetalle' => $formDetalle, 'routes' => $routes];
             return view('dashboard', $this->GetInfo($data));
         } catch (\Exception $exception) {
             return back()->withInput()

@@ -40,10 +40,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                @foreach ($details as $detail)
-                                    <p class="dropdown-item">{{ $detail->cantidad }} {{ $detail->stock->product->descripcion }}</p>
-                                @endforeach
+                            <div class="dropdown-menu dropdown-menu-right" id="divDetailCart">
                             </div>
                         @endif
                     </div>
@@ -53,7 +50,7 @@
                 <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                     @foreach ($stocks as $stock)
                     <div class="col">
-                        {!! Form::open(['id' => 'form-product']) !!}
+                        {!! Form::open(['class' => 'form-product']) !!}
                             {!! Form::hidden('product_id', $stock->product->id) !!}
                             {!! Form::hidden('order_id', $order->id) !!}
                             <div class="card bg-white text-center">
@@ -117,9 +114,10 @@
 <script>
     var mPedido = $("#modal");
 
+    UpdateListCart();
     DetailsCount();
 
-    $("#form-product").on('submit', function (e) {
+    $(".form-product").on('submit', function (e) {
         e.preventDefault();
         var dataForm = FormToJSON($(this));
         AbrirModal(dataForm);
@@ -159,10 +157,29 @@
         })
         .then(data => {
             mPedido.modal("hide");
-            shortDetail = $("<p>");
-            shortDetail.clone().addClass("dropdown-item").text(data.detail.cantidad + " " + data.detail.stock.product.descripcion).prependTo(".dropdown-menu-right");
+            UpdateListCart();
             DetailsCount();
         })
+    }
+
+    function UpdateListCart() {
+        Service({
+            type: "get",
+            url: "{{ $routes['cart'] }}"
+        })
+        .then(data => {
+            $("#divDetailCart").empty();
+            for (const key in data.details) {
+                let detail = data.details[key];
+                $("#divDetailCart").append(`<p class="dropdown-item">${detail.cantidad} ${detail.stock.product.descripcion}</p>`);
+            }
+            $("#spnCartCount").text(data.details.length);
+        })
+    }
+
+    function AddDetail(detail) {
+        shortDetail = $("<p>");
+        shortDetail.clone().addClass("dropdown-item").text(detail.cantidad + " " + detail.stock.product.descripcion).prependTo(".dropdown-menu-right");
     }
 
     function DetailsCount() {
