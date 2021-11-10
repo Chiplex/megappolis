@@ -142,43 +142,48 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.pages: ~31 rows (aproximadamente)
+-- Volcando datos para la tabla megappolis.pages: ~37 rows (aproximadamente)
 /*!40000 ALTER TABLE `pages` DISABLE KEYS */;
 REPLACE INTO `pages` (`id`, `app_id`, `controller`, `action`, `name`, `type`, `icon`, `page_id`, `created_at`, `updated_at`) VALUES
 	(1, 1, 'page', 'register', 'Registro de Paginas', 'page', NULL, 0, NULL, NULL),
 	(2, 1, 'permission', 'register', 'Registro de Permisos', 'page', NULL, 0, NULL, NULL),
-	(3, 1, 'page', 'index', 'Páginas', 'submenu', 'fa fa-file', 11, '2021-04-05 12:04:15', '2021-04-12 12:06:20'),
-	(4, 1, 'permission', 'index', 'Permisos', 'submenu', 'fa fa-user-shield', 11, '2021-04-05 12:05:33', '2021-04-12 12:06:47'),
-	(5, 1, 'app', 'index', 'Apps', 'submenu', 'fa fa-city', 11, '2021-04-05 12:05:59', '2021-04-12 12:09:37'),
+	(3, 1, 'page', 'index', 'Páginas', 'menu', 'fa fa-file', 0, '2021-04-05 12:04:15', '2021-11-10 00:57:22'),
+	(4, 1, 'permission', 'index', 'Permisos', 'menu', 'fa fa-user-shield', 0, '2021-04-05 12:05:33', '2021-11-10 00:56:14'),
+	(5, 1, 'app', 'index', 'Apps', 'menu', 'fa fa-city', 0, '2021-04-05 12:05:59', '2021-11-10 00:56:58'),
 	(6, 1, 'app', 'register', 'Registro de Roles', 'page', NULL, 0, '2021-04-05 12:06:26', '2021-04-05 12:06:26'),
-	(7, 1, 'role', 'index', 'Roles', 'submenu', 'fa fa-user-tag', 11, '2021-04-05 12:06:58', '2021-04-12 12:07:03'),
+	(7, 1, 'role', 'index', 'Roles', 'menu', 'fa fa-user-tag', 0, '2021-04-05 12:06:58', '2021-11-10 00:56:44'),
 	(8, 1, 'role', 'register', 'Registro de rol', 'page', NULL, 0, '2021-04-05 12:07:38', '2021-04-05 12:07:38'),
-	(9, 1, 'user', 'index', 'Usuarios', 'submenu', 'fa fa-user-friends', 11, '2021-04-05 12:16:57', '2021-04-12 12:07:17'),
+	(9, 1, 'user', 'index', 'Usuarios', 'menu', 'fa fa-user-friends', 0, '2021-04-05 12:16:57', '2021-11-10 00:56:32'),
 	(10, 1, 'user', 'register', 'Registro de usuario', 'page', NULL, 0, '2021-04-05 12:17:38', '2021-04-05 12:17:38'),
-	(11, 1, 'home', 'index', 'Core', 'menu', NULL, 0, '2021-04-05 15:37:35', '2021-04-05 15:37:35'),
-	(12, 2, 'home', 'index', 'Yeipi', 'menu', NULL, 0, '2021-04-05 16:10:50', '2021-04-05 16:10:50'),
-	(13, 1, 'people', 'index', 'Personas', 'submenu', 'fa fa-users', 11, '2021-04-12 12:09:09', '2021-04-12 12:09:09'),
+	(11, 1, 'home', 'index', 'Core', 'app', NULL, 0, '2021-04-05 15:37:35', '2021-11-10 00:54:44'),
+	(12, 2, 'home', 'index', 'Yeipi', 'app', NULL, 0, '2021-04-05 16:10:50', '2021-11-10 00:55:01'),
+	(13, 1, 'people', 'index', 'Personas', 'menu', 'fa fa-users', 0, '2021-04-12 12:09:09', '2021-11-10 00:55:58'),
 	(14, 1, 'people', 'register', 'Registro de Personas', 'page', NULL, 0, '2021-04-12 12:10:50', '2021-04-12 12:10:50'),
-	(15, 2, 'pedir', 'index', 'Pedir', 'submenu', 'fa fa-cart-plus', 12, '2021-04-12 12:22:30', '2021-04-12 12:22:30'),
-	(16, 2, 'entregar', 'index', 'Entregas', 'submenu', 'fa fa-truck-loading', 12, '2021-04-12 12:26:45', '2021-04-12 12:26:45'),
-	(17, 2, 'proveer', 'index', 'Proveer', 'submenu', 'fa fa-project-diagram', 12, '2021-04-12 12:28:21', '2021-04-12 12:28:21'),
-	(18, 2, 'pedir', 'register', 'Detalles de pedido', 'page', NULL, 0, '2021-04-13 19:08:51', '2021-04-13 19:08:51'),
-	(19, 2, 'detail', 'register', 'Registro de Detalles', 'submenu', NULL, 12, '2021-04-15 18:57:15', '2021-04-15 19:12:28'),
-	(20, 2, 'entregar', 'register', 'Registro de Pedido', 'page', NULL, 0, '2021-04-16 15:32:31', '2021-04-16 15:32:31'),
-	(21, 2, 'shop', 'index', 'Proveedores', 'submenu', 'fa fa-star', 12, '2021-04-16 17:55:21', '2021-04-16 17:55:21'),
-	(22, 2, 'shop', 'register', 'Registro de Proveedor', 'page', NULL, 0, '2021-04-16 17:56:08', '2021-04-16 17:56:08'),
-	(23, 2, 'delivery', 'index', 'Deliveries', 'page', 'fa fa-user-circle', 0, '2021-04-16 20:32:30', '2021-04-16 20:32:30'),
-	(24, 2, 'contract', 'index', 'Contratos', 'submenu', NULL, 12, '2021-04-16 20:52:41', '2021-04-16 20:53:05'),
-	(25, 2, 'contract', 'register', 'Registro de contrato', 'page', NULL, 0, '2021-04-16 20:53:51', '2021-04-16 20:53:51'),
-	(26, 2, 'home', 'register', 'Registro de Información básica', 'new', NULL, 0, '2021-10-27 18:33:01', '2021-10-27 21:30:16'),
-	(27, 2, 'pedir', 'iniciar', 'Inicio de ubicación de pedido', 'new', NULL, 0, '2021-10-27 21:27:47', '2021-10-27 21:48:56'),
-	(28, 2, 'pedir', 'history', 'Histórico de Pedidos', 'page', NULL, 0, '2021-10-27 21:33:36', '2021-11-03 21:06:02'),
-	(29, 2, 'proveer', 'iniciar', 'Inicio de ubicación de provisión', 'new', NULL, 0, '2021-10-27 21:48:19', '2021-10-27 21:49:16'),
-	(30, 2, 'proveer', 'register', 'Registro de Productos', 'new', NULL, 0, '2021-10-27 21:50:26', '2021-10-27 21:51:17'),
-	(31, 2, 'product', 'index', 'Productos', 'menu', NULL, 12, '2021-11-03 21:41:02', '2021-11-03 21:44:34'),
-	(32, 2, 'pedir', 'current', 'Pedido Actual', 'page', NULL, 0, '2021-11-07 01:19:32', '2021-11-07 02:20:34');
+	(15, 2, 'pedir', 'index', 'Inicio', 'submenu', 'fa fa-home', 34, '2021-04-12 12:22:30', '2021-11-10 01:31:31'),
+	(16, 2, 'entregar', 'index', 'Inicio', 'submenu', 'fa fa-home', 36, '2021-04-12 12:26:45', '2021-11-10 02:14:52'),
+	(17, 2, 'proveer', 'index', 'Inicio', 'submenu', 'fa fa-home', 37, '2021-04-12 12:28:21', '2021-11-10 02:16:48'),
+	(18, 2, 'pedir', 'register', 'Detalles de pedido', 'page', NULL, 34, '2021-04-13 19:08:51', '2021-11-10 02:25:05'),
+	(19, 2, 'detail', 'register', 'Detalles', 'submenu', NULL, 33, '2021-04-15 18:57:15', '2021-11-10 02:11:56'),
+	(20, 2, 'entregar', 'register', 'Registro de Pedido', 'page', NULL, 36, '2021-04-16 15:32:31', '2021-11-10 02:24:37'),
+	(21, 2, 'shop', 'index', 'Proveedores', 'submenu', 'fa fa-star', 33, '2021-04-16 17:55:21', '2021-11-10 02:26:41'),
+	(22, 2, 'shop', 'register', 'Registro de Proveedor', 'page', NULL, 33, '2021-04-16 17:56:08', '2021-11-10 02:27:11'),
+	(23, 2, 'delivery', 'index', 'Deliveries', 'submenu', 'fa fa-user-circle', 33, '2021-04-16 20:32:30', '2021-11-10 01:22:42'),
+	(24, 2, 'contract', 'index', 'Contratos', 'submenu', NULL, 33, '2021-04-16 20:52:41', '2021-11-10 01:21:54'),
+	(25, 2, 'contract', 'register', 'Registro de contrato', 'page', NULL, 33, '2021-04-16 20:53:51', '2021-11-10 02:23:58'),
+	(26, 2, 'home', 'register', 'Registro de Información básica', 'page', NULL, 0, '2021-10-27 18:33:01', '2021-11-10 02:23:21'),
+	(27, 2, 'pedir', 'iniciar', 'Inicio de ubicación de pedido', 'page', NULL, 34, '2021-10-27 21:27:47', '2021-11-10 02:25:13'),
+	(28, 2, 'pedir', 'history', 'Histórico de Pedidos', 'submenu', 'fa fa-history', 34, '2021-10-27 21:33:36', '2021-11-10 01:32:22'),
+	(29, 2, 'proveer', 'iniciar', 'Inicio de ubicación de provisión', 'page', NULL, 37, '2021-10-27 21:48:19', '2021-11-10 02:25:38'),
+	(30, 2, 'proveer', 'register', 'Registro de Productos', 'page', NULL, 37, '2021-10-27 21:50:26', '2021-11-10 02:25:50'),
+	(31, 2, 'product', 'index', 'Productos', 'submenu', NULL, 33, '2021-11-03 21:41:02', '2021-11-10 02:17:41'),
+	(32, 2, 'pedir', 'current', 'Pedido Actual', 'page', NULL, 34, '2021-11-07 01:19:32', '2021-11-10 02:25:23'),
+	(33, 2, NULL, NULL, 'Administración', 'menu', 'fa fa-table', 0, '2021-11-10 01:09:40', '2021-11-10 01:09:40'),
+	(34, 2, NULL, NULL, 'Pedir', 'menu', 'fa fa-cart-plus', 0, '2021-11-10 01:27:58', '2021-11-10 02:21:23'),
+	(35, 1, NULL, NULL, 'Iniciar', 'page', NULL, 0, '2021-11-10 02:10:03', '2021-11-10 02:10:03'),
+	(36, 2, NULL, NULL, 'Entregar', 'menu', 'fa fa-truck', 0, '2021-11-10 02:13:11', '2021-11-10 02:14:30'),
+	(37, 2, NULL, NULL, 'Proveer', 'menu', 'fa fa-project-diagram', 0, '2021-11-10 02:15:40', '2021-11-10 02:16:57');
 /*!40000 ALTER TABLE `pages` ENABLE KEYS */;
 
 -- Volcando estructura para tabla megappolis.password_resets
@@ -212,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `peoples` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.peoples: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla megappolis.peoples: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `peoples` DISABLE KEYS */;
 REPLACE INTO `peoples` (`id`, `tipo`, `name`, `otherName`, `lastName`, `otherLastName`, `dateBirth`, `country`, `city`, `phone`, `sex`, `created_at`, `updated_at`, `documentNumber`) VALUES
 	(1, 'HUM', 'Roger', 'Alexandro', 'Arce', 'Zeballos', '1994-04-11', 'Bolivia', 'La Paz', '60125591', 'M', '2021-04-12 12:11:36', '2021-10-27 21:27:46', '9126497');
@@ -378,10 +383,13 @@ CREATE TABLE IF NOT EXISTS `yeipi_details` (
   `fechaNoConseguido` date DEFAULT NULL,
   `stock_id` bigint(20) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.yeipi_details: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `yeipi_details` DISABLE KEYS */;
+REPLACE INTO `yeipi_details` (`id`, `order_id`, `descripcion`, `cantidad`, `precio`, `created_at`, `updated_at`, `fechaConseguido`, `fechaNoConseguido`, `stock_id`) VALUES
+	(9, 1, '', 2, 2.5000, '2021-11-08 23:49:41', '2021-11-08 23:49:41', NULL, NULL, 2),
+	(10, 1, '', 5, 0.5000, '2021-11-08 23:49:51', '2021-11-08 23:49:51', NULL, NULL, 3);
 /*!40000 ALTER TABLE `yeipi_details` ENABLE KEYS */;
 
 -- Volcando estructura para tabla megappolis.yeipi_orders
@@ -470,16 +478,14 @@ CREATE TABLE IF NOT EXISTS `yeipi_stocks` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.yeipi_stocks: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla megappolis.yeipi_stocks: ~3 rows (aproximadamente)
 /*!40000 ALTER TABLE `yeipi_stocks` DISABLE KEYS */;
 REPLACE INTO `yeipi_stocks` (`id`, `product_id`, `shop_id`, `precio`, `stock`, `medida`, `created_at`, `updated_at`) VALUES
-	(1, 1, 2, 2.50, 5.00, 'pieza', '2021-11-03 21:53:26', '2021-11-03 21:53:26'),
-	(2, 2, 2, 2.50, 20.00, 'pieza', '2021-11-03 21:53:43', '2021-11-03 21:53:43'),
-	(3, 1, 1, 0.60, 20.00, 'libra', '2021-11-04 21:18:54', '2021-11-04 21:18:54'),
-	(4, 2, 1, 0.60, 5.00, 'libraa', '2021-11-04 21:19:04', '2021-11-04 21:19:04'),
-	(5, 3, 1, 0.50, 5.00, 'pieza', '2021-11-04 21:19:19', '2021-11-04 21:19:19');
+	(1, 1, 1, 3.00, 7.00, 'libra', '2021-11-07 22:00:02', '2021-11-08 23:49:32'),
+	(2, 2, 1, 2.50, 18.00, 'libra', '2021-11-07 22:11:05', '2021-11-08 23:49:41'),
+	(3, 3, 1, 0.50, 45.00, 'libraa', '2021-11-07 23:46:38', '2021-11-08 23:49:51');
 /*!40000 ALTER TABLE `yeipi_stocks` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -79,7 +79,6 @@ class PedirController extends Controller
         $stocks = Stock::whereNotIn('shop_id', $details->pluck('id'))->select('product_id')->groupBy('product_id')->get();
         $routes = [
             'localization' => route('yeipi.pedir.preparar'),
-            'history' => route('yeipi.pedir.history'),
             'current' => route('yeipi.pedir.current'),
             'shop' => url('yeipi/pedir/shop'),
             'count' => route('yeipi.pedir.count'),

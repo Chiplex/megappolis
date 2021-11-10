@@ -21,9 +21,6 @@
                         <i class="fas fa-external-link-alt"></i>
                         Actualizar localización
                     </a>
-                    <a href="{{ $routes['history'] }}" class="btn btn-default">
-                        <i class="fa fa-history" aria-hidden="true"></i> Ver pedidos anteriores
-                    </a>
                     <div class="btn-group">
                         {{-- Si tiene un pedido en curso, redirecciona al pedido en curso caso contrario registra el pedido --}}
                         @if($order->fechaRecepcion != null)
