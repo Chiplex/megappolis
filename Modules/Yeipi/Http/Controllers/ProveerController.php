@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Modules\Yeipi\Entities\Shop;
 use Modules\Yeipi\Entities\Stock;
 use Modules\Yeipi\Entities\Product;
+use Modules\Yeipi\Entities\Order;
 use Datatables;
 
 class ProveerController extends Controller
@@ -56,31 +57,40 @@ class ProveerController extends Controller
     /**
      * @Get("/proveer/index", "yeipi.proveer.index", 'access:YEIPI-PROVIDER')
      * 
-     * Muestra una lista de productos que se pueden comprar solo si el proveedor tiene una tienda
+     * Muestra la pagina principal del proveedor
      * @return Renderable
      */
     public function index()
     {
         $shop = auth()->user()->people->provider->shop;
+
+        // Si el proveedor no tiene una tienda, se redirecciona a la pagina de preparacion
         if(!isset($shop)){
             return redirect()->route('yeipi.proveer.preparar');
         }
         
-        // Trer las ordenes entregadas y no entregadas solo si el proveedor tiene una ventas
+        // Obtener las ordenes entregadas y no entregadas del proveedor
+        
+            
         if($shop->sales->isEmpty()){
             $ordersDelivered = collect();
             $ordersUndelivered = collect();
             $totalSales = 0;
         }else{
-            $ordersDelivered =  $shop->sales->order()->delivered()->get();
-            $ordersUndelivered = $shop->sales->order()->unDelivered()->get();
-            $totalSales = $this->totalSales($shop->sales()->orders()->delivered());
+            $ordersDelivered = Order::delivered()->with(['stocks'=> function ($query) use ($shop){
+                $query->where('shop_id', $shop->id);
+            }])->get();
+            $ordersUndelivered = Order::unDelivered()->with(['stocks'=> function ($query) use ($shop){
+                $query->where('shop_id', $shop->id);
+            }])->get();
+            $totalSales = $this->totalSales($ordersDelivered);
         }
         
         $stock = $shop->stocks;
 
         // Generar un formulario para agregar un producto
         $form = ['route' => 'yeipi.proveer.stock.store', 'method' => 'POST', 'id' => 'frmProducto'];
+        
         $data = compact('shop', 'ordersDelivered', 'ordersUndelivered', 'totalSales', 'stock', 'form');
         return view('dashboard', $this->GetInfo($data));
     }
@@ -211,5 +221,36 @@ class ProveerController extends Controller
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
+    }
+
+    /**
+     * @Get("/proveer/stock/", "yeipi.proveer.stock", 'access:YEIPI-PROVIDER')
+     * 
+     * Muestra la página de los productos en stock
+     * @return Renderable
+     */
+    public function stock()
+    {
+        $shop = auth()->user()->people->provider->shop;
+        $stock = $shop->stocks;
+        $breadcrumb = ['title' => 'Stock', 'url' => route('yeipi.proveer.stock')];
+        $form = ['route' => 'yeipi.proveer.stock.store', 'id' => 'form-stock'];
+        $data = compact('shop', 'stock', 'form');
+        return view('dashboard', $this->GetInfo($data));
+    }
+
+    /**
+     * @Get("/proveer/customer", "yeipi.proveer.customer", 'access:YEIPI-PROVIDER')
+     * 
+     * Muestra la página de los clientes
+     * @return Renderable
+     */
+    public function customer()
+    {
+        $shop = auth()->user()->people->provider->shop;
+        $orders = $shop->sales->order()->delivered()->with(['customer.people', 'delivery.people']);
+        $breadcrumb = ['title' => 'Clientes', 'url' => route('yeipi.proveer.customer')];
+        $data = compact('shop', 'orders', 'breadcrumb');
+        return view('dashboard', $this->GetInfo($data));
     }
 }

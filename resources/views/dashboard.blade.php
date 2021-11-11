@@ -18,6 +18,26 @@
 
 
 @section('content_header')
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>{{ $page->buildTitle() }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    @foreach($page->buildBreadcrumbs($page) as $breadcrumb)
+                        <li class="breadcrumb-item @if($breadcrumb['active']) active @endif">
+                            @if($breadcrumb['active'])
+                                {{ $breadcrumb['name'] }}
+                            @else
+                                <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['name'] }}</a>
+                            @endif
+                        </li>
+                    @endforeach
+                </ol>
+            </div>
+        </div>
+    </div>
     @if (\Session::has('message'))
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -25,7 +45,6 @@
             {!! \Session::get('message') !!}
         </div>
     @endif
-    <h1>{{$page->name}}</h1>
     @if ($errors->any())
         <ul class="alert alert-danger">
             @foreach ($errors->all() as $error)

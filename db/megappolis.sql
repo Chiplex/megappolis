@@ -2,12 +2,14 @@
 -- Host:                         127.0.0.1
 -- Versión del servidor:         10.4.21-MariaDB - mariadb.org binary distribution
 -- SO del servidor:              Win64
--- HeidiSQL Versión:             11.2.0.6213
+-- HeidiSQL Versión:             11.3.0.6363
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
@@ -32,11 +34,9 @@ CREATE TABLE IF NOT EXISTS `apps` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.apps: ~2 rows (aproximadamente)
-/*!40000 ALTER TABLE `apps` DISABLE KEYS */;
 REPLACE INTO `apps` (`id`, `name`, `icon`, `type`, `approved_at`, `blocked_at`, `user_id`, `created_at`, `updated_at`) VALUES
-	(1, 'core', 'fa fa-cog', 'MAIN', '2021-04-05', NULL, 1, NULL, '2021-04-05 14:11:35'),
-	(2, 'yeipi', 'fa fa-truck', 'delivery', '2021-04-05', NULL, 1, '2021-04-05 14:43:12', '2021-04-05 14:47:25');
-/*!40000 ALTER TABLE `apps` ENABLE KEYS */;
+	(1, 'core', 'fa fa-cog', 'MAIN', '2021-04-05', NULL, 1, NULL, '2021-04-05 18:11:35'),
+	(2, 'yeipi', 'fa fa-truck', 'delivery', '2021-04-05', NULL, 1, '2021-04-05 18:43:12', '2021-04-05 18:47:25');
 
 -- Volcando estructura para tabla megappolis.failed_jobs
 CREATE TABLE IF NOT EXISTS `failed_jobs` (
@@ -52,8 +52,6 @@ CREATE TABLE IF NOT EXISTS `failed_jobs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.failed_jobs: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `failed_jobs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `failed_jobs` ENABLE KEYS */;
 
 -- Volcando estructura para tabla megappolis.historical
 CREATE TABLE IF NOT EXISTS `historical` (
@@ -70,8 +68,6 @@ CREATE TABLE IF NOT EXISTS `historical` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.historical: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `historical` DISABLE KEYS */;
-/*!40000 ALTER TABLE `historical` ENABLE KEYS */;
 
 -- Volcando estructura para tabla megappolis.lots
 CREATE TABLE IF NOT EXISTS `lots` (
@@ -84,8 +80,6 @@ CREATE TABLE IF NOT EXISTS `lots` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.lots: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `lots` DISABLE KEYS */;
-/*!40000 ALTER TABLE `lots` ENABLE KEYS */;
 
 -- Volcando estructura para tabla megappolis.migrations
 CREATE TABLE IF NOT EXISTS `migrations` (
@@ -96,7 +90,6 @@ CREATE TABLE IF NOT EXISTS `migrations` (
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.migrations: ~29 rows (aproximadamente)
-/*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
 REPLACE INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '2014_10_12_000000_create_users_table', 1),
 	(2, '2014_10_12_100000_create_password_resets_table', 1),
@@ -127,7 +120,6 @@ REPLACE INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(27, '2021_04_20_224502_create_provider_table', 15),
 	(28, '2021_04_20_225016_alter_shop_table', 16),
 	(29, '2021_04_20_234035_alter_customer_table', 17);
-/*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 
 -- Volcando estructura para tabla megappolis.pages
 CREATE TABLE IF NOT EXISTS `pages` (
@@ -142,49 +134,47 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.pages: ~37 rows (aproximadamente)
-/*!40000 ALTER TABLE `pages` DISABLE KEYS */;
+-- Volcando datos para la tabla megappolis.pages: ~38 rows (aproximadamente)
 REPLACE INTO `pages` (`id`, `app_id`, `controller`, `action`, `name`, `type`, `icon`, `page_id`, `created_at`, `updated_at`) VALUES
 	(1, 1, 'page', 'register', 'Registro de Paginas', 'page', NULL, 0, NULL, NULL),
 	(2, 1, 'permission', 'register', 'Registro de Permisos', 'page', NULL, 0, NULL, NULL),
-	(3, 1, 'page', 'index', 'Páginas', 'menu', 'fa fa-file', 0, '2021-04-05 12:04:15', '2021-11-10 00:57:22'),
-	(4, 1, 'permission', 'index', 'Permisos', 'menu', 'fa fa-user-shield', 0, '2021-04-05 12:05:33', '2021-11-10 00:56:14'),
-	(5, 1, 'app', 'index', 'Apps', 'menu', 'fa fa-city', 0, '2021-04-05 12:05:59', '2021-11-10 00:56:58'),
-	(6, 1, 'app', 'register', 'Registro de Roles', 'page', NULL, 0, '2021-04-05 12:06:26', '2021-04-05 12:06:26'),
-	(7, 1, 'role', 'index', 'Roles', 'menu', 'fa fa-user-tag', 0, '2021-04-05 12:06:58', '2021-11-10 00:56:44'),
-	(8, 1, 'role', 'register', 'Registro de rol', 'page', NULL, 0, '2021-04-05 12:07:38', '2021-04-05 12:07:38'),
-	(9, 1, 'user', 'index', 'Usuarios', 'menu', 'fa fa-user-friends', 0, '2021-04-05 12:16:57', '2021-11-10 00:56:32'),
-	(10, 1, 'user', 'register', 'Registro de usuario', 'page', NULL, 0, '2021-04-05 12:17:38', '2021-04-05 12:17:38'),
-	(11, 1, 'home', 'index', 'Core', 'app', NULL, 0, '2021-04-05 15:37:35', '2021-11-10 00:54:44'),
-	(12, 2, 'home', 'index', 'Yeipi', 'app', NULL, 0, '2021-04-05 16:10:50', '2021-11-10 00:55:01'),
-	(13, 1, 'people', 'index', 'Personas', 'menu', 'fa fa-users', 0, '2021-04-12 12:09:09', '2021-11-10 00:55:58'),
-	(14, 1, 'people', 'register', 'Registro de Personas', 'page', NULL, 0, '2021-04-12 12:10:50', '2021-04-12 12:10:50'),
-	(15, 2, 'pedir', 'index', 'Inicio', 'submenu', 'fa fa-home', 34, '2021-04-12 12:22:30', '2021-11-10 01:31:31'),
-	(16, 2, 'entregar', 'index', 'Inicio', 'submenu', 'fa fa-home', 36, '2021-04-12 12:26:45', '2021-11-10 02:14:52'),
-	(17, 2, 'proveer', 'index', 'Inicio', 'submenu', 'fa fa-home', 37, '2021-04-12 12:28:21', '2021-11-10 02:16:48'),
-	(18, 2, 'pedir', 'register', 'Detalles de pedido', 'page', NULL, 34, '2021-04-13 19:08:51', '2021-11-10 02:25:05'),
-	(19, 2, 'detail', 'register', 'Detalles', 'submenu', NULL, 33, '2021-04-15 18:57:15', '2021-11-10 02:11:56'),
-	(20, 2, 'entregar', 'register', 'Registro de Pedido', 'page', NULL, 36, '2021-04-16 15:32:31', '2021-11-10 02:24:37'),
-	(21, 2, 'shop', 'index', 'Proveedores', 'submenu', 'fa fa-star', 33, '2021-04-16 17:55:21', '2021-11-10 02:26:41'),
-	(22, 2, 'shop', 'register', 'Registro de Proveedor', 'page', NULL, 33, '2021-04-16 17:56:08', '2021-11-10 02:27:11'),
-	(23, 2, 'delivery', 'index', 'Deliveries', 'submenu', 'fa fa-user-circle', 33, '2021-04-16 20:32:30', '2021-11-10 01:22:42'),
-	(24, 2, 'contract', 'index', 'Contratos', 'submenu', NULL, 33, '2021-04-16 20:52:41', '2021-11-10 01:21:54'),
-	(25, 2, 'contract', 'register', 'Registro de contrato', 'page', NULL, 33, '2021-04-16 20:53:51', '2021-11-10 02:23:58'),
-	(26, 2, 'home', 'register', 'Registro de Información básica', 'page', NULL, 0, '2021-10-27 18:33:01', '2021-11-10 02:23:21'),
-	(27, 2, 'pedir', 'iniciar', 'Inicio de ubicación de pedido', 'page', NULL, 34, '2021-10-27 21:27:47', '2021-11-10 02:25:13'),
-	(28, 2, 'pedir', 'history', 'Histórico de Pedidos', 'submenu', 'fa fa-history', 34, '2021-10-27 21:33:36', '2021-11-10 01:32:22'),
-	(29, 2, 'proveer', 'iniciar', 'Inicio de ubicación de provisión', 'page', NULL, 37, '2021-10-27 21:48:19', '2021-11-10 02:25:38'),
-	(30, 2, 'proveer', 'register', 'Registro de Productos', 'page', NULL, 37, '2021-10-27 21:50:26', '2021-11-10 02:25:50'),
-	(31, 2, 'product', 'index', 'Productos', 'submenu', NULL, 33, '2021-11-03 21:41:02', '2021-11-10 02:17:41'),
-	(32, 2, 'pedir', 'current', 'Pedido Actual', 'page', NULL, 34, '2021-11-07 01:19:32', '2021-11-10 02:25:23'),
-	(33, 2, NULL, NULL, 'Administración', 'menu', 'fa fa-table', 0, '2021-11-10 01:09:40', '2021-11-10 01:09:40'),
-	(34, 2, NULL, NULL, 'Pedir', 'menu', 'fa fa-cart-plus', 0, '2021-11-10 01:27:58', '2021-11-10 02:21:23'),
-	(35, 1, NULL, NULL, 'Iniciar', 'page', NULL, 0, '2021-11-10 02:10:03', '2021-11-10 02:10:03'),
-	(36, 2, NULL, NULL, 'Entregar', 'menu', 'fa fa-truck', 0, '2021-11-10 02:13:11', '2021-11-10 02:14:30'),
-	(37, 2, NULL, NULL, 'Proveer', 'menu', 'fa fa-project-diagram', 0, '2021-11-10 02:15:40', '2021-11-10 02:16:57');
-/*!40000 ALTER TABLE `pages` ENABLE KEYS */;
+	(3, 1, 'page', 'index', 'Páginas', 'menu', 'fa fa-file', 0, '2021-04-05 16:04:15', '2021-11-10 04:57:22'),
+	(4, 1, 'permission', 'index', 'Permisos', 'menu', 'fa fa-user-shield', 0, '2021-04-05 16:05:33', '2021-11-10 04:56:14'),
+	(5, 1, 'app', 'index', 'Apps', 'menu', 'fa fa-city', 0, '2021-04-05 16:05:59', '2021-11-10 04:56:58'),
+	(6, 1, 'app', 'register', 'Registro de Roles', 'page', NULL, 0, '2021-04-05 16:06:26', '2021-04-05 16:06:26'),
+	(7, 1, 'role', 'index', 'Roles', 'menu', 'fa fa-user-tag', 0, '2021-04-05 16:06:58', '2021-11-10 04:56:44'),
+	(8, 1, 'role', 'register', 'Registro de rol', 'page', NULL, 0, '2021-04-05 16:07:38', '2021-04-05 16:07:38'),
+	(9, 1, 'user', 'index', 'Usuarios', 'menu', 'fa fa-user-friends', 0, '2021-04-05 16:16:57', '2021-11-10 04:56:32'),
+	(10, 1, 'user', 'register', 'Registro de usuario', 'page', NULL, 0, '2021-04-05 16:17:38', '2021-04-05 16:17:38'),
+	(11, 1, 'home', 'index', 'Core', 'app', NULL, 0, '2021-04-05 19:37:35', '2021-11-10 04:54:44'),
+	(12, 2, 'home', 'index', 'Yeipi', 'app', NULL, 0, '2021-04-05 20:10:50', '2021-11-10 04:55:01'),
+	(13, 1, 'people', 'index', 'Personas', 'menu', 'fa fa-users', 0, '2021-04-12 16:09:09', '2021-11-10 04:55:58'),
+	(14, 1, 'people', 'register', 'Registro de Personas', 'page', NULL, 0, '2021-04-12 16:10:50', '2021-04-12 16:10:50'),
+	(15, 2, 'pedir', 'index', 'Inicio', 'submenu', 'fa fa-home', 34, '2021-04-12 16:22:30', '2021-11-10 05:31:31'),
+	(16, 2, 'entregar', 'index', 'Inicio', 'submenu', 'fa fa-home', 36, '2021-04-12 16:26:45', '2021-11-10 06:14:52'),
+	(17, 2, 'proveer', 'index', 'Inicio', 'submenu', 'fa fa-home', 37, '2021-04-12 16:28:21', '2021-11-10 06:16:48'),
+	(19, 2, 'detail', 'register', 'Detalles', 'submenu', NULL, 33, '2021-04-15 22:57:15', '2021-11-10 06:11:56'),
+	(20, 2, 'entregar', 'register', 'Registro de Pedido', 'page', NULL, 36, '2021-04-16 19:32:31', '2021-11-10 06:24:37'),
+	(21, 2, 'shop', 'index', 'Proveedores', 'submenu', 'fa fa-star', 33, '2021-04-16 21:55:21', '2021-11-10 06:26:41'),
+	(22, 2, 'shop', 'register', 'Registro de Proveedor', 'page', NULL, 33, '2021-04-16 21:56:08', '2021-11-10 06:27:11'),
+	(23, 2, 'delivery', 'index', 'Deliveries', 'submenu', 'fa fa-user-circle', 33, '2021-04-17 00:32:30', '2021-11-10 05:22:42'),
+	(24, 2, 'contract', 'index', 'Contratos', 'submenu', NULL, 33, '2021-04-17 00:52:41', '2021-11-10 05:21:54'),
+	(25, 2, 'contract', 'register', 'Registro de contrato', 'page', NULL, 33, '2021-04-17 00:53:51', '2021-11-10 06:23:58'),
+	(26, 2, 'home', 'register', 'Registro de Información básica', 'page', NULL, 0, '2021-10-27 22:33:01', '2021-11-10 06:23:21'),
+	(27, 2, 'pedir', 'iniciar', 'Inicio de ubicación de pedido', 'page', NULL, 15, '2021-10-28 01:27:47', '2021-11-10 06:25:13'),
+	(28, 2, 'pedir', 'history', 'Histórico de Pedidos', 'submenu', 'fa fa-history', 34, '2021-10-28 01:33:36', '2021-11-10 05:32:22'),
+	(29, 2, 'proveer', 'iniciar', 'Inicio de ubicación de provisión', 'page', NULL, 37, '2021-10-28 01:48:19', '2021-11-10 06:25:38'),
+	(30, 2, 'proveer', 'register', 'Registro de Productos', 'page', NULL, 37, '2021-10-28 01:50:26', '2021-11-10 06:25:50'),
+	(31, 2, 'product', 'index', 'Productos', 'submenu', NULL, 33, '2021-11-04 01:41:02', '2021-11-10 06:17:41'),
+	(32, 2, 'pedir', 'current', 'Pedido Actual', 'page', NULL, 15, '2021-11-07 05:19:32', '2021-11-10 06:25:23'),
+	(33, 2, NULL, NULL, 'Administración', 'menu', 'fa fa-table', 12, '2021-11-10 05:09:40', '2021-11-10 05:09:40'),
+	(34, 2, NULL, NULL, 'Pedir', 'menu', 'fa fa-cart-plus', 12, '2021-11-10 05:27:58', '2021-11-10 06:21:23'),
+	(35, 1, NULL, NULL, 'Iniciar', 'page', NULL, 0, '2021-11-10 06:10:03', '2021-11-10 06:10:03'),
+	(36, 2, NULL, NULL, 'Entregar', 'menu', 'fa fa-truck', 12, '2021-11-10 06:13:11', '2021-11-10 06:14:30'),
+	(37, 2, NULL, NULL, 'Proveer', 'menu', 'fa fa-project-diagram', 12, '2021-11-10 06:15:40', '2021-11-10 06:16:57'),
+	(38, 2, 'proveer', 'stock', 'Stock', 'submenu', 'fa fa-store', 37, '2021-11-11 21:47:04', '2021-11-11 21:47:45');
 
 -- Volcando estructura para tabla megappolis.password_resets
 CREATE TABLE IF NOT EXISTS `password_resets` (
@@ -195,8 +185,6 @@ CREATE TABLE IF NOT EXISTS `password_resets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.password_resets: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `password_resets` DISABLE KEYS */;
-/*!40000 ALTER TABLE `password_resets` ENABLE KEYS */;
 
 -- Volcando estructura para tabla megappolis.peoples
 CREATE TABLE IF NOT EXISTS `peoples` (
@@ -217,11 +205,9 @@ CREATE TABLE IF NOT EXISTS `peoples` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.peoples: ~1 rows (aproximadamente)
-/*!40000 ALTER TABLE `peoples` DISABLE KEYS */;
+-- Volcando datos para la tabla megappolis.peoples: ~0 rows (aproximadamente)
 REPLACE INTO `peoples` (`id`, `tipo`, `name`, `otherName`, `lastName`, `otherLastName`, `dateBirth`, `country`, `city`, `phone`, `sex`, `created_at`, `updated_at`, `documentNumber`) VALUES
-	(1, 'HUM', 'Roger', 'Alexandro', 'Arce', 'Zeballos', '1994-04-11', 'Bolivia', 'La Paz', '60125591', 'M', '2021-04-12 12:11:36', '2021-10-27 21:27:46', '9126497');
-/*!40000 ALTER TABLE `peoples` ENABLE KEYS */;
+	(1, 'HUM', 'Roger', 'Alexandro', 'Arce', 'Zeballos', '1994-04-11', 'Bolivia', 'La Paz', '60125591', 'M', '2021-04-12 16:11:36', '2021-10-28 01:27:46', '9126497');
 
 -- Volcando estructura para tabla megappolis.permissions
 CREATE TABLE IF NOT EXISTS `permissions` (
@@ -232,31 +218,30 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.permissions: ~17 rows (aproximadamente)
-/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
+-- Volcando datos para la tabla megappolis.permissions: ~18 rows (aproximadamente)
 REPLACE INTO `permissions` (`id`, `role_id`, `page_id`, `name`, `created_at`, `updated_at`) VALUES
 	(1, 1, 11, 'view', NULL, NULL),
 	(2, 1, 3, 'view', NULL, NULL),
 	(3, 1, 4, 'view', NULL, NULL),
 	(4, 1, 2, 'view', NULL, NULL),
-	(5, 1, 1, 'view', '2021-10-27 18:07:45', '2021-10-27 18:07:45'),
-	(6, 1, 5, 'view', '2021-10-27 18:16:44', '2021-10-27 18:16:44'),
-	(7, 1, 7, 'view', '2021-10-27 18:17:27', '2021-10-27 18:17:27'),
-	(8, 1, 9, 'view', '2021-10-27 18:18:08', '2021-10-27 18:18:08'),
-	(9, 1, 13, 'view', '2021-10-27 18:32:44', '2021-10-27 18:32:44'),
-	(10, 2, 26, 'view', '2021-10-27 21:19:09', '2021-10-27 21:19:09'),
-	(11, 2, 27, 'view', '2021-10-27 21:28:41', '2021-10-27 21:28:41'),
-	(12, 2, 15, 'view', '2021-10-27 21:33:22', '2021-10-27 21:33:22'),
-	(13, 4, 29, 'view', '2021-10-27 21:49:32', '2021-10-27 21:49:32'),
-	(14, 4, 30, 'view', '2021-10-27 21:50:49', '2021-10-27 21:50:49'),
-	(15, 2, 28, 'view', '2021-11-03 21:11:29', '2021-11-03 21:11:29'),
-	(16, 2, 18, 'view', '2021-11-03 21:37:05', '2021-11-03 21:37:05'),
-	(17, 1, 31, 'view', '2021-11-03 21:41:20', '2021-11-03 21:41:20'),
-	(18, 1, 17, 'view', '2021-11-04 22:14:58', '2021-11-04 22:14:58'),
-	(19, 2, 32, 'view', '2021-11-07 01:20:05', '2021-11-07 01:20:05');
-/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
+	(5, 1, 1, 'view', '2021-10-27 22:07:45', '2021-10-27 22:07:45'),
+	(6, 1, 5, 'view', '2021-10-27 22:16:44', '2021-10-27 22:16:44'),
+	(7, 1, 7, 'view', '2021-10-27 22:17:27', '2021-10-27 22:17:27'),
+	(8, 1, 9, 'view', '2021-10-27 22:18:08', '2021-10-27 22:18:08'),
+	(9, 1, 13, 'view', '2021-10-27 22:32:44', '2021-10-27 22:32:44'),
+	(10, 2, 26, 'view', '2021-10-28 01:19:09', '2021-10-28 01:19:09'),
+	(11, 2, 27, 'view', '2021-10-28 01:28:41', '2021-10-28 01:28:41'),
+	(12, 2, 15, 'view', '2021-10-28 01:33:22', '2021-10-28 01:33:22'),
+	(13, 4, 29, 'view', '2021-10-28 01:49:32', '2021-10-28 01:49:32'),
+	(14, 4, 30, 'view', '2021-10-28 01:50:49', '2021-10-28 01:50:49'),
+	(15, 2, 28, 'view', '2021-11-04 01:11:29', '2021-11-04 01:11:29'),
+	(16, 2, 18, 'view', '2021-11-04 01:37:05', '2021-11-04 01:37:05'),
+	(17, 1, 31, 'view', '2021-11-04 01:41:20', '2021-11-04 01:41:20'),
+	(18, 1, 17, 'view', '2021-11-05 02:14:58', '2021-11-05 02:14:58'),
+	(19, 2, 32, 'view', '2021-11-08 19:03:58', '2021-11-08 19:03:58'),
+	(20, 4, 38, 'view', '2021-11-11 22:16:33', '2021-11-11 22:16:33');
 
 -- Volcando estructura para tabla megappolis.roles
 CREATE TABLE IF NOT EXISTS `roles` (
@@ -270,13 +255,11 @@ CREATE TABLE IF NOT EXISTS `roles` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.roles: ~4 rows (aproximadamente)
-/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
 REPLACE INTO `roles` (`id`, `name`, `type`, `created_at`, `updated_at`, `app_id`) VALUES
-	(1, 'CORE-MEGAPPOLIS', 'MAIN', NULL, '2021-04-12 14:20:41', 1),
-	(2, 'YEIPI-CUSTOMER', 'USER', '2021-04-12 14:43:16', '2021-04-12 14:43:16', 2),
-	(3, 'YEIPI-DELIVERY', 'USER', '2021-04-12 14:44:03', '2021-04-12 14:44:59', 2),
-	(4, 'YEIPI-PROVIDER', 'USER', '2021-04-12 14:44:36', '2021-04-12 14:44:36', 2);
-/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+	(1, 'CORE-MEGAPPOLIS', 'MAIN', NULL, '2021-04-12 18:20:41', 1),
+	(2, 'YEIPI-CUSTOMER', 'USER', '2021-04-12 18:43:16', '2021-04-12 18:43:16', 2),
+	(3, 'YEIPI-DELIVERY', 'USER', '2021-04-12 18:44:03', '2021-04-12 18:44:59', 2),
+	(4, 'YEIPI-PROVIDER', 'USER', '2021-04-12 18:44:36', '2021-04-12 18:44:36', 2);
 
 -- Volcando estructura para tabla megappolis.roles_users
 CREATE TABLE IF NOT EXISTS `roles_users` (
@@ -289,13 +272,11 @@ CREATE TABLE IF NOT EXISTS `roles_users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.roles_users: ~4 rows (aproximadamente)
-/*!40000 ALTER TABLE `roles_users` DISABLE KEYS */;
 REPLACE INTO `roles_users` (`id`, `role_id`, `user_id`, `created_at`, `updated_at`) VALUES
 	(2, 1, 1, NULL, NULL),
-	(5, 2, 1, '2021-04-12 15:07:22', '2021-04-12 15:07:22'),
-	(6, 3, 1, '2021-04-16 14:55:54', '2021-04-16 14:55:54'),
-	(8, 4, 1, '2021-11-03 21:52:13', '2021-11-03 21:52:13');
-/*!40000 ALTER TABLE `roles_users` ENABLE KEYS */;
+	(5, 2, 1, '2021-04-12 19:07:22', '2021-04-12 19:07:22'),
+	(6, 3, 1, '2021-04-16 18:55:54', '2021-04-16 18:55:54'),
+	(8, 4, 1, '2021-11-04 01:52:13', '2021-11-04 01:52:13');
 
 -- Volcando estructura para tabla megappolis.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -314,11 +295,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   CONSTRAINT `users_people_id_foreign` FOREIGN KEY (`people_id`) REFERENCES `peoples` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.users: ~1 rows (aproximadamente)
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+-- Volcando datos para la tabla megappolis.users: ~0 rows (aproximadamente)
 REPLACE INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `people_id`) VALUES
-	(1, 'Alex', 'raaz11chip@gmail.com', NULL, '$2y$10$3Ic/tnDuFgSUd/9S90yjyOUpXICr1/sEhU6PwF00DutULVvL59Ha6', NULL, '2021-10-26 22:02:09', '2021-10-26 22:02:09', 1);
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+	(1, 'Alex', 'raaz11chip@gmail.com', NULL, '$2y$10$3Ic/tnDuFgSUd/9S90yjyOUpXICr1/sEhU6PwF00DutULVvL59Ha6', NULL, '2021-10-27 02:02:09', '2021-10-27 02:02:09', 1);
 
 -- Volcando estructura para tabla megappolis.yeipi_contracts
 CREATE TABLE IF NOT EXISTS `yeipi_contracts` (
@@ -333,8 +312,6 @@ CREATE TABLE IF NOT EXISTS `yeipi_contracts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.yeipi_contracts: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `yeipi_contracts` DISABLE KEYS */;
-/*!40000 ALTER TABLE `yeipi_contracts` ENABLE KEYS */;
 
 -- Volcando estructura para tabla megappolis.yeipi_customers
 CREATE TABLE IF NOT EXISTS `yeipi_customers` (
@@ -349,10 +326,8 @@ CREATE TABLE IF NOT EXISTS `yeipi_customers` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.yeipi_customers: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `yeipi_customers` DISABLE KEYS */;
 REPLACE INTO `yeipi_customers` (`id`, `people_id`, `created_at`, `updated_at`, `direccion`, `latitud`, `longitud`) VALUES
-	(1, 1, '2021-10-27 21:27:46', '2021-10-27 21:29:33', 'Posta Llojeta Nº100, Avenida Mario Mercado, Bajo Llojeta, Cotahuma, La Paz, Pedro Domingo Murillo, La Paz, Bolivia', '-16.50572', '-68.14293');
-/*!40000 ALTER TABLE `yeipi_customers` ENABLE KEYS */;
+	(1, 1, '2021-10-28 01:27:46', '2021-10-28 01:29:33', 'Posta Llojeta Nº100, Avenida Mario Mercado, Bajo Llojeta, Cotahuma, La Paz, Pedro Domingo Murillo, La Paz, Bolivia', '-16.50572', '-68.14293');
 
 -- Volcando estructura para tabla megappolis.yeipi_deliveries
 CREATE TABLE IF NOT EXISTS `yeipi_deliveries` (
@@ -367,8 +342,6 @@ CREATE TABLE IF NOT EXISTS `yeipi_deliveries` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.yeipi_deliveries: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `yeipi_deliveries` DISABLE KEYS */;
-/*!40000 ALTER TABLE `yeipi_deliveries` ENABLE KEYS */;
 
 -- Volcando estructura para tabla megappolis.yeipi_details
 CREATE TABLE IF NOT EXISTS `yeipi_details` (
@@ -383,14 +356,11 @@ CREATE TABLE IF NOT EXISTS `yeipi_details` (
   `fechaNoConseguido` date DEFAULT NULL,
   `stock_id` bigint(20) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.yeipi_details: ~2 rows (aproximadamente)
-/*!40000 ALTER TABLE `yeipi_details` DISABLE KEYS */;
 REPLACE INTO `yeipi_details` (`id`, `order_id`, `descripcion`, `cantidad`, `precio`, `created_at`, `updated_at`, `fechaConseguido`, `fechaNoConseguido`, `stock_id`) VALUES
-	(9, 1, '', 2, 2.5000, '2021-11-08 23:49:41', '2021-11-08 23:49:41', NULL, NULL, 2),
-	(10, 1, '', 5, 0.5000, '2021-11-08 23:49:51', '2021-11-08 23:49:51', NULL, NULL, 3);
-/*!40000 ALTER TABLE `yeipi_details` ENABLE KEYS */;
+	(2, 1, '', 1, 0.6000, '2021-11-08 18:58:46', '2021-11-08 18:58:46', NULL, NULL, 4);
 
 -- Volcando estructura para tabla megappolis.yeipi_orders
 CREATE TABLE IF NOT EXISTS `yeipi_orders` (
@@ -404,13 +374,11 @@ CREATE TABLE IF NOT EXISTS `yeipi_orders` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `fechaRecepcion` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.yeipi_orders: ~2 rows (aproximadamente)
-/*!40000 ALTER TABLE `yeipi_orders` DISABLE KEYS */;
+-- Volcando datos para la tabla megappolis.yeipi_orders: ~0 rows (aproximadamente)
 REPLACE INTO `yeipi_orders` (`id`, `customer_id`, `delivery_id`, `fechaSolicitud`, `fechaSalida`, `fechaEntrega`, `created_at`, `updated_at`, `fechaRecepcion`) VALUES
-	(1, 1, NULL, NULL, NULL, NULL, '2021-10-27 21:29:33', '2021-10-27 21:29:33', NULL);
-/*!40000 ALTER TABLE `yeipi_orders` ENABLE KEYS */;
+	(1, 1, NULL, NULL, NULL, NULL, '2021-10-28 01:29:33', '2021-10-28 01:29:33', NULL);
 
 -- Volcando estructura para tabla megappolis.yeipi_products
 CREATE TABLE IF NOT EXISTS `yeipi_products` (
@@ -422,13 +390,11 @@ CREATE TABLE IF NOT EXISTS `yeipi_products` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.yeipi_products: ~3 rows (aproximadamente)
-/*!40000 ALTER TABLE `yeipi_products` DISABLE KEYS */;
+-- Volcando datos para la tabla megappolis.yeipi_products: ~2 rows (aproximadamente)
 REPLACE INTO `yeipi_products` (`id`, `descripcion`, `marca`, `created_at`, `updated_at`) VALUES
-	(1, 'Azucar', NULL, '2021-11-03 21:43:34', '2021-11-03 21:43:34'),
-	(2, 'Arroz', NULL, '2021-11-03 21:43:38', '2021-11-03 21:43:38'),
-	(3, 'Pan', NULL, '2021-11-03 21:43:55', '2021-11-03 21:43:55');
-/*!40000 ALTER TABLE `yeipi_products` ENABLE KEYS */;
+	(1, 'Azucar', NULL, '2021-11-04 01:43:34', '2021-11-04 01:43:34'),
+	(2, 'Arroz', NULL, '2021-11-04 01:43:38', '2021-11-04 01:43:38'),
+	(3, 'Pan', NULL, '2021-11-04 01:43:55', '2021-11-04 01:43:55');
 
 -- Volcando estructura para tabla megappolis.yeipi_provider
 CREATE TABLE IF NOT EXISTS `yeipi_provider` (
@@ -440,10 +406,8 @@ CREATE TABLE IF NOT EXISTS `yeipi_provider` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.yeipi_provider: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `yeipi_provider` DISABLE KEYS */;
 REPLACE INTO `yeipi_provider` (`id`, `people_id`, `created_at`, `updated_at`) VALUES
-	(1, 1, '2021-10-27 21:48:19', '2021-10-27 21:48:19');
-/*!40000 ALTER TABLE `yeipi_provider` ENABLE KEYS */;
+	(1, 1, '2021-10-28 01:48:19', '2021-10-28 01:48:19');
 
 -- Volcando estructura para tabla megappolis.yeipi_shops
 CREATE TABLE IF NOT EXISTS `yeipi_shops` (
@@ -458,14 +422,11 @@ CREATE TABLE IF NOT EXISTS `yeipi_shops` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `provider_id` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.yeipi_shops: ~2 rows (aproximadamente)
-/*!40000 ALTER TABLE `yeipi_shops` DISABLE KEYS */;
+-- Volcando datos para la tabla megappolis.yeipi_shops: ~0 rows (aproximadamente)
 REPLACE INTO `yeipi_shops` (`id`, `nombre`, `direccion`, `latitud`, `longitud`, `abre`, `cierra`, `created_at`, `updated_at`, `provider_id`) VALUES
-	(1, 'La Caserita', 'CEFI, Avenida Buenos Aires, Cotahuma, La Paz, Pedro Domingo Murillo, La Paz, 0201, Bolivia', '-16.51188', '-68.14374', '06:00:00', '22:00:00', '2021-11-04 21:05:10', '2021-11-04 21:05:10', 1),
-	(2, 'Algabo', 'Calle Acacias', '-16.52567', '-68.12356', '10:30:00', '15:30:00', '2021-11-03 21:52:58', '2021-11-03 21:52:58', 1);
-/*!40000 ALTER TABLE `yeipi_shops` ENABLE KEYS */;
+	(1, 'La Caserita', 'CEFI, Avenida Buenos Aires, Cotahuma, La Paz, Pedro Domingo Murillo, La Paz, 0201, Bolivia', '-16.51188', '-68.14374', '06:00:00', '22:00:00', '2021-11-05 01:05:10', '2021-11-05 01:05:10', 1);
 
 -- Volcando estructura para tabla megappolis.yeipi_stocks
 CREATE TABLE IF NOT EXISTS `yeipi_stocks` (
@@ -478,16 +439,17 @@ CREATE TABLE IF NOT EXISTS `yeipi_stocks` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.yeipi_stocks: ~3 rows (aproximadamente)
-/*!40000 ALTER TABLE `yeipi_stocks` DISABLE KEYS */;
+-- Volcando datos para la tabla megappolis.yeipi_stocks: ~4 rows (aproximadamente)
 REPLACE INTO `yeipi_stocks` (`id`, `product_id`, `shop_id`, `precio`, `stock`, `medida`, `created_at`, `updated_at`) VALUES
-	(1, 1, 1, 3.00, 7.00, 'libra', '2021-11-07 22:00:02', '2021-11-08 23:49:32'),
-	(2, 2, 1, 2.50, 18.00, 'libra', '2021-11-07 22:11:05', '2021-11-08 23:49:41'),
-	(3, 3, 1, 0.50, 45.00, 'libraa', '2021-11-07 23:46:38', '2021-11-08 23:49:51');
-/*!40000 ALTER TABLE `yeipi_stocks` ENABLE KEYS */;
+	(1, 1, 2, 2.50, 5.00, 'pieza', '2021-11-04 01:53:26', '2021-11-04 01:53:26'),
+	(2, 2, 2, 2.50, 20.00, 'pieza', '2021-11-04 01:53:43', '2021-11-04 01:53:43'),
+	(3, 1, 1, 0.60, 0.00, 'libra', '2021-11-05 01:18:54', '2021-11-08 18:39:22'),
+	(4, 2, 1, 0.60, 4.00, 'libraa', '2021-11-05 01:19:04', '2021-11-08 18:58:46'),
+	(5, 3, 1, 0.50, 5.00, 'pieza', '2021-11-05 01:19:19', '2021-11-05 01:19:19');
 
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Yeipi\Entities\Customer;
 use Modules\Yeipi\Entities\Contract;
 use Modules\Yeipi\Entities\Detail;
+use Modules\Yeipi\Entities\Stock;
 
 class Order extends Model
 {
@@ -58,6 +59,16 @@ class Order extends Model
         return $this->hasMany(Detail::class);
     }
 
+    /**
+     * The Stock that belong to the Order.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function stocks()
+    {
+        return $this->belongsToMany(Stock::class, Detail::class);
+    }
+    
     /**
      * Scope a query to only include last orders.
      *
