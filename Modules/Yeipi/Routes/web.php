@@ -84,7 +84,7 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
         Route::put('/stock/{stock}', 'ProveerController@stockUpdate')->name('yeipi.proveer.stock.update');
         Route::delete('/stock/{stock}', 'ProveerController@stockDelete')->name('yeipi.proveer.stock.delete');
 
-        Route::get('/customer', 'ProveerController@order')->name('yeipi.proveer.order');
+        Route::get('/customer', 'ProveerController@customer')->name('yeipi.proveer.customer');
     });
 
     // Rutas de las ordenes

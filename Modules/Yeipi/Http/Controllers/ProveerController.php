@@ -248,7 +248,9 @@ class ProveerController extends Controller
     public function customer()
     {
         $shop = auth()->user()->people->provider->shop;
-        $orders = $shop->sales->order()->delivered()->with(['customer.people', 'delivery.people']);
+        $orders = Order::delivered()->with(['customer.people', 'delivery.people'])->whereRelation('stocks', 'shop_id', $shop->id);
+        dd($orders->getQuery()->toSql());
+        $shop->sales->order()->delivered()->with(['customer.people', 'delivery.people']);
         $breadcrumb = ['title' => 'Clientes', 'url' => route('yeipi.proveer.customer')];
         $data = compact('shop', 'orders', 'breadcrumb');
         return view('dashboard', $this->GetInfo($data));
