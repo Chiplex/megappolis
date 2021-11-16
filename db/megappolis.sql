@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.pages: ~38 rows (aproximadamente)
 REPLACE INTO `pages` (`id`, `app_id`, `controller`, `action`, `name`, `type`, `icon`, `page_id`, `created_at`, `updated_at`) VALUES
@@ -174,7 +174,8 @@ REPLACE INTO `pages` (`id`, `app_id`, `controller`, `action`, `name`, `type`, `i
 	(35, 1, NULL, NULL, 'Iniciar', 'page', NULL, 0, '2021-11-10 06:10:03', '2021-11-10 06:10:03'),
 	(36, 2, NULL, NULL, 'Entregar', 'menu', 'fa fa-truck', 12, '2021-11-10 06:13:11', '2021-11-10 06:14:30'),
 	(37, 2, NULL, NULL, 'Proveer', 'menu', 'fa fa-project-diagram', 12, '2021-11-10 06:15:40', '2021-11-10 06:16:57'),
-	(38, 2, 'proveer', 'stock', 'Stock', 'submenu', 'fa fa-store', 37, '2021-11-11 21:47:04', '2021-11-11 21:47:45');
+	(38, 2, 'proveer', 'stock', 'Stock', 'submenu', 'fa fa-store', 37, '2021-11-11 21:47:04', '2021-11-11 21:47:45'),
+	(39, 2, 'proveer', 'customer', 'Consumidores', 'submenu', 'fa fa-walking', 37, '2021-11-16 22:12:09', '2021-11-16 23:40:53');
 
 -- Volcando estructura para tabla megappolis.password_resets
 CREATE TABLE IF NOT EXISTS `password_resets` (
@@ -218,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla megappolis.permissions: ~18 rows (aproximadamente)
 REPLACE INTO `permissions` (`id`, `role_id`, `page_id`, `name`, `created_at`, `updated_at`) VALUES
@@ -241,7 +242,8 @@ REPLACE INTO `permissions` (`id`, `role_id`, `page_id`, `name`, `created_at`, `u
 	(17, 1, 31, 'view', '2021-11-04 01:41:20', '2021-11-04 01:41:20'),
 	(18, 1, 17, 'view', '2021-11-05 02:14:58', '2021-11-05 02:14:58'),
 	(19, 2, 32, 'view', '2021-11-08 19:03:58', '2021-11-08 19:03:58'),
-	(20, 4, 38, 'view', '2021-11-11 22:16:33', '2021-11-11 22:16:33');
+	(20, 4, 38, 'view', '2021-11-11 22:16:33', '2021-11-11 22:16:33'),
+	(21, 4, 39, 'view', '2021-11-16 22:15:10', '2021-11-16 22:15:10');
 
 -- Volcando estructura para tabla megappolis.roles
 CREATE TABLE IF NOT EXISTS `roles` (

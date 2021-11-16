@@ -232,14 +232,10 @@ class ProveerController extends Controller
     public function dataCustomer()
     {
         $provider = auth()->user()->people->provider;
-        $shops = $provider->shop;
+        $shop = $provider->shop;
 
-        // Trer las ordenes entregadas y no entregadas solo si el proveedor tiene una ventas
-        if($shops->sales->isEmpty()){
-            $orders = collect();
-        }else{
-            $orders = $shops->sales->order()->delivered()->with(['customer.people', 'delivery.people']);
-        }
+        $orders = Order::delivered()->with(['customer.people', 'delivery.people'])->whereRelation('stocks', 'shop_id', $shop->id);
+        dd($orders->getQuery()->toSql());
 
         return Datatables::of($orders)
             ->setRowClass('context-menu-customer')
