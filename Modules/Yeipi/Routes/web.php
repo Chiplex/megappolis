@@ -76,15 +76,15 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
 
         Route::get('/index', 'ProveerController@index')->name('yeipi.proveer.index');
         Route::get('/product', 'ProveerController@product')->name('yeipi.proveer.product');
-        Route::get('/data/customer', 'ProveerController@datacustomer')->name('yeipi.proveer.data.customer');
         
         Route::get('/stock', 'ProveerController@stock')->name('yeipi.proveer.stock');
         Route::get('/data/stock', 'ProveerController@dataStock')->name('yeipi.proveer.data.stock');
         Route::post('/stock', 'ProveerController@stockStore')->name('yeipi.proveer.stock.store');
         Route::put('/stock/{stock}', 'ProveerController@stockUpdate')->name('yeipi.proveer.stock.update');
         Route::delete('/stock/{stock}', 'ProveerController@stockDelete')->name('yeipi.proveer.stock.delete');
-
+        
         Route::get('/customer', 'ProveerController@customer')->name('yeipi.proveer.customer');
+        Route::get('/data/customer', 'ProveerController@dataCustomer')->name('yeipi.proveer.data.customer');
     });
 
     // Rutas de las ordenes

@@ -10,14 +10,12 @@
                 </div>
             </div>
             <div class="card-body">
-                <table class="table" id="tblCustomer" style="width: 100%">
+                <table class="table" id="tblCustomer">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Producto</th>
                             <th>Marca</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
                         </tr>
                     </thead>
                 </table>

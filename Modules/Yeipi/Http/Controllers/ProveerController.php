@@ -126,54 +126,6 @@ class ProveerController extends Controller
     }
 
     /**
-     * @Get("/proveer/data/stock", "yeipi.proveer.data.stock", 'access:YEIPI-PROVIDER')
-     * 
-     * Retorna una lista de productos en stock como DataTable
-     * @return Datatables
-     */
-    public function dataStock()
-    {
-        $provider = auth()->user()->people->provider;
-        $shops = $provider->shop;
-        $stocks = $shops->stocks()->with('product');
-
-        return Datatables::of($stocks)
-            ->setRowClass('context-menu-stock')
-            ->addIndexColumn()
-            ->make(true);
-    }
-
-    /**
-     * @Get("/proveer/data/customer", "yeipi.proveer.data.customer", 'access:YEIPI-PROVIDER')
-     * 
-     * Retorna una lista de clientes con el delivery y su estado como DataTable
-     * @return Datatables
-     */
-    public function dataCustomer()
-    {
-        $provider = auth()->user()->people->provider;
-        $shops = $provider->shop;
-
-        // Trer las ordenes entregadas y no entregadas solo si el proveedor tiene una ventas
-        if($shops->sales->isEmpty()){
-            $orders = collect();
-        }else{
-            $orders = $shops->sales->order()->delivered()->with(['customer.people', 'delivery.people']);
-        }
-
-        return Datatables::of($orders)
-            ->setRowClass('context-menu-customer')
-            ->addColumn('customer', function ($order){
-                return $order->delivery? $order->delivery->people->getNameComplete(): '';
-            })
-            ->addColumn('delivery', function ($order){
-                return $order->customer? $order->customer->people->getNameComplete(): '';
-            })
-            ->addIndexColumn()
-            ->make(true);
-    }
-
-    /**
      * @Post("/proveer/stock", "yeipi.proveer.stock", 'access:YEIPI-PROVIDER')
      * 
      * Agrega un producto al stock del proveedor
@@ -240,6 +192,24 @@ class ProveerController extends Controller
     }
 
     /**
+     * @Get("/proveer/data/stock", "yeipi.proveer.data.stock", 'access:YEIPI-PROVIDER')
+     * 
+     * Retorna una lista de productos en stock como DataTable
+     * @return Datatables
+     */
+    public function dataStock()
+    {
+        $provider = auth()->user()->people->provider;
+        $shops = $provider->shop;
+        $stocks = $shops->stocks()->with('product');
+
+        return Datatables::of($stocks)
+            ->setRowClass('context-menu-stock')
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+    /**
      * @Get("/proveer/customer", "yeipi.proveer.customer", 'access:YEIPI-PROVIDER')
      * 
      * Muestra la página de los clientes
@@ -249,10 +219,37 @@ class ProveerController extends Controller
     {
         $shop = auth()->user()->people->provider->shop;
         $orders = Order::delivered()->with(['customer.people', 'delivery.people'])->whereRelation('stocks', 'shop_id', $shop->id);
-        dd($orders->getQuery()->toSql());
-        $shop->sales->order()->delivered()->with(['customer.people', 'delivery.people']);
-        $breadcrumb = ['title' => 'Clientes', 'url' => route('yeipi.proveer.customer')];
-        $data = compact('shop', 'orders', 'breadcrumb');
+        $data = compact('shop', 'orders');
         return view('dashboard', $this->GetInfo($data));
+    }
+
+    /**
+     * @Get("/proveer/data/customer", "yeipi.proveer.data.customer", 'access:YEIPI-PROVIDER')
+     * 
+     * Retorna una lista de clientes con el delivery y su estado como DataTable
+     * @return Datatables
+     */
+    public function dataCustomer()
+    {
+        $provider = auth()->user()->people->provider;
+        $shops = $provider->shop;
+
+        // Trer las ordenes entregadas y no entregadas solo si el proveedor tiene una ventas
+        if($shops->sales->isEmpty()){
+            $orders = collect();
+        }else{
+            $orders = $shops->sales->order()->delivered()->with(['customer.people', 'delivery.people']);
+        }
+
+        return Datatables::of($orders)
+            ->setRowClass('context-menu-customer')
+            ->addColumn('customer', function ($order){
+                return $order->delivery? $order->delivery->people->getNameComplete(): '';
+            })
+            ->addColumn('delivery', function ($order){
+                return $order->customer? $order->customer->people->getNameComplete(): '';
+            })
+            ->addIndexColumn()
+            ->make(true);
     }
 }

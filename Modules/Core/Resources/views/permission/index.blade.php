@@ -36,10 +36,10 @@
               <tr>
                 <td>{{$permission->id}}</td>
                 <td>{{$permission->role->name}}</td>
-                <td>{{$permission->page->app->name}}</td>
-                <td>{{$permission->page->controller}}</td>
-                <td>{{$permission->page->action}}</td>
-                <td>{{$permission->page->name}}</td>
+                <td>{{$permission?->page?->app?->name ?? ""}}</td>
+                <td>{{$permission?->page?->controller ?? ""}}</td>
+                <td>{{$permission?->page?->action ?? ""}}</td>
+                <td>{{$permission?->page?->name ?? ""}}</td>
                 <td>{{$permission->name}}</td>
                 <td>
                   <div class="btn-group btn-group-sm">
