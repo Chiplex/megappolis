@@ -79,13 +79,6 @@
                 <input type="hidden" name="order_id">
                 <input type="hidden" name="stock_id">
                 <div class="form-group row">
-                    <label for="shop" class="col-sm-4">Descripcion</label>
-                    <div class="col-sm-8">
-                        <input type="text" name="descripcion" data="descripcion" data="stock.product.descripcion"
-                            class="form-control" placeholder="Descripcion" required>
-                    </div>
-                </div>
-                <div class="form-group row">
                     <label for="cantidad" class="col-sm-4 col-form-label">Cantidad</label>
                     <div class="col-sm-8">
                         <input class="form-control" placeholder="Cantidad" name="cantidad" type="text" id="cantidad">
@@ -168,7 +161,6 @@
     });
 
     function AbrirModalDetalle(model) {
-        console.log(model);
         JSONToForm(mPedido, model);
         mPedido.modal('show');
     }
@@ -186,12 +178,8 @@
             method: method,
             data: data,
             success: function (response) {
-                if (response.success) {
-                    mPedido.modal('hide');
-                    t.ajax.reload();
-                } else {
-                    alert(response.message);
-                }
+                mPedido.modal('hide');
+                t.ajax.reload();
             },
             error: function (response) {
                 alert(response.message);

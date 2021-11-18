@@ -387,7 +387,7 @@ class PedirController extends Controller
     }
     
     /**
-     * @Update("/pedir/register", "yeipi.pedir.register", 'access:YEIPI-CUSTOMER')
+     * @Update("/pedir/update", "yeipi.pedir.update", 'access:YEIPI-CUSTOMER')
      * 
      * Actualiza un detalle del pedido actual atraves de una peticion Ajax
      * @param Request $request
@@ -399,9 +399,9 @@ class PedirController extends Controller
             if ($request->ajax()) {
                 $customer = auth()->user()->people->customer;
                 $order = $customer->orders()->lastest()->Undelivered()->firstOrFail();
+                dd($request->detail_id);
                 $detail = $order->details()->where('id', $request->detail_id)->firstOrFail();
                 $detail->cantidad = $request->cantidad;
-                $detail->precio = $request->precio;
                 $detail->save();
                 return response()->json(['success' => 'Pedido actualizado']);
             }
