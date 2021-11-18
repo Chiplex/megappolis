@@ -41,7 +41,6 @@
                 <tr>
                     <th>#</th>
                     <th>Producto</th>
-                    <th>Descripción</th>
                     <th>Tienda</th>
                     <th>Direccion</th>
                     <th>Cantidad</th>
@@ -51,7 +50,6 @@
             </thead>
             <tfoot>
                 <tr>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -83,7 +81,8 @@
                 <div class="form-group row">
                     <label for="shop" class="col-sm-4">Descripcion</label>
                     <div class="col-sm-8">
-                        <input type="text" name="descripcion" data="descripcion" data="stock.product.descripcion" class="form-control" placeholder="Descripcion" required>
+                        <input type="text" name="descripcion" data="descripcion" data="stock.product.descripcion"
+                            class="form-control" placeholder="Descripcion" required>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -110,135 +109,134 @@
 
 @push('js')
 <script>
-var mPedido = $("#modal");
-var total = 0;
-var t = $('#table').DataTable({
-    processing: true,
-    serverSide: true,
-    "pageLength": 500,
-    ajax: "{{ $routes['dataCurrent'] }}",
-    columns: [
-        { data: 'id', name: 'id', "orderable": false },
-        { data: 'stock.product.descripcion', name: 'stock.product.descripcion' },
-        { data: 'descripcion', name: 'descripcion' },
-        { data: 'stock.shop.nombre', name: 'stock.shop.nombre' },
-        { data: 'stock.shop.direccion', name: 'stock.shop.direccion' },
-        { data: 'cantidad', name: 'cantidad' },
-        { data: 'precio', name: 'precio' },
-        { data: 'subtotal', name: 'subtotal', orderable: false, searchable: false },
-    ],
-    "createdRow": (row, data, index) => {
-        total = data.subtotal + total;
-        $('td', row).eq(7).addClass("text-right");
-        $('td', row).eq(6).addClass("text-right");
-        $('td', row).eq(5).addClass("text-right");
-        $('tfoot td:eq(7)').addClass("text-right").html(number_format(total, 2));
-    },
-    "drawCallback": function (settings) {
-        total = 0;
-    }
-});
+    var mPedido = $("#modal");
+    var total = 0;
+    var t = $('#table').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 500,
+        ajax: "{{ $routes['dataCurrent'] }}",
+        columns: [
+            { data: 'id', name: 'id', "orderable": false },
+            { data: 'stock.product.descripcion', name: 'stock.product.descripcion' },
+            { data: 'stock.shop.nombre', name: 'stock.shop.nombre' },
+            { data: 'stock.shop.direccion', name: 'stock.shop.direccion' },
+            { data: 'cantidad', name: 'cantidad' },
+            { data: 'precio', name: 'precio' },
+            { data: 'subtotal', name: 'subtotal', orderable: false, searchable: false },
+        ],
+        "createdRow": (row, data, index) => {
+            total = data.subtotal + total;
+            $('td', row).eq(7).addClass("text-right");
+            $('td', row).eq(6).addClass("text-right");
+            $('td', row).eq(5).addClass("text-right");
+            $('tfoot td:eq(7)').addClass("text-right").html(number_format(total, 2));
+        },
+        "drawCallback": function (settings) {
+            total = 0;
+        }
+    });
 
-$.contextMenu({
-    selector: ".context-menu",
-    build: function ($trigger, e) {
-        return {
-            callback: function (key, options) {
-                var tr = $(options.$trigger[0]).closest('tr');
-                var row = t.row(tr);
-                var model = row.data();
-                switch (key) {
-                    case "edit":
-                        AbrirModalDetalle(model);
-                        break;
-                    case "delete":
-                        EliminarDetalle(model);
-                        break;
+    $.contextMenu({
+        selector: ".context-menu",
+        build: function ($trigger, e) {
+            return {
+                callback: function (key, options) {
+                    var tr = $(options.$trigger[0]).closest('tr');
+                    var row = t.row(tr);
+                    var model = row.data();
+                    switch (key) {
+                        case "edit":
+                            AbrirModalDetalle(model);
+                            break;
+                        case "delete":
+                            EliminarDetalle(model);
+                            break;
+                    }
+                },
+                items: {
+                    "edit": { name: "Editar", icon: "edit", disabled: {{ isset($order->fechaSolicitud) ? 'true': 'false'}} },
+                    "delete": { name: "Eliminar", icon: "delete", disabled: {{ isset($order->fechaSolicitud) ? 'true': 'false'}} },
+                }
+            };
+        },
+    });
+
+    $("#form-product").submit(function (e) {
+        e.preventDefault();
+        GuardarDetalle();
+    });
+
+    function AbrirModalDetalle(model) {
+        console.log(model);
+        JSONToForm(mPedido, model);
+        mPedido.modal('show');
+    }
+
+    function GuardarDetalle() {
+        var form = $("#form-product");
+        var data = FormToJSON(form);
+        var url = form.attr('action');
+        var method = "PUT";
+        if (data.id) {
+            method = "POST";
+        }
+        $.ajax({
+            url: url,
+            method: method,
+            data: data,
+            success: function (response) {
+                if (response.success) {
+                    mPedido.modal('hide');
+                    t.ajax.reload();
+                } else {
+                    alert(response.message);
                 }
             },
-            items: {
-                "edit": { name: "Editar", icon: "edit", disabled: {{ isset($order->fechaSolicitud) ? 'true': 'false'}} },
-                "delete": { name: "Eliminar", icon: "delete", disabled: {{ isset($order->fechaSolicitud) ? 'true': 'false'}} },
-            }
-        };
-    },
-});
-
-$("#form-product").submit(function (e) {
-    e.preventDefault();
-    GuardarDetalle();
-});
-
-function AbrirModalDetalle(model) {
-    console.log(model);
-    JSONToForm(mPedido, model);
-    mPedido.modal('show');
-}
-
-function GuardarDetalle() {
-    var form = $("#form-product");
-    var data = FormToJSON(form);
-    var url = form.attr('action');
-    var method = "PUT";
-    if (data.id) {
-        method = "POST";
-    }
-    $.ajax({
-        url: url,
-        method: method,
-        data: data,
-        success: function (response) {
-            if (response.success) {
-                mPedido.modal('hide');
-                t.ajax.reload();
-            } else {
+            error: function (response) {
                 alert(response.message);
             }
-        },
-        error: function (response) {
-            alert(response.message);
-        }
-    });
-}
+        });
+    }
 
-function EliminarDetalle(model) {
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: "¡No podrás revertir esto!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: '¡Sí, eliminar!'
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                url: "{{ route('yeipi.pedir.delete') }}",
-                type: 'DELETE',
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    detail_id: model.id
-                },
-                success: function (data) {
-                    if (data.success) {
-                        Swal.fire(
-                            '¡Eliminado!',
-                            data.message,
-                            'success'
-                        );
-                        t.ajax.reload();
-                    } else {
-                        Swal.fire(
-                            '¡Error!',
-                            data.message,
-                            'error'
-                        );
+    function EliminarDetalle(model) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¡No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '¡Sí, eliminar!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "{{ route('yeipi.pedir.delete') }}",
+                    type: 'DELETE',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        detail_id: model.id
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire(
+                                '¡Eliminado!',
+                                data.message,
+                                'success'
+                            );
+                            t.ajax.reload();
+                        } else {
+                            Swal.fire(
+                                '¡Error!',
+                                data.message,
+                                'error'
+                            );
+                        }
                     }
-                }
-            });
-        }
-    });
-}
+                });
+            }
+        });
+    }
 
 </script>
 @endpush

@@ -109,16 +109,16 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     //     Route::delete('/register/{detail}', 'DetailController@destroy')->name('yeipi.detail.delete');
     // });
     
-    // // Rutas de los productos
-    // Route::prefix('/product')->middleware('access:CORE-MEGAPPOLIS')->group(function () {
-    //     Route::get('/data', 'ProductController@data')->name('yeipi.product.data');
-    //     Route::get('/index', 'ProductController@index')->name('yeipi.product.index');
-    //     Route::get('/register', 'ProductController@create')->name('yeipi.product.create');
-    //     Route::post('/register', 'ProductController@store')->name('yeipi.product.store');
-    //     Route::get('/register/{product}', 'ProductController@edit')->name('yeipi.product.edit');
-    //     Route::put('/register/{product}', 'ProductController@update')->name('yeipi.product.update');
-    //     Route::delete('/register/{product}', 'ProductController@destroy')->name('yeipi.product.delete');
-    // });
+    // Rutas de los productos
+    Route::prefix('/product')->middleware('access:CORE-MEGAPPOLIS')->group(function () {
+        Route::get('/data', 'ProductController@data')->name('yeipi.product.data');
+        Route::get('/index', 'ProductController@index')->name('yeipi.product.index');
+        Route::get('/register', 'ProductController@create')->name('yeipi.product.create');
+        Route::post('/register', 'ProductController@store')->name('yeipi.product.store');
+        Route::get('/register/{product}', 'ProductController@edit')->name('yeipi.product.edit');
+        Route::put('/register/{product}', 'ProductController@update')->name('yeipi.product.update');
+        Route::delete('/register/{product}', 'ProductController@destroy')->name('yeipi.product.delete');
+    });
 
     // // Rutas de los Consumidores
     // Route::prefix('/customer')->middleware('access:CORE-MEGAPPOLIS')->group(function () {

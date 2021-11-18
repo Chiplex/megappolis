@@ -126,31 +126,6 @@ class ProveerController extends Controller
     }
 
     /**
-     * @Post("/proveer/stock", "yeipi.proveer.stock", 'access:YEIPI-PROVIDER')
-     * 
-     * Agrega un producto al stock del proveedor
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        try { 
-            Stock::create($request->all());
-
-            if ($request->ajax()) 
-                return response()->json(['success' => 'Product was successfully added.'], 200);
-            
-            return redirect()->route('yeipi.product.index');
-        } catch (Exception $exception) {
-            if ($request->ajax()) 
-                return response()->json(['error' => 'Unexpected error occurred while trying to process your request.'], 500);
-            
-            return back()->withInput()
-                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
-        }
-    }
-
-    /**
      * @Put("/proveer/stock/{stock}", "yeipi.proveer.stock", 'access:YEIPI-PROVIDER')
      * 
      * Actualiza un producto del stock del proveedor
@@ -192,6 +167,82 @@ class ProveerController extends Controller
     }
 
     /**
+     * @Post("/proveer/stock", "yeipi.proveer.stock", 'access:YEIPI-PROVIDER')
+     * 
+     * Agrega un producto al stock del proveedor
+     * @param Request $request
+     * @return Renderable
+     */
+    public function stockStore(Request $request)
+    {
+        try { 
+            Stock::create($request->all());
+
+            if ($request->ajax()) 
+                return response()->json(['success' => 'Product was successfully added.'], 200);
+            
+            return redirect()->route('yeipi.product.index');
+        } catch (Exception $exception) {
+            if ($request->ajax()) 
+                return response()->json(['error' => 'Unexpected error occurred while trying to process your request.'], 500);
+            
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
+    /**
+     * @Put("/proveer/stock/{stock}", "yeipi.proveer.stock.update", 'access:YEIPI-PROVIDER')
+     * 
+     * Actualiza un producto del stock del proveedor
+     * @param Stock $stock
+     * @param Request $request
+     * @return Renderable
+     */
+    public function stockUpdate(Stock $stock, Request $request)
+    {
+        try {
+            $stock->update($request->all());
+
+            if ($request->ajax()) 
+                return response()->json(['success' => 'Product was successfully updated.'], 200);
+            
+            return redirect()->route('yeipi.product.index');
+        } catch (Exception $exception) {
+            if ($request->ajax()) 
+                return response()->json(['error' => 'Unexpected error occurred while trying to process your request.'], 500);
+            
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
+    /**
+     * @Delete("/proveer/stock/{stock}", "yeipi.proveer.stock.delete", 'access:YEIPI-PROVIDER')
+     * 
+     * Elimina un producto del stock del proveedor
+     * @param Stock $stock
+     * @return Renderable
+     */
+    public function stockDelete(Stock $stock)
+    {
+        try {
+            $stock->delete();
+
+            if ($request->ajax()) 
+                return response()->json(['success' => 'Product was successfully deleted.'], 200);
+            
+            return redirect()->route('yeipi.product.index');
+        } catch (Exception $exception) {
+            if ($request->ajax()) 
+                return response()->json(['error' => 'Unexpected error occurred while trying to process your request.'], 500);
+            
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
+    /**
      * @Get("/proveer/data/stock", "yeipi.proveer.data.stock", 'access:YEIPI-PROVIDER')
      * 
      * Retorna una lista de productos en stock como DataTable
@@ -206,6 +257,9 @@ class ProveerController extends Controller
         return Datatables::of($stocks)
             ->setRowClass('context-menu-stock')
             ->addIndexColumn()
+            ->addColumn('subtotal', function($stock){
+                return $stock->stock * $stock->precio;
+            })
             ->make(true);
     }
 
@@ -224,6 +278,64 @@ class ProveerController extends Controller
     }
 
     /**
+     * @Get("/proveer/sale", "yeipi.proveer.sale", 'access:YEIPI-PROVIDER')
+     * 
+     * Muestra la página de las ventas
+     * @return Renderable
+     */
+    public function sale()
+    {
+        $shop = auth()->user()->people->provider->shop;
+        $orders = Order::delivered()->with(['customer.people', 'delivery.people'])->whereRelation('stocks', 'shop_id', $shop->id);
+        $data = compact('shop', 'orders');
+        return view('dashboard', $this->GetInfo($data));
+    }
+
+    /**
+     * @Get("/proveer/data/sale", "yeipi.proveer.data.sale", 'access:YEIPI-PROVIDER')
+     * 
+     * Retorna una lista de ventas como DataTable
+     * @return Datatables
+     */
+    public function dataSale()
+    {
+        $provider = auth()->user()->people->provider;
+        $shops = $provider->shop;
+        $orders = Order::delivered()->with(['customer.people', 'delivery.people'])->whereRelation('stocks', 'shop_id', $shops->id);
+
+        return Datatables::of($orders)
+            ->setRowClass('context-menu-sale')
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+    /**
+     * @Post("/proveer/sale", "yeipi.proveer.sale", 'access:YEIPI-PROVIDER')
+     * 
+     * Agrega una venta al proveedor
+     * @param Request $request
+     * @return Renderable
+    */
+    public function saleStore(Request $request)
+    {
+        try {
+            $order = Order::create($request->all());
+            $order->stocks()->attach($request->stocks);
+
+            if ($request->ajax()) 
+                return response()->json(['success' => 'Order was successfully added.'], 200);
+            
+            return redirect()->route('yeipi.sale.index');
+        } catch (Exception $exception) {
+            if ($request->ajax()) 
+                return response()->json(['error' => 'Unexpected error occurred while trying to process your request.'], 500);
+            
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
+
+    /**
      * @Get("/proveer/data/customer", "yeipi.proveer.data.customer", 'access:YEIPI-PROVIDER')
      * 
      * Retorna una lista de clientes con el delivery y su estado como DataTable
@@ -234,8 +346,9 @@ class ProveerController extends Controller
         $provider = auth()->user()->people->provider;
         $shop = $provider->shop;
 
-        $orders = Order::delivered()->with(['customer.people', 'delivery.people'])->whereRelation('stocks', 'shop_id', $shop->id);
-        dd($orders->getQuery()->toSql());
+        $orders = Order::delivered()
+            ->with(['customer.people', 'delivery.people'])
+            ->whereRelation('stocks', 'shop_id', $shop->id);
 
         return Datatables::of($orders)
             ->setRowClass('context-menu-customer')

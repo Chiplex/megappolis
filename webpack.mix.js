@@ -11,8 +11,8 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .ts('resources/ts/app.ts', 'public/js')
+mix.js('./resources/js/app.js', 'public/js')
+    .ts('./resources/ts/app.ts', 'public/js')
     .webpackConfig({
         module: {
             rules: [{
@@ -25,5 +25,4 @@ mix.js('resources/js/app.js', 'public/js')
             extensions: ["*", ".js", ".jsx", ".vue", ".ts", ".tsx"]
         }
     })
-    .sass('resources/sass/app.scss', 'public/css')
-    .sourceMaps();
+    .sass('resources/sass/app.scss', 'public/css');

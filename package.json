@@ -11,27 +11,29 @@
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.2.1",
-        "@types/jquery": "^3.5.5",
+        "@types/jquery": "^3.5.8",
         "alpinejs": "^2.8.2",
-        "autoprefixer": "^10.1.0",
-        "axios": "^0.21",
-        "bootstrap": "^4.0.0",
+        "autoprefixer": "^10.4.0",
+        "axios": "^0.21.4",
+        "bootstrap": "^4.6.1",
         "jquery": "^3.6.0",
-        "laravel-mix": "^6.0.18",
+        "laravel-mix": "^6.0.39",
         "lodash": "^4.17.19",
         "popper.js": "^1.12",
-        "postcss": "^8.2.12",
+        "postcss": "^8.3.11",
         "postcss-import": "^12.0.1",
-        "resolve-url-loader": "^3.1.2",
-        "sass": "^1.32.11",
+        "resolve-url-loader": "^3.1.4",
+        "sass": "^1.43.4",
         "sass-loader": "^8.0.0",
-        "tailwindcss": "^2.1.1",
-        "ts-loader": "^8.2.0",
-        "typescript": "^4.2.4"
+        "tailwindcss": "^2.2.19",
+        "ts-loader": "^8.3.0",
+        "typescript": "^4.5.2"
     },
     "dependencies": {
-        "datatables.net-bs4": "^1.10.24",
-        "datatables.net-buttons-bs4": "^1.7.0",
-        "handlebars": "^4.7.7"
+        "datatables.net-bs4": "^1.11.3",
+        "datatables.net-buttons-bs4": "^1.7.1",
+        "handlebars": "^4.7.7",
+        "moment": "^2.29.1",
+        "numeral": "^2.0.6"
     }
 }
