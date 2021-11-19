@@ -16,31 +16,32 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
     Route::get('/home/register/{yeipi}', 'HomeController@create')->name('yeipi.home.create');
     Route::post('/home/register', 'HomeController@store')->name('yeipi.home.store');
 
-    // Rutas para el controlador de Pedir
-    Route::prefix('pedir')->middleware(['access:YEIPI-CUSTOMER'])->group(function () {
-        Route::get('/iniciar', 'PedirController@preparar')->name('yeipi.pedir.preparar');
-        Route::post('/iniciar', 'PedirController@iniciar')->name('yeipi.pedir.iniciar');
+    // Rutas para el controlador de Comprar
+    Route::prefix('comprar')->middleware(['access:YEIPI-CUSTOMER'])->group(function () {
+        Route::get('/iniciar', 'ComprarController@preparar')->name('yeipi.comprar.preparar');
+        Route::post('/iniciar', 'ComprarController@iniciar')->name('yeipi.comprar.iniciar');
 
-        Route::get('/index', 'PedirController@index')->name('yeipi.pedir.index');
-        Route::get('/cart', 'PedirController@cart')->name('yeipi.pedir.cart');
-        Route::get('/search/{search}', 'PedirController@search')->name('yeipi.pedir.search');
-        Route::get('/shop/{product}', 'PedirController@shop')->name('yeipi.pedir.shop');
-        Route::post('/product', 'PedirController@store')->name('yeipi.pedir.store');
-        Route::get('/count', 'PedirController@count')->name('yeipi.pedir.count');
+        Route::get('/index', 'ComprarController@index')->name('yeipi.comprar.index');
+        Route::get('/cart', 'ComprarController@cart')->name('yeipi.comprar.cart');
+        Route::get('/search/{search}', 'ComprarController@search')->name('yeipi.comprar.search');
+        Route::get('/shop/{product}', 'ComprarController@shop')->name('yeipi.comprar.shop');
+        Route::post('/detail', 'ComprarController@store')->name('yeipi.comprar.detail.store');
+        Route::get('/count', 'ComprarController@count')->name('yeipi.comprar.count');
         
-        Route::get('/history', 'PedirController@history')->name('yeipi.pedir.history');
-        Route::get('/data/history', 'PedirController@dataHistory')->name('yeipi.pedir.data.history');
+        Route::get('/history', 'ComprarController@history')->name('yeipi.comprar.history');
+        Route::get('/data/history', 'ComprarController@dataHistory')->name('yeipi.comprar.data.history');
         
-        Route::get('/current', 'PedirController@current')->name('yeipi.pedir.current');
-        Route::get('/data/current', 'PedirController@dataCurrent')->name('yeipi.pedir.data.current');
+        Route::get('/current', 'ComprarController@current')->name('yeipi.comprar.current');
+        Route::get('/data/current', 'ComprarController@dataCurrent')->name('yeipi.comprar.data.current');
 
-        Route::post('/solicitar', 'PedirController@solicitar')->name('yeipi.pedir.solicitar');
-        Route::delete('/cancelar', 'PedirController@cancelar')->name('yeipi.pedir.cancelar');
+        Route::post('/solicitar', 'ComprarController@solicitar')->name('yeipi.comprar.solicitar');
+        Route::delete('/cancelar', 'ComprarController@cancelar')->name('yeipi.comprar.cancelar');
 
-        Route::put('/product', 'PedirController@update')->name('yeipi.pedir.update');
-        Route::delete('/product', 'PedirController@delete')->name('yeipi.pedir.delete');
+        Route::put('/detail', 'ComprarController@update')->name('yeipi.comprar.detail.update');
+        Route::delete('/detail', 'ComprarController@delete')->name('yeipi.comprar.detail.delete');
 
-        Route::get('/qualify', 'PedirController@qualify')->name('yeipi.pedir.qualify');
+        Route::get('/qualify', 'ComprarController@qualify')->name('yeipi.comprar.qualify');
+        Route::post('/qualify', 'ComprarController@qualifyStore')->name('yeipi.comprar.qualify.store');
     });
 
     // Rutas para el controlador de entregar

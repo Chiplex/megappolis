@@ -6,8 +6,7 @@
             <input type="number" name="Calificacion" class="form-control" placeholder="Calificacion" min="0" max="5"
                 value="{{ $order->calificacion }}">
             @endif
-            {!! Form::button('<i class="fas fa-save"></i> '.$text, ['class' => 'btn btn-primary', 'type' => 'submit'])
-            !!}
+            {!! Form::button('<i class="fas fa-save"></i> '.$text, ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
             {!! Form::close() !!}
         </div>
     </div>
@@ -76,6 +75,7 @@
             </div>
             {!! Form::open($formDetalle) !!}
             <div class="modal-body">
+                <input type="hidden" name="id">
                 <input type="hidden" name="order_id">
                 <input type="hidden" name="stock_id">
                 <div class="form-group row">
@@ -102,7 +102,8 @@
 
 @push('js')
 <script>
-    var mPedido = $("#modal");
+    var mDetalle = $("#modal");
+    var formDetalle = $("#{{ $formDetalle['id'] }}");
     var total = 0;
     var t = $('#table').DataTable({
         processing: true,
@@ -155,30 +156,29 @@
         },
     });
 
-    $("#form-product").submit(function (e) {
+    formDetalle.submit(function (e) {
         e.preventDefault();
         GuardarDetalle();
     });
 
     function AbrirModalDetalle(model) {
-        JSONToForm(mPedido, model);
-        mPedido.modal('show');
+        JSONToForm(formDetalle, model);
+        mDetalle.modal('show');
     }
 
     function GuardarDetalle() {
-        var form = $("#form-product");
-        var data = FormToJSON(form);
-        var url = form.attr('action');
-        var method = "PUT";
+        var data = FormToJSON(formDetalle);
+        var url = formDetalle.attr('action');
+        var method = "POST";
         if (data.id) {
-            method = "POST";
+            method = "PUT";
         }
         $.ajax({
             url: url,
             method: method,
             data: data,
             success: function (response) {
-                mPedido.modal('hide');
+                mDetalle.modal('hide');
                 t.ajax.reload();
             },
             error: function (response) {
@@ -199,7 +199,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('yeipi.pedir.delete') }}",
+                    url: "{{ $routes['delete'] }}",
                     type: 'DELETE',
                     data: {
                         _token: "{{ csrf_token() }}",

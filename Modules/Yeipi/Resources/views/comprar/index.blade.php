@@ -17,9 +17,9 @@
                     </div>
                 </div>
                 <div class="card-tools">
-                    <a href="{{ $routes['localization'] }}" class="btn btn-default">
+                    <a href="{{ $routes['location'] }}" class="btn btn-default">
                         <i class="fas fa-external-link-alt"></i>
-                        Actualizar localización
+                        Actualizar ubicación
                     </a>
                     <div class="btn-group">
                         {{-- Si tiene un pedido en curso, redirecciona al pedido en curso caso contrario registra el pedido --}}
@@ -47,7 +47,7 @@
                 <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                     @foreach ($stocks as $stock)
                     <div class="col">
-                        {!! Form::open(['class' => 'form-product']) !!}
+                        {!! Form::open($formProduct) !!}
                             {!! Form::hidden('product_id', $stock->product->id) !!}
                             {!! Form::hidden('order_id', $order->id) !!}
                             <div class="card bg-white text-center">
@@ -75,7 +75,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            {!! Form::open($form) !!}
+            {!! Form::open($formDetail) !!}
             <div class="modal-body">
                 <input type="hidden" name="product_id">
                 <input type="hidden" name="order_id">
@@ -109,54 +109,56 @@
 
 @push('js')
 <script>
-    var mPedido = $("#modal");
+    var mDetalle = $("#modal");
+    var formProduct = $(".{{ $formProduct['class'] }}");
+    var formDetail = $("#{{ $formDetail['id'] }}");
 
     UpdateListCart();
     DetailsCount();
 
-    $(".form-product").on('submit', function (e) {
+    formProduct.on('submit', function (e) {
         e.preventDefault();
         var dataForm = FormToJSON($(this));
-        AbrirModal(dataForm);
+        AbrirModalDetalle(dataForm);
     });
 
-    $("#form-pedir", mPedido).on('submit', function (e) {
+    formDetail.on('submit', function (e) {
         e.preventDefault();
-        var pedido = FormToJSON($(this));
-        GuardarPedido(pedido);
+        var detalle = FormToJSON($(this));
+        GuardarDetalle(detalle);
     });
 
-    function AbrirModal(dataForm) {
-        JSONToForm(mPedido, dataForm);
+    function AbrirModalDetalle(dataForm) {
+        JSONToForm(formDetail, dataForm);
         Service({
             type: "get",
             url: "{{ $routes['shop'] }}" + "/" + dataForm.product_id,
         })
         .then(data => FillDrop(data.shops))
 
-        mPedido.modal('show');
+        mDetalle.modal('show');
+    }
+
+    function GuardarDetalle(detalle) {
+        Service({
+            type: "post",
+            url: formDetail.attr('action'),
+            data: detalle
+        })
+        .then(data => {
+            mDetalle.modal("hide");
+            UpdateListCart();
+            DetailsCount();
+        })
     }
 
     function FillDrop(shops) {
-        select = $("#drpShops", mPedido).empty();
+        select = $("#drpShops", mDetalle).empty();
         option = $("<option>");
         for (const key in shops) {
             let shop = shops[key];
             option.clone().val(shop.id).text(`Bs. ${shop.pivot.precio} en ${shop.nombre}`).appendTo(select);
         }
-    }
-
-    function GuardarPedido(pedido) {
-        Service({
-            type: "post",
-            url: $("#form-pedir", mPedido).attr('action'),
-            data: pedido
-        })
-        .then(data => {
-            mPedido.modal("hide");
-            UpdateListCart();
-            DetailsCount();
-        })
     }
 
     function UpdateListCart() {
@@ -172,11 +174,6 @@
             }
             $("#spnCartCount").text(data.details.length);
         })
-    }
-
-    function AddDetail(detail) {
-        shortDetail = $("<p>");
-        shortDetail.clone().addClass("dropdown-item").text(detail.cantidad + " " + detail.stock.product.descripcion).prependTo(".dropdown-menu-right");
     }
 
     function DetailsCount() {
