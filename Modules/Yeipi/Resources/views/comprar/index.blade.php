@@ -17,10 +17,6 @@
                     </div>
                 </div>
                 <div class="card-tools">
-                    <a href="{{ $routes['location'] }}" class="btn btn-default">
-                        <i class="fas fa-external-link-alt"></i>
-                        Actualizar ubicación
-                    </a>
                     <div class="btn-group">
                         {{-- Si tiene un pedido en curso, redirecciona al pedido en curso caso contrario registra el pedido --}}
                         @if($order->fechaRecepcion != null)

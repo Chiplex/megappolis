@@ -18,7 +18,7 @@ Route::prefix('yeipi')->middleware(['auth'])->group(function() {
 
     // Rutas para el controlador de Comprar
     Route::prefix('comprar')->middleware(['access:YEIPI-CUSTOMER'])->group(function () {
-        Route::get('/iniciar', 'ComprarController@preparar')->name('yeipi.comprar.preparar');
+        Route::get('/location', 'ComprarController@preparar')->name('yeipi.comprar.preparar');
         Route::post('/iniciar', 'ComprarController@iniciar')->name('yeipi.comprar.iniciar');
 
         Route::get('/index', 'ComprarController@index')->name('yeipi.comprar.index');

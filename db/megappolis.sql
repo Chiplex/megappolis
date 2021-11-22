@@ -163,7 +163,7 @@ REPLACE INTO `pages` (`id`, `app_id`, `controller`, `action`, `name`, `type`, `i
 	(24, 2, 'contract', 'index', 'Contratos', 'submenu', NULL, 33, '2021-04-17 00:52:41', '2021-11-10 05:21:54'),
 	(25, 2, 'contract', 'register', 'Registro de contrato', 'page', NULL, 33, '2021-04-17 00:53:51', '2021-11-10 06:23:58'),
 	(26, 2, 'home', 'register', 'Registro de Información básica', 'page', NULL, 0, '2021-10-27 22:33:01', '2021-11-10 06:23:21'),
-	(27, 2, 'comprar', 'iniciar', 'Inicio de ubicación de pedido', 'page', NULL, 15, '2021-10-28 01:27:47', '2021-11-10 06:25:13'),
+	(27, 2, 'comprar', 'location', 'Mi Ubicación', 'submenu', 'fa fa-map-marker-alt', 34, '2021-10-28 01:27:47', '2021-11-23 00:55:52'),
 	(28, 2, 'comprar', 'history', 'Histórico de Pedidos', 'submenu', 'fa fa-history', 34, '2021-10-28 01:33:36', '2021-11-10 05:32:22'),
 	(29, 2, 'proveer', 'iniciar', 'Inicio de ubicación de provisión', 'page', NULL, 37, '2021-10-28 01:48:19', '2021-11-10 06:25:38'),
 	(30, 2, 'proveer', 'register', 'Registro de Productos', 'page', NULL, 37, '2021-10-28 01:50:26', '2021-11-10 06:25:50'),
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.permissions: ~18 rows (aproximadamente)
+-- Volcando datos para la tabla megappolis.permissions: ~17 rows (aproximadamente)
 REPLACE INTO `permissions` (`id`, `role_id`, `page_id`, `name`, `created_at`, `updated_at`) VALUES
 	(1, 1, 11, 'view', NULL, NULL),
 	(2, 1, 3, 'view', NULL, NULL),
@@ -360,7 +360,7 @@ CREATE TABLE IF NOT EXISTS `yeipi_details` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.yeipi_details: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla megappolis.yeipi_details: ~2 rows (aproximadamente)
 REPLACE INTO `yeipi_details` (`id`, `order_id`, `descripcion`, `cantidad`, `precio`, `created_at`, `updated_at`, `fechaConseguido`, `fechaNoConseguido`, `stock_id`) VALUES
 	(1, 1, '', 1, 2.5000, '2021-11-20 02:27:33', '2021-11-20 02:42:31', NULL, NULL, 1),
 	(2, 1, '', 1, 12.0000, '2021-11-20 02:27:39', '2021-11-20 02:27:39', NULL, NULL, 6);
@@ -393,7 +393,7 @@ CREATE TABLE IF NOT EXISTS `yeipi_products` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla megappolis.yeipi_products: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla megappolis.yeipi_products: ~2 rows (aproximadamente)
 REPLACE INTO `yeipi_products` (`id`, `descripcion`, `marca`, `created_at`, `updated_at`) VALUES
 	(1, 'Azucar', NULL, '2021-11-04 01:43:34', '2021-11-04 01:43:34'),
 	(2, 'Arroz', NULL, '2021-11-04 01:43:38', '2021-11-04 01:43:38'),
