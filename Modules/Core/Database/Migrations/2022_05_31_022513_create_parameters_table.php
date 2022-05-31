@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterShopTable extends Migration
+class CreateParametersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AlterShopTable extends Migration
      */
     public function up()
     {
-        Schema::table('yeipi_shops', function (Blueprint $table) {
-            $table->foreignId('provider_id');
+        Schema::create('parameters', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 255);
+            $table->string('value', 255);
+            $table->string('description', 255)->nullable();
         });
     }
 
@@ -25,8 +28,6 @@ class AlterShopTable extends Migration
      */
     public function down()
     {
-        Schema::table('yeipi_shops', function (Blueprint $table) {
-            $table->dropColumn('provider_id');
-        });
+        Schema::dropIfExists('parameters');
     }
 }

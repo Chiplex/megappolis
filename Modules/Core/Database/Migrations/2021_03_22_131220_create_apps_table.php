@@ -16,12 +16,10 @@ class CreateAppsTable extends Migration
         Schema::create('apps', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->string('icon', 15)->nullable();
             $table->string('type', 20);
-            $table->date('approved_at')->nullable();
-            $table->date('blocked_at')->nullable();
             $table->foreignId('user_id');
-            $table->timestamps();
+            $table->string('description', 255)->nullable();
+            $table->string('url', 255)->nullable();
         });
     }
 

@@ -15,13 +15,18 @@ class CreateShopsTable extends Migration
     {
         Schema::create('yeipi_shops', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 50);
-            $table->string('direccion', 200);
-            $table->string('latitud', 10)->nullable();
-            $table->string('longitud', 10)->nullable();
-            $table->time('abre')->nullable();
-            $table->time('cierra')->nullable();
-            $table->timestamps();
+            $table->string('name', 50);
+            $table->string('address', 255);
+            $table->string('phone', 20);
+            $table->string('email', 50);
+            $table->string('website', 50);
+            $table->string('latitude', 20)->nullable();
+            $table->string('longitude', 20)->nullable();
+            $table->string('description', 255)->nullable();
+            $table->string('slug', 255)->nullable();
+            $table->time('open')->nullable();
+            $table->time('close')->nullable();
+            $table->foreignId('provider_id');
         });
     }
 

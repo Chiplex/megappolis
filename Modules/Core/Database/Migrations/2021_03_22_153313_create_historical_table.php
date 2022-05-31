@@ -21,7 +21,6 @@ class CreateHistoricalTable extends Migration
             $table->string('field',100);
             $table->text('value');
             $table->string('type',20);
-            $table->timestamps();
         });
     }
 

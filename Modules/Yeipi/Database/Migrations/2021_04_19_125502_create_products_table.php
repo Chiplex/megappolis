@@ -15,9 +15,11 @@ class CreateProductsTable extends Migration
     {
         Schema::create('yeipi_products', function (Blueprint $table) {
             $table->id();
-            $table->string('descripcion', 100);
-            $table->string('marca', 50)->nullable();
-            $table->timestamps();
+            $table->foreignId("category_id");
+            $table->string('name', 255);
+            $table->string('description', 255)->nullable();
+            $table->string('packingUnit', 10);
+            $table->string('measureUnit', 50);
         });
     }
 

@@ -18,7 +18,6 @@ class CreatePermissionsTable extends Migration
             $table->foreignId('role_id');
             $table->foreignId('page_id');
             $table->string('name', 20);
-            $table->timestamps();
         });
     }
 

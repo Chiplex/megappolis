@@ -16,7 +16,9 @@ class CreateCustomersTable extends Migration
         Schema::create('yeipi_customers', function (Blueprint $table) {
             $table->id();
             $table->foreignId("people_id");
-            $table->timestamps();
+            $table->string('address', 200)->nullable();
+            $table->string('latitude', 10)->nullable();
+            $table->string('longitude', 10)->nullable();
         });
     }
 

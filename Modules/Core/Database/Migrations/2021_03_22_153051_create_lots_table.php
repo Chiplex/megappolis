@@ -17,7 +17,6 @@ class CreateLotsTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('state', 10);
-            $table->timestamps();
         });
     }
 

@@ -16,7 +16,6 @@ class CreateProviderTable extends Migration
         Schema::create('yeipi_provider', function (Blueprint $table) {
             $table->id();
             $table->foreignId('people_id');
-            $table->timestamps();
         });
     }
 

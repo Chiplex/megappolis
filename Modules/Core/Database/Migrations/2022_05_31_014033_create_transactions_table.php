@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePagesTable extends Migration
+class CreateTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreatePagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pages', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('app_id');
-            $table->string('controller', 200)->nullable();
-            $table->string('action', 200)->nullable();
-            $table->string('name', 200);
+            $table->foreignId('user_id');
+            $table->string('transaction_id');
             $table->string('type', 20);
-            $table->string('icon')->nullable();
-            $table->foreignId('page_id')->default(0);
+            $table->dateTime('date');
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ class CreatePagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pages');
+        Schema::dropIfExists('transactions');
     }
 }

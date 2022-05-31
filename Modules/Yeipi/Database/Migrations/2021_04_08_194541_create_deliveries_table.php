@@ -16,9 +16,8 @@ class CreateDeliveriesTable extends Migration
         Schema::create('yeipi_deliveries', function (Blueprint $table) {
             $table->id();
             $table->foreignId("people_id");
-            $table->tinyInteger('puntuacion');
-            $table->string("valoracion", 500);
-            $table->timestamps();
+            $table->tinyInteger('score');
+            $table->string('comment', 255);
         });
     }
 

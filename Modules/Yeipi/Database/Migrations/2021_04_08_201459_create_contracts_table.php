@@ -17,9 +17,10 @@ class CreateContractsTable extends Migration
             $table->id();
             $table->foreignId("shop_id");
             $table->foreignId("delivery_id");
-            $table->dateTime('empieza');
-            $table->dateTime('acaba')->nullable();
-            $table->timestamps();
+            $table->decimal('amount', 5, 2)->nullable()->default(2.0);
+            $table->date('start_at');
+            $table->date('end_at');
+            $table->string('comment', 255)->nullable();
         });
     }
 
