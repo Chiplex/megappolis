@@ -13,8 +13,10 @@ class Role extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = ['name', 'type', 'app_id'];
-    
+
     protected static function newFactory()
     {
         return \Modules\Core\Database\factories\RoleFactory::new();

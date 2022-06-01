@@ -17,7 +17,7 @@ class CreateAppsTable extends Migration
             $table->id();
             $table->string('name', 100);
             $table->string('type', 20);
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->nullable();
             $table->string('description', 255)->nullable();
             $table->string('url', 255)->nullable();
         });

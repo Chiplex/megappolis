@@ -13,6 +13,8 @@ class People extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'peoples';
 
     protected $fillable = [
@@ -28,7 +30,7 @@ class People extends Model
         'sex',
         'documentNumber',
     ];
-    
+
     protected static function newFactory()
     {
         return \Modules\Core\Database\factories\PeopleFactory::new();
@@ -66,7 +68,7 @@ class People extends Model
     {
         return $this->hasOne(Delivery::class);
     }
-    
+
     /**
      * Get all of the Provider for the People
      *

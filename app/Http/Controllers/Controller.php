@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Modules\Core\Entities\App;
-use Modules\Core\Entities\Page;
+use Modules\Core\Entities\Module;
 use Modules\Core\Entities\Permission;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -19,27 +19,40 @@ class Controller extends BaseController
 
     public function GetInfo($data)
     {
-        $page = $this->GetPages();
-        $permission = $this->GetPermissions($page);
-        return ['page' => $page, 'permissions' => $permission, 'data'=> $data];
+        $module = $this->GetModules();
+        $permission = $this->GetPermissions($module);
+        return ['page' => $module, 'permissions' => $permission, 'data'=> $data];
     }
 
-    public function GetPages()
+    public function GetModules()
     {
         $user = Auth::user();
-        $app = $user->apps()->where('name', request()->segment(1) ?? 'core')->first() ?? App::where('name', request()->segment(1) ?? 'core')->first();
-        $page = $app->pages()->firstOrNew(['controller' => request()->segment(2) ?? 'home', 'action' => request()->segment(3) ?? 'index']);
-
-        if($page->isDirty()){
-            $page->name = implode('/', request()->segments());
-            $page->type = 'new';
-            $page->save();
+        $app = $user->apps()->firstOrNew(['name'=> request()->segment(1) ?? 'core']);
+        if($app->isDirty())
+        {
+            $app->description = 'Core';
+            $app->type = 'CORE';
+            $app->url = '/core';
+            $app->user_id = $user->id;
+            $app->save();
         }
 
-        return $page;
+        $module = $app->modules()->firstOrNew([
+            'controller' => request()->segment(2) ?? 'home',
+            'action' => request()->segment(3) ?? 'index'
+        ]);
+
+        if($module->isDirty()){
+            $module->name = implode('/', request()->segments());
+            $module->description = 'Core';
+            $module->type = 'CORE';
+            $module->save();
+        }
+
+        return $module;
     }
 
-    public function GetPermissions(Page $page)
+    public function GetPermissions(Module $page)
     {
         if(Auth::user()->roles()->where('name', $this->role)->exists()){
             return Permission::where('page_id', $page->id)

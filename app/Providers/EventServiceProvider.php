@@ -32,17 +32,21 @@ class EventServiceProvider extends ServiceProvider
     {
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
 
-            $apps = App::whereNotNull('approved_at')->get()->map(function (App $app)
+            $apps = App::whereHas('transactions', function ($query) {
+                $query->where('value', 'aproved');
+                $query->where('value', '!=' , 'rejected');
+            })
+                ->get()
+                ->map(function (App $app)
             {
                return [
-                   'text' => '',
+                   'text' => $app->name,
                    'url' => '/'.$app['name'],
                    'icon' => $app['icon'],
                    'topnav' => true
-               ]; 
+               ];
             });
 
-           
             $event->menu->add(...$apps);
 
             $module = request()->segment(1);
@@ -55,7 +59,7 @@ class EventServiceProvider extends ServiceProvider
                         'icon' => $page['icon'],
                         'url' => $page->buildUrl(),
                     ];
-                    
+
                     $submenus = Page::where(['type' => 'submenu', 'page_id' => $page['id']])->get()->map(function (Page $page)
                     {
                         return [

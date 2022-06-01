@@ -8,11 +8,13 @@ use Modules\Core\Entities\App;
 use Modules\Core\Entities\Permission;
 use Modules\Core\Entities\Role;
 
-class Page extends Model
+class Module extends Model
 {
     use HasFactory;
 
-    protected $table = "pages";
+    public $timestamps = false;
+
+    protected $table = "modules";
 
     protected $fillable = [
         'app_id',
@@ -21,9 +23,9 @@ class Page extends Model
         'name',
         'type',
         'icon',
-        'page_id'
+        'module_id'
     ];
-    
+
     protected static function newFactory()
     {
         return \Modules\Core\Database\factories\PageFactory::new();
@@ -38,28 +40,28 @@ class Page extends Model
     }
 
     /**
-     * Get all of the pages for the Page
+     * Get all of the modules for the Page
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function pages()
+    public function modules()
     {
-        return $this->hasMany(Page::class);
+        return $this->hasMany(Module::class);
     }
-    
+
     /**
-     * Get the page that owns the Page
+     * Get the Module that owns the Module
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function page()
+    public function module()
     {
-        return $this->belongsTo(Page::class);
+        return $this->belongsTo(Module::class);
     }
 
     /**
      * Get the persmisions that owns the Page
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function permissions()
@@ -69,7 +71,7 @@ class Page extends Model
 
     /**
      * Get the roles that owns the Page
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
@@ -79,7 +81,7 @@ class Page extends Model
 
     /**
      * Build the View
-     * 
+     *
      * @return string
      */
     public function buildView()
@@ -89,7 +91,7 @@ class Page extends Model
 
     /**
      * Build the title of the page
-     * 
+     *
      * @return string
      */
     public function buildTitle()
@@ -99,7 +101,7 @@ class Page extends Model
 
     /**
      * Build the url of the page
-     * 
+     *
      * @return string
      */
     public function buildUrl()
@@ -109,7 +111,7 @@ class Page extends Model
 
     /**
      * Build the breadcrumbs as tree of the page and return it as an array
-     * 
+     *
      * @return array
      */
     public function buildBreadcrumbs($currentPage)
@@ -129,7 +131,7 @@ class Page extends Model
         //         'active' => $currentPage->id == $this->id
         //     ];
         // }
-        
+
         // if ($currentPage->id != null) {
         //     $page = Page::firstWhere('page_id', $this->page_id);
         //     if ($page != null) {
@@ -152,10 +154,10 @@ class Page extends Model
         ];
         return $breadcrumbs;
     }
-    
+
     /**
      * Scope a query to only include pages of a given type.
-     * 
+     *
      * @return string
      */
     public function scopeType($query, $type)

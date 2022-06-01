@@ -42,6 +42,14 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="row">
+                    <div class="col-4">
+                        <div class="position-relative p-3 bg-green text-center">
+                            <a href="{{ route('core.app.create') }}">
+                                <i class="fa fa-plus fa-10x fa-fw"></i>
+                            </a>
+                            <h1 class="display-1">Nueva App</h1>
+                        </div>
+                    </div>
                     @foreach ($apps as $app)
                     <div class="col-4">
                         <div class="position-relative p-3 bg-light text-center">
@@ -54,7 +62,7 @@
                                 <i class="fa {{$app->icon }} fa-10x fa-fw"></i>
                             </a>
                             <h1 class="display-1">{{ $app->name }}</h1>
-                        </div> 
+                        </div>
                     </div>
                     @endforeach
                 </div>

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePagesTable extends Migration
+class CreateModulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pages', function (Blueprint $table) {
+        Schema::create('modules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('app_id');
             $table->string('controller', 200)->nullable();
@@ -22,7 +22,7 @@ class CreatePagesTable extends Migration
             $table->string('description', 255)->nullable();
             $table->string('type', 20);
             $table->string('icon')->nullable();
-            $table->foreignId('page_id')->default(0);
+            $table->foreignId('module_id')->default(0);
         });
     }
 

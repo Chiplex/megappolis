@@ -17,9 +17,10 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->foreignId('app_id');
             $table->foreignId('user_id');
-            $table->string('transaction_id');
-            $table->string('type', 20);
             $table->dateTime('date');
+            $table->string('value');
+            $table->string('type', 20);
+            $table->string('transaction_id');
             $table->timestamps();
         });
     }

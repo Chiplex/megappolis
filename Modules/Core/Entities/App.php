@@ -6,24 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
 use Modules\Core\Entities\Page;
+use Modules\Core\Entities\Transactions;
 
 class App extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'icon', 'type', 'user_id'];
-        
+    public $timestamps = false;
+
+    protected $fillable = [
+        'name',
+        'type',
+        'user_id',
+        'description',
+        'url',
+    ];
+
     protected static function newFactory()
     {
         return \Modules\Core\Database\factories\AppFactory::new();
     }
 
     /**
-     * Get the pages for the app.
+     * Get the modules for the app.
      */
-    public function pages()
+    public function modules()
     {
-        return $this->hasMany(Page::class);
+        return $this->hasMany(Module::class);
     }
 
     /**
@@ -32,5 +41,13 @@ class App extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the transactions for the app.
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'transaction_id');
     }
 }

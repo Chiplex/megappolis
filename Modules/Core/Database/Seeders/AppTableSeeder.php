@@ -16,11 +16,5 @@ class AppTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
-        DB::table('apps')->insert([
-            'name' => 'core',
-            'type' => 'MAIN',
-            'user_id' => '1',
-        ]);
     }
 }

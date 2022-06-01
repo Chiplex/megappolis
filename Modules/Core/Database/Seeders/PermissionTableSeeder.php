@@ -16,41 +16,5 @@ class PermissionTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
-        // DB::table('permissions')->insert([
-        //     'role_id' => '1',
-        //     'page_id' => '1',
-        //     'name' => 'view',
-        // ]);
-
-        // DB::table('permissions')->insert([
-        //     'role_id' => '1',
-        //     'page_id' => '2',
-        //     'name' => 'view',
-        // ]);
-
-        // DB::table('permissions')->insert([
-        //     'role_id' => '1',
-        //     'page_id' => '3',
-        //     'name' => 'view',
-        // ]);
-
-        // DB::table('permissions')->insert([
-        //     'role_id' => '1',
-        //     'page_id' => '4',
-        //     'name' => 'view',
-        // ]);
-
-        DB::table('permissions')->insert([
-            'role_id' => '1',
-            'page_id' => '1',
-            'name' => 'view',
-        ]);
-
-        DB::table('permissions')->insert([
-            'role_id' => '1',
-            'page_id' => '2',
-            'name' => 'view',
-        ]);
     }
 }

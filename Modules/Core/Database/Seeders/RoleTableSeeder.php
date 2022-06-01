@@ -19,7 +19,7 @@ class RoleTableSeeder extends Seeder
 
         DB::table('roles')->insert([
             'name' => 'CORE-MEGAPPOLIS',
-            'type' => 'MAIN',
+            'description' => 'Megappolis Core Role',
         ]);
     }
 }
