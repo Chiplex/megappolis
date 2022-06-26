@@ -16,5 +16,12 @@ class PermissionTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
+
+        $permissions = [
+            'role_id' => 1,
+            'module_id' => 12,
+            'name' => 'view',
+        ];
+        DB::table('permissions')->insert($permissions);
     }
 }

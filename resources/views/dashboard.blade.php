@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', $page->buildTitle())
+@section('title', $module->buildTitle())
 
 @section('content_top_nav_right')
     @if (Route::has('login'))
@@ -16,16 +16,15 @@
     @endif
 @endsection
 
-
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>{{ $page->buildTitle() }}</h1>
+                <h1>{{ $module->buildTitle() }}</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    @foreach($page->buildBreadcrumbs($page) as $breadcrumb)
+                    @foreach($module->buildBreadcrumbs($module) as $breadcrumb)
                         <li class="breadcrumb-item @if($breadcrumb['active']) active @endif">
                             @if($breadcrumb['active'])
                                 {{ $breadcrumb['name'] }}
@@ -57,7 +56,7 @@
 @section('content')
 
 @if ($permissions->contains('name', 'view'))
-    @include($page->buildView(), $data)
+    @include($module->buildView(), $data)
 @else
     No tiene permisos para ver esta pagina
 @endif

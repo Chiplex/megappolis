@@ -21,57 +21,37 @@ class Controller extends BaseController
     {
         $module = $this->GetModules();
         $permission = $this->GetPermissions($module);
-        return ['page' => $module, 'permissions' => $permission, 'data'=> $data];
+        return ['module' => $module, 'permissions' => $permission, 'data'=> $data];
     }
 
     public function GetModules()
     {
         $user = Auth::user();
-        $app = $user->apps()->firstOrNew(['name'=> request()->segment(1) ?? 'core']);
-        if($app->isDirty())
-        {
-            $app->description = 'Core';
-            $app->type = 'CORE';
-            $app->url = '/core';
-            $app->user_id = $user->id;
-            $app->save();
-        }
+        $app = $user->apps()->where(['name'=> request()->segment(1) ?? 'core'])->first();
 
-        $module = $app->modules()->firstOrNew([
+        $module = $app->modules()->where([
             'controller' => request()->segment(2) ?? 'home',
             'action' => request()->segment(3) ?? 'index'
-        ]);
-
-        if($module->isDirty()){
-            $module->name = implode('/', request()->segments());
-            $module->description = 'Core';
-            $module->type = 'CORE';
-            $module->module_id = $app->id;
-            $module->save();
-        }
+        ])->first();
 
         return $module;
     }
 
-    public function GetPermissions(Module $page)
+    public function GetPermissions(Module $module)
     {
         if(Auth::user()->roles()->where('name', $this->role)->exists()){
-            return Permission::where('page_id', $page->id)
+            return Permission::where('module_id', $module->id)
                 ->select('name')
                 ->orderBy('name')
                 ->groupBy('name')
                 ->get();
         }
-        else {
-            return auth()
-                ->user()
-                ->roles()
-                ->firstWhere('app_id', $page->app->id)
+        return auth()->user()->roles()
+            ->firstWhere('app_id', $module->app->id)
                 ->permissions()
                 ->select('name')
                 ->orderBy('name')
                 ->groupBy('name')
                 ->get();
-        }
     }
 }

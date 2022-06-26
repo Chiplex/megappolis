@@ -47,10 +47,11 @@ class EventServiceProvider extends ServiceProvider
 
             $event->menu->add(...$apps);
 
-            $module = request()->segment(1);
-            if ($module != null) {
-                $app = App::where('name', $module)->first();
-                $modules = Module::where(['type' => 'menu', 'app_id' => $app->id])->get()->map(function (Module $module)
+            $app = request()->segment(1);
+            if ($app != null) {
+                $app = App::where('name', $app)->first();
+                $modules = Module::where(['type' => 'module', 'app_id' => $app->id])->get()
+                ->map(function (Module $module)
                 {
                     $menu = [
                         'text' => $module['name'],
@@ -58,7 +59,9 @@ class EventServiceProvider extends ServiceProvider
                         'url' => $module->buildUrl(),
                     ];
 
-                    $submenus = Module::where(['type' => 'submenu', 'module_id' => $module['id']])->get()->map(function (Module $module)
+                    $submenus = Module::where(['type' => 'access', 'module_id' => $module['id']])
+                    ->orWhere(['type' => 'submodule', 'module_id' => $module['id']])->get()
+                    ->map(function (Module $module)
                     {
                         return [
                             'text' => $module['name'],

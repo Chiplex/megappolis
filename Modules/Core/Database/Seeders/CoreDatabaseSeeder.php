@@ -16,6 +16,10 @@ class CoreDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call(RoleTableSeeder::class);
+        //$this->call(RoleTableSeeder::class);
+        //$this->call(RoleUserTableSeeder::class);
+        //$this->call(AppTableSeeder::class);
+        //$this->call(ModuleTableSeeder::class);
+        $this->call(PermissionTableSeeder::class);
     }
 }

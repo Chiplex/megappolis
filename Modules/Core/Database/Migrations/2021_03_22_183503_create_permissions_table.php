@@ -16,7 +16,7 @@ class CreatePermissionsTable extends Migration
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('role_id');
-            $table->foreignId('page_id');
+            $table->foreignId('module_id');
             $table->string('name', 20);
         });
     }
