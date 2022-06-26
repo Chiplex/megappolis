@@ -21,6 +21,7 @@ class Module extends Model
         'controller',
         'action',
         'name',
+        'description',
         'type',
         'icon',
         'module_id'

@@ -8,7 +8,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 use Modules\Core\Entities\App;
-use Modules\Core\Entities\Page;
+use Modules\Core\Entities\Module;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -32,10 +32,8 @@ class EventServiceProvider extends ServiceProvider
     {
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
 
-            $apps = App::whereHas('transactions', function ($query) {
-                $query->where('value', 'aproved');
-                $query->where('value', '!=' , 'rejected');
-            })
+            $apps = App::whereRelation('transactions', 'value', 'approved')
+                ->whereRelation('transactions','value', '!=', 'rejected')
                 ->get()
                 ->map(function (App $app)
             {
@@ -51,21 +49,21 @@ class EventServiceProvider extends ServiceProvider
 
             $module = request()->segment(1);
             if ($module != null) {
-                $app = App::firstWhere(['name' => $module]);
-                $pages = Page::where(['type' => 'menu', 'app_id' => $app->id])->get()->map(function (Page $page)
+                $app = App::where('name', $module)->first();
+                $modules = Module::where(['type' => 'menu', 'app_id' => $app->id])->get()->map(function (Module $module)
                 {
                     $menu = [
-                        'text' => $page['name'],
-                        'icon' => $page['icon'],
-                        'url' => $page->buildUrl(),
+                        'text' => $module['name'],
+                        'icon' => $module['icon'],
+                        'url' => $module->buildUrl(),
                     ];
 
-                    $submenus = Page::where(['type' => 'submenu', 'page_id' => $page['id']])->get()->map(function (Page $page)
+                    $submenus = Module::where(['type' => 'submenu', 'module_id' => $module['id']])->get()->map(function (Module $module)
                     {
                         return [
-                            'text' => $page['name'],
-                            'icon' => $page['icon'],
-                            'url' => $page->buildUrl(),
+                            'text' => $module['name'],
+                            'icon' => $module['icon'],
+                            'url' => $module->buildUrl(),
                         ];
                     })->toArray();
                     if (count($submenus) > 0) {
@@ -74,7 +72,7 @@ class EventServiceProvider extends ServiceProvider
                     return $menu;
                 })->toArray();
 
-                $event->menu->add(...$pages);
+                $event->menu->add(...$modules);
             }
         });
     }

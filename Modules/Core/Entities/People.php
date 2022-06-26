@@ -23,12 +23,12 @@ class People extends Model
         'otherName',
         'lastName',
         'otherLastName',
-        'dateBirth',
+        'birth',
         'country',
         'city',
         'phone',
         'sex',
-        'documentNumber',
+        'document',
     ];
 
     protected static function newFactory()

@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 //use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
-use Modules\Core\Entities\Page;
+use Modules\Core\Entities\Module;
 use Modules\Core\Entities\Role;
 use Modules\Core\Entities\Permission;
 
@@ -18,7 +18,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permissions = Permission::with(['page.app'])->get();
+        $permissions = Permission::with(['module.app'])->get();
         $data = ['permissions' => $permissions];
         return view('dashboard', $this->GetInfo($data));
     }
@@ -29,9 +29,9 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        $pages = Page::all();
+        $modules = module::all();
         $roles = Role::all();
-        $data = ['pages' => $pages, 'roles' => $roles];
+        $data = ['modules' => $modules, 'roles' => $roles];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -72,9 +72,9 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
-        $pages = Page::all();
+        $modules = module::all();
         $roles = Role::all();
-        $data = ['pages' => $pages, 'roles' => $roles, 'permission' => $permission];
+        $data = ['modules' => $modules, 'roles' => $roles, 'permission' => $permission];
         return view('dashboard', $this->GetInfo($data));
     }
 

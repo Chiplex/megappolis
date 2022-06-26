@@ -121,7 +121,7 @@ return [
     |
     */
 
-    'classes_body' => 'white-mode',
+    'classes_body' => 'black-mode',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -129,7 +129,7 @@ return [
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-light-primary elevation-0',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_topnav' => 'navbar-white navbar-blue',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 

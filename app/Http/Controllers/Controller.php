@@ -46,6 +46,7 @@ class Controller extends BaseController
             $module->name = implode('/', request()->segments());
             $module->description = 'Core';
             $module->type = 'CORE';
+            $module->module_id = $app->id;
             $module->save();
         }
 
