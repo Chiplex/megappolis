@@ -29,6 +29,7 @@ Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(fu
     Route::get('/role/user/{role} ', 'RoleController@user')->name('core.role.user');
     Route::get('/role/user-page-permissions/{role}', 'RoleController@show')->name('core.role.show');
 
+    Route::get('/permission/data', 'PermissionController@data')->name('core.permission.data');
     Route::get('/permission/index', 'PermissionController@index')->name('core.permission.index');
     Route::get('/permission/register', 'PermissionController@create')->name('core.permission.create');
     Route::post('/permission/register', 'PermissionController@store')->name('core.permission.store');
@@ -43,12 +44,12 @@ Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(fu
     Route::get('/app/approve/{app}', 'AppController@approve')->name('core.app.approve');
     Route::get('/app/block/{app}', 'AppController@block')->name('core.app.block');
 
-    Route::get('/page/index', 'PageController@index')->name('core.page.index');
-    Route::get('/page/register', 'PageController@create')->name('core.page.create');
-    Route::post('/page/register', 'PageController@store')->name('core.page.store');
-    Route::get('/page/register/{page}', 'PageController@edit')->name('core.page.edit');
-    Route::put('/page/register/{page}', 'PageController@update')->name('core.page.update');
-    Route::get('/page/data/', 'PageController@data')->name('core.page.data');
+    Route::get('/module/index', 'ModuleController@index')->name('core.module.index');
+    Route::get('/module/register', 'ModuleController@create')->name('core.module.create');
+    Route::post('/module/register', 'ModuleController@store')->name('core.module.store');
+    Route::get('/module/register/{module}', 'ModuleController@edit')->name('core.module.edit');
+    Route::put('/module/register/{module}', 'ModuleController@update')->name('core.module.update');
+    Route::get('/module/data/', 'ModuleController@data')->name('core.page.data');
 
     Route::get('/people/index', 'PeopleController@index')->name('core.people.index');
     Route::get('/people/register', 'PeopleController@create')->name('core.people.create');

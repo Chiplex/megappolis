@@ -13,16 +13,24 @@ class Permission extends Model
 
     protected $fillable = ['role_id', 'module_id', 'name'];
 
+    public $timestamps = false;
+
     protected static function newFactory()
     {
         return \Modules\Core\Database\factories\PermissionFactory::new();
     }
 
+    /**
+     * Get the module for the permission.
+     */
     public function module()
     {
         return $this->belongsTo(Module::class);
     }
 
+    /**
+     * Get the role for the permission.
+     */
     public function role()
     {
         return $this->belongsTo(Role::class);

@@ -9,17 +9,29 @@ use App\Http\Controllers\Controller;
 use Modules\Core\Entities\Module;
 use Modules\Core\Entities\Role;
 use Modules\Core\Entities\Permission;
+use Datatables;
 
 class PermissionController extends Controller
 {
+    /**
+     * Show data for Datatables
+     */
+    public function data()
+    {
+        $permissions = Permission::with('module.app', 'role')->get();
+        return Datatables::of($permissions)
+            ->addIndexColumn()
+            ->setRowClass('{{ "context-menu" }}')
+            ->make(true);
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        $permissions = Permission::with(['module.app'])->get();
-        $data = ['permissions' => $permissions];
+        $data = [];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -49,7 +61,6 @@ class PermissionController extends Controller
             return redirect()->route('core.permission.index')
                 ->with('success_message', 'Attribute was successfully added.');
         } catch (Exception $exception) {
-            dd($exception);
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
@@ -88,7 +99,7 @@ class PermissionController extends Controller
     {
         $permission->update($request->all());
         return redirect()->route('core.permission.index')
-        ->with('success_message', 'Attribute was successfully added.');
+            ->with('success_message', 'Attribute was successfully added.');
     }
 
     /**
@@ -96,8 +107,10 @@ class PermissionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Permission $permission)
     {
-        //
+        $permission->delete();
+        return redirect()->route('core.permission.index')
+            ->with('success_message', 'Attribute was successfully added.');
     }
 }

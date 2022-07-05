@@ -1,7 +1,7 @@
 <div class="card card-info">
-  <form class="form-horizontal" action="@if (isset($permission)) {{ route('core.permission.update' , ['permission' => $permission->id]) }} @else {{ route('core.permission.store') }} @endif" method="POST">
+  <form class="form-horizontal" action="@isset($permission) {{ route('core.permission.update' , ['permission' => $permission->id]) }} @else {{ route('core.permission.store') }} @endif" method="POST">
     @csrf
-    @if (isset($permission))
+    @isset($permission)
       @method('PUT')
     @endif
     <div class="card-header">
@@ -15,43 +15,43 @@
         <div class="col-sm-4">
           <select class="custom-select form-control-border" id="role" name="role_id">
               @foreach ($roles as $role)
-                  <option value="{{$role->id}}" 
-                    @isset($permission) 
-                      @if (old('role_id') ?? $permission->role_id == $role->id) 
-                        selected 
-                      @endif 
+                  <option value="{{$role->id}}"
+                    @isset($permission)
+                      @if (old('role_id') ?? $permission->role_id == $role->id)
+                        selected
+                      @endif
                     @endisset
                     @empty($permission)
-                      @if (old('role_id') == $role->id) 
-                        selected 
-                      @endif 
+                      @if (old('role_id') == $role->id)
+                        selected
+                      @endif
                     @endempty
                     >
                     {{$role->name}}
-                  </option> 
+                  </option>
               @endforeach
           </select>
         </div>
       </div>
       <div class="form-group row">
-        <label for="page" class="col-sm-2 col-form-label">Page</label>
+        <label for="module" class="col-sm-2 col-form-label">Module</label>
         <div class="col-sm-4">
-          <select class="custom-select form-control-border" id="page" name="page_id">
-              @foreach ($pages as $page)
-                  <option value="{{$page->id}}" 
-                    @isset($permission) 
-                      @if (old('page_id') ?? $permission->page_id == $page->id) 
-                        selected 
-                      @endif 
+          <select class="custom-select form-control-border" id="module" name="module_id">
+              @foreach ($modules as $module)
+                  <option value="{{$module->id}}"
+                    @isset($permission)
+                      @if (old('module_id') ?? $permission->module_id == $module->id)
+                        selected
+                      @endif
                     @endisset
                     @empty($permission)
-                      @if (old('page_id') == $page->id) 
-                        selected 
-                      @endif 
+                      @if (old('module_id') == $module->id)
+                        selected
+                      @endif
                     @endempty
                     >
-                    {{$page->name}}
-                  </option> 
+                    {{$module->name}}
+                  </option>
               @endforeach
           </select>
         </div>
@@ -65,3 +65,69 @@
     </div>
   </form>
 </div>
+@push('js')
+<script>
+    var modal = $("#modal");
+    var t = $('#table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route('core.permission.data') }}',
+        columns: [
+            { data: 'id', name: 'id', "orderable": false },
+            { data: 'descripcion', name: 'descripcion' },
+            { data: 'marca', name: 'marca' }
+        ],
+    });
+
+    $.contextMenu({
+        selector: ".context-menu",
+        build: function ($trigger, e) {
+            return {
+                callback: function (key, options) {
+                    var tr = $(options.$trigger[0]).closest('tr');
+                    var row = t.row(tr);
+                    var model = row.data();
+                    switch (key) {
+                        case "edit":
+                            AbrirModal(model);
+                            break;
+                    }
+                },
+                items: {
+                    "edit": { name: "Editar", icon: "edit", },
+                }
+            };
+        },
+    });
+
+    $("#frmProducto").on('submit', function (e) {
+        e.preventDefault();
+        var model = FormToJSON($(this));
+        var url = model.id ? "{{ url('yeipi/product/register') }}" + "/" +  model.id : "{{ route('yeipi.product.store') }}"
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: model,
+        })
+        .done((r) => t.search("").draw())
+        .fail((e) => console.log(e))
+        .always(() => modal.modal("hide"))
+    });
+
+    $("#btnAbrirModal").on('click', function () {
+       AbrirModal();
+    });
+
+    function AbrirModal(model) {
+        let nuevo = typeof model === "undefined";
+        $("#iptMethod").remove();
+        if (nuevo) {
+            $("#frmProducto")[0].reset();
+        }
+        else {
+            JSONToForm($("#frmProducto")[0], model);
+        }
+        modal.modal("show");
+    }
+</script>
+@endpush

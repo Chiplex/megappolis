@@ -18,9 +18,16 @@ class PermissionTableSeeder extends Seeder
         Model::unguard();
 
         $permissions = [
-            'role_id' => 1,
-            'module_id' => 12,
-            'name' => 'view',
+            [
+                'role_id' => 1,
+                'module_id' => 12,
+                'name' => 'view',
+            ],
+            [
+                'role_id' => 1,
+                'module_id' => 13,
+                'name' => 'view',
+            ],
         ];
         DB::table('permissions')->insert($permissions);
     }

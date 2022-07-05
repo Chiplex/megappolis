@@ -6,16 +6,16 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 // use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
-use Modules\Core\Entities\Page;
+use Modules\Core\Entities\Module;
 use Modules\Core\Entities\App;
 use Datatables;
 
-class PageController extends Controller
+class ModuleController extends Controller
 {
     public function data()
     {
-        $pages = Page::with('app', 'page')->select('pages.*');
-        return Datatables::of($pages)
+        $modules = Module::with('app', 'module')->select('modules.*');
+        return Datatables::of($modules)
             ->setRowClass('{{ "context-menu" }}')
             ->addIndexColumn()
             ->make(true);
@@ -38,8 +38,8 @@ class PageController extends Controller
     public function create()
     {
         $apps = App::pluck('name', 'id')->all();
-        $menus = Page::type('menu')->pluck('name', 'id')->all();
-        $form = ['route' => 'core.page.store', 'method' => 'post'];
+        $menus = Module::type('menu')->pluck('name', 'id')->all();
+        $form = ['route' => 'core.module.store', 'method' => 'post'];
         $data = ['apps' => $apps, 'menus' => $menus, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
     }
@@ -54,11 +54,11 @@ class PageController extends Controller
         try {
             $data = $request->all();
             $data['state'] = "A";
-            $data['page_id'] = 0;
-            Page::create($data);
+            $data['module_id'] = 0;
+            Module::create($data);
 
-            return redirect()->route('core.page.index')
-                ->with('success_message', 'Attribute was successfully added.');
+            return redirect()->route('core.module.index')
+                ->with('success_message', 'Module created successfully');
         } catch (Exception $exception) {
             dd($exception);
             return back()->withInput()
@@ -71,9 +71,9 @@ class PageController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show(Page $page)
+    public function show(Module $module)
     {
-        $data = ['page' => $page];
+        $data = ['module' => $module];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -82,12 +82,12 @@ class PageController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit(Page $page)
+    public function edit(Module $module)
     {
         $apps = App::pluck('name', 'id')->all();
-        $menus = Page::type('menu')->pluck('name', 'id')->all();
-        $form = ['route' => ['core.page.update', $page->id], 'method' => 'put'];
-        $data = ['apps' => $apps, 'page' => $page, 'menus' => $menus, 'form' => $form];
+        $menus = module::type('menu')->pluck('name', 'id')->all();
+        $form = ['route' => ['core.module.update', $module->id], 'method' => 'put'];
+        $data = ['apps' => $apps, 'module' => $module, 'menus' => $menus, 'form' => $form];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -97,15 +97,15 @@ class PageController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request,  Page $page)
+    public function update(Request $request,  Module $module)
     {
         try {
             $data = $request->all();
-            $data['page_id'] = $data['page_id'] ?? 0;
-            $page->update($data);
+            $data['module_id'] = $data['module_id'] ?? 0;
+            $module->update($data);
 
-            return redirect()->route('core.page.index')
-                ->with('success_message', 'Attribute was successfully added.');
+            return redirect()->route('core.module.index')
+                ->with('success_message', 'Module updated successfully');
         } catch (Exception $exception) {
             dd($exception);
             return back()->withInput()
@@ -118,8 +118,17 @@ class PageController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Module $module)
     {
-        //
+        try {
+            $module->delete();
+
+            return redirect()->route('core.module.index')
+                ->with('success_message', 'Module deleted successfully');
+        } catch (Exception $exception) {
+            dd($exception);
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 }

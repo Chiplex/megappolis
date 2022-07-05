@@ -60,7 +60,7 @@ class EventServiceProvider extends ServiceProvider
                     ];
 
                     $submenus = Module::where(['type' => 'access', 'module_id' => $module['id']])
-                    ->orWhere(['type' => 'submodule', 'module_id' => $module['id']])->get()
+                    ->orWhere(['type' => 'submodule'])->get()
                     ->map(function (Module $module)
                     {
                         return [
