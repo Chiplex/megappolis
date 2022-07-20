@@ -8,9 +8,21 @@ use Illuminate\Http\Request;
 // use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
 use Modules\Core\Entities\App;
+use DataTables;
 
 class AppController extends Controller
 {
+    /**
+     * Show data for Datatables
+     */
+    public function data()
+    {
+        $apps = App::with('user')->get();
+        return Datatables::of($apps)
+            ->addIndexColumn()
+            ->setRowClass('{{ "context-menu" }}')
+            ->make(true);
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -19,7 +31,7 @@ class AppController extends Controller
     {
         $apps = App::with('user')->get();
         $data = ['apps' => $apps];
-        return view('dashboard', $this->GetInfo($data));
+        return $this->layout($this->GetInfo($data));
     }
 
     /**

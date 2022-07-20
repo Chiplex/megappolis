@@ -36,6 +36,7 @@ Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(fu
     Route::get('/permission/register/{permission}', 'PermissionController@edit')->name('core.permission.edit');
     Route::put('/permission/register/{permission}', 'PermissionController@update')->name('core.permission.update');
 
+    Route::get('/app/data', 'AppController@data')->name('core.app.data');
     Route::get('/app/index', 'AppController@index')->name('core.app.index');
     Route::get('/app/register', 'AppController@create')->name('core.app.create');
     Route::post('/app/register', 'AppController@store')->name('core.app.store');

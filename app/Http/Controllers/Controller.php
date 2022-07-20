@@ -54,4 +54,9 @@ class Controller extends BaseController
                 ->groupBy('name')
                 ->get();
     }
+
+    public function layout($data)
+    {
+        return view('layout', $data);
+    }
 }
