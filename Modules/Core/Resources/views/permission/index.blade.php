@@ -58,7 +58,7 @@
                     var model = row.data();
                     switch (key) {
                         case "edit":
-                            AbrirModal(model);
+                            OpenWindow('{{ url('/core/permission/register/') }}/' + model.id);
                             break;
                     }
                 },

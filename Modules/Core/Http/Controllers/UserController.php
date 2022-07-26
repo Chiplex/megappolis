@@ -9,18 +9,28 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Modules\Core\Entities\Permission;
 use Modules\Core\Entities\People;
-
+use DataTables;
 
 class UserController extends Controller
 {
+    /**
+     * Show data for Datatables
+     */
+    public function data()
+    {
+        $user = User::with('people')->get();
+        return Datatables::of($user)
+            ->addIndexColumn()
+            ->setRowClass('{{ "context-menu" }}')
+            ->make(true);
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        $users = User::with('people')->get();
-        $data = ['users' => $users];
+        $data = [];
         return view('dashboard', $this->GetInfo($data));
     }
 
@@ -63,7 +73,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        
+
     }
 
     /**

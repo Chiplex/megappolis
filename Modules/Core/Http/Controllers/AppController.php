@@ -23,15 +23,15 @@ class AppController extends Controller
             ->setRowClass('{{ "context-menu" }}')
             ->make(true);
     }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        $apps = App::with('user')->get();
-        $data = ['apps' => $apps];
-        return $this->layout($this->GetInfo($data));
+        $data = [];
+        return $this->layout($data);
     }
 
     /**
@@ -41,7 +41,7 @@ class AppController extends Controller
     public function create()
     {
         $data = [];
-        return view('dashboard', $this->GetInfo($data));
+        return $this->layout($data);
     }
 
     /**
@@ -74,7 +74,7 @@ class AppController extends Controller
     public function show(App $app)
     {
         $data = ['app_' => $app];
-        return view('dashboard', $this->GetInfo($data));
+        return $this->layout($data);
     }
 
     /**
@@ -85,7 +85,7 @@ class AppController extends Controller
     public function edit(App $app)
     {
         $data = ['app_' => $app];
-        return view('dashboard', $this->GetInfo($data));
+        return $this->layout($data);
     }
 
     /**
@@ -114,9 +114,17 @@ class AppController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(App $app)
     {
-        //
+        try {
+            $app->delete();
+
+            return redirect()->route('core.app.index')
+                ->with('success_message', 'App was successfully deleted.');
+        } catch (Exception $exception) {
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
     }
 
     public function approve(App $app)

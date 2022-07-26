@@ -14,12 +14,14 @@
 Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(function() {
     Route::get('/', 'HomeController@index')->name('core');
 
+    Route::get('/user/data', 'UserController@data')->name('core.user.data');
     Route::get('/user/index', 'UserController@index')->name('core.user.index');
     Route::get('/user/register', 'UserController@create')->name('core.user.create');
     Route::post('/user/register', 'UserController@store')->name('core.user.store');
     Route::get('/user/register/{user}', 'UserController@edit')->name('core.user.edit');
     Route::put('/user/register/{user}', 'UserController@update')->name('core.user.update');
 
+    Route::get('/role/data', 'RoleController@data')->name('core.role.data');
     Route::get('/role/index', 'RoleController@index')->name('core.role.index');
     Route::get('/role/register', 'RoleController@create')->name('core.role.create');
     Route::post('/role/register', 'RoleController@store')->name('core.role.store');

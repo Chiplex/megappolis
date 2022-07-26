@@ -3,14 +3,6 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <div class="input-group">
-                        <input type="text" name="table_search" class="form-control" placeholder="Search" />
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-default">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
                 </div>
                 <div class="card-tools">
                     <a class="btn btn-tool btn-primary" href="{{ url('/core/user/register/') }}" role="button">
@@ -19,34 +11,54 @@
                 </div>
             </div>
             <!-- /.card-header -->
-            <div class="card-body table-responsive p-0" style="height: 300px;">
-                <table class="table table-head-fixed text-nowrap">
+            <div class="card-body table-responsive">
+                <table class="table table-head-fixed text-nowrap" id="table">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>User</th>
                             <th>Email</th>
-                            <th>People</th>
-                            <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($users as $user)
-                            <tr>
-                                <td>{{ $user->id }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->people->name }}</td>
-                                <td>
-									<a href="{{ url('/core/user/register/' . $user->id) }}" class="nav-link">
-										<i class="far fa-edit"></i>
-									</a>
-								</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+@push('js')
+<script>
+    var t = $('#table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route('core.user.data') }}',
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', "orderable": false, searchable: false },
+            { data: 'name', name: 'name' },
+            { data: 'email', name: 'email' },
+        ],
+    });
+
+    $.contextMenu({
+        selector: ".context-menu",
+        build: function ($trigger, e) {
+            return {
+                callback: function (key, options) {
+                    var tr = $(options.$trigger[0]).closest('tr');
+                    var row = t.row(tr);
+                    var model = row.data();
+                    switch (key) {
+                        case "edit":
+                            OpenWindow('{{ url('/core/user/register/') }}/' + model.id);
+                            break;
+                    }
+                },
+                items: {
+                    "edit": { name: "Editar", icon: "edit", },
+                }
+            };
+        },
+    });
+
+</script>
+@endpush

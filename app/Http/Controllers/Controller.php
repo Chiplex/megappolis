@@ -57,6 +57,6 @@ class Controller extends BaseController
 
     public function layout($data)
     {
-        return view('layout', $data);
+        return view('layout', $this->GetInfo($data));
     }
 }
