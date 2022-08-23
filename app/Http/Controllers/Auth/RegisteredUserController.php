@@ -9,6 +9,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Module\Core\Entities\Role;
+use Module\Core\Entities\App;
 
 class RegisteredUserController extends Controller
 {
@@ -44,7 +46,22 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        if($user->id == 1) $user->roles()->attach(1);
+        if($user->id == 1) {
+            $role = new Role();
+            $role->name = 'CORE-MEGAPPOLIS';
+            $role->description = 'Megappolis Core Role';
+            $role->save();
+
+            $user->roles()->attach($role);
+
+            $app = new App();
+            $app->name = 'core';
+            $app->description = 'Megappolis Core App';
+            $app->type = 'CORE';
+            $app->url = '/core';
+            $app->user_id = $user->id;
+            $app->save();
+        }
 
         Auth::login($user);
 

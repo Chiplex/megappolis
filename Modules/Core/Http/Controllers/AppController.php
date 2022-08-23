@@ -17,9 +17,15 @@ class AppController extends Controller
      */
     public function data()
     {
-        $apps = App::with('user')->get();
+        $apps = App::with('user', 'transactions')->get();
         return Datatables::of($apps)
             ->addIndexColumn()
+            ->addColumn('approved_at', function ($app) {
+                return $app->transactions->where('status', 'approved')->count();
+            })
+            ->addColumn('blocked_at', function ($app) {
+                return $app->transactions->where('status', 'pending')->count();
+            })
             ->setRowClass('{{ "context-menu" }}')
             ->make(true);
     }
@@ -40,7 +46,8 @@ class AppController extends Controller
      */
     public function create()
     {
-        $data = [];
+        $form = ['route' => 'core.app.store', 'method' => 'POST'];
+        $data = ['form' => $form];
         return $this->layout($data);
     }
 

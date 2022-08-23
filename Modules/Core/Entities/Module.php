@@ -4,13 +4,14 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\ModelStatus\HasStatuses;
 use Modules\Core\Entities\App;
 use Modules\Core\Entities\Permission;
 use Modules\Core\Entities\Role;
 
 class Module extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStatuses;
 
     public $timestamps = false;
 

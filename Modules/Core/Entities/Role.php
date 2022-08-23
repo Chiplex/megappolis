@@ -4,14 +4,15 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Core\Entities\Page;
-use Modules\Core\Entities\Permission;
-use Modules\Core\Entities\App;
+use Spatie\ModelStatus\HasStatuses;
 use App\Models\User;
+use Modules\Core\Entities\App;
+use Modules\Core\Entities\Module;
+use Modules\Core\Entities\Permission;
 
 class Role extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStatuses;
 
     public $timestamps = false;
 
@@ -23,11 +24,11 @@ class Role extends Model
     }
 
     /**
-     * The roles that belong to the pages.
+     * The roles that belong to the modules.
      */
-    public function pages()
+    public function modules()
     {
-        return $this->belongsToMany(Page::class, Permission::class);
+        return $this->belongsToMany(Module::class, Permission::class);
     }
 
     /**

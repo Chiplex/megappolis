@@ -4,13 +4,13 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\ModelStatus\HasStatuses;
 use App\Models\User;
 use Modules\Core\Entities\Page;
-use Modules\Core\Entities\Transactions;
 
 class App extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStatuses;
 
     public $timestamps = false;
 
@@ -41,13 +41,5 @@ class App extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the transactions for the app.
-     */
-    public function transactions()
-    {
-        return $this->hasMany(Transaction::class, 'transaction_id');
     }
 }

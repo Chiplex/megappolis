@@ -17,12 +17,12 @@ class AppTableSeeder extends Seeder
     {
         Model::unguard();
 
-        DB::table('apps')->insert([
-            'name' => 'core',
-            'description' => 'Megappolis Core App',
-            'type' => 'CORE',
-            'url' => '/core',
-            'user_id' => 1,
-        ]);
+        // DB::table('apps')->insert([
+        //     'name' => 'core',
+        //     'description' => 'Megappolis Core App',
+        //     'type' => 'CORE',
+        //     'url' => '/core',
+        //     'user_id' => 1,
+        // ]);
     }
 }

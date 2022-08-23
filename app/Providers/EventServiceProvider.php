@@ -32,9 +32,7 @@ class EventServiceProvider extends ServiceProvider
     {
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
 
-            $apps = App::whereRelation('transactions', 'value', 'approved')
-                ->whereRelation('transactions','value', '!=', 'rejected')
-                ->get()
+            $apps = App::get()
                 ->map(function (App $app)
             {
                return [

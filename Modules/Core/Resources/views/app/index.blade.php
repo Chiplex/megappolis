@@ -8,7 +8,7 @@
                 </div>
             </div>
             <!-- /.card-header -->
-            <div class="card-body table-responsive p-0" style="height: 300px;">
+            <div class="card-body table-responsive">
                 <table class="table table-head-fixed text-nowrap" id="table">
                     <thead>
                         <tr>
@@ -56,7 +56,7 @@
                     var model = row.data();
                     switch (key) {
                         case "edit":
-                            AbrirModal(model);
+                            OpenWindow('{{ url('/core/app/register/') }}/' + model.id);
                             break;
                     }
                 },

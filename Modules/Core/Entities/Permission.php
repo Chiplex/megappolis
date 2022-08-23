@@ -4,12 +4,13 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\ModelStatus\HasStatuses;
 use Modules\Core\Entities\Module;
 use Modules\Core\Entities\Role;
 
 class Permission extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStatuses;
 
     protected $fillable = ['role_id', 'module_id', 'name'];
 
