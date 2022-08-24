@@ -17,14 +17,14 @@ class AppController extends Controller
      */
     public function data()
     {
-        $apps = App::with('user', 'transactions')->get();
+        $apps = App::with(['user','statuses'])->get();
         return Datatables::of($apps)
             ->addIndexColumn()
-            ->addColumn('approved_at', function ($app) {
-                return $app->transactions->where('status', 'approved')->count();
+            ->addColumn('status', function ($app) {
+                return $app->latestStatus();
             })
-            ->addColumn('blocked_at', function ($app) {
-                return $app->transactions->where('status', 'pending')->count();
+            ->addColumn('status_date', function ($app) {
+                return $app->latestStatus() != null ? $app->latestStatus()->created_at->format('d/m/Y H:i') : '';
             })
             ->setRowClass('{{ "context-menu" }}')
             ->make(true);
@@ -36,7 +36,8 @@ class AppController extends Controller
      */
     public function index()
     {
-        $data = [];
+        $form = ['route' => 'core.app.store', 'method' => 'POST'];
+        $data = ['form' => $form];
         return $this->layout($data);
     }
 
