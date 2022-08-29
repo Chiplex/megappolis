@@ -10,6 +10,10 @@ use Modules\Core\Entities\Page;
 
 class App extends Model
 {
+    const STATUS_PENDING = 'pending';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_REJECTED = 'rejected';
+
     use HasFactory, HasStatuses;
 
     public $timestamps = false;
@@ -48,7 +52,7 @@ class App extends Model
      */
     public function approve()
     {
-        $this->setStatus(App::STATUS_APPROVED);
+        $this->setStatus("approved");
         $this->save();
     }
 
@@ -57,7 +61,9 @@ class App extends Model
      */
     public function reject()
     {
-        $this->setStatus(App::STATUS_REJECTED);
+        $this->setStatus("rejected");
         $this->save();
     }
+
+
 }

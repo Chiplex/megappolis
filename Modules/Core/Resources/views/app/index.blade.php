@@ -44,21 +44,21 @@
                 {!! Form::hidden('id') !!}
 
                 @include('form.text', [
-                    'name' => 'name',
-                    'title' => 'Name',
-                    'modal' => true
+                'name' => 'name',
+                'title' => 'Name',
+                'modal' => true
                 ])
 
                 @include('form.text', [
-                    'name' => 'type',
-                    'title' => 'Type',
-                    'modal' => true
+                'name' => 'type',
+                'title' => 'Type',
+                'modal' => true
                 ])
 
                 @include('form.text', [
-                    'name' => 'description',
-                    'title' => 'Description',
-                    'modal' => true
+                'name' => 'description',
+                'title' => 'Description',
+                'modal' => true
                 ])
             </div>
             <div class="modal-footer">
@@ -90,7 +90,7 @@
     });
 
     $.contextMenu({
-        selector: ".context-menu",
+        selector: ".context-menu-approved",
         build: function ($trigger, e) {
             return {
                 callback: async function (key, options) {
@@ -98,8 +98,12 @@
                     var row = t.row(tr);
                     var model = row.data();
                     switch (key) {
+                        case "reject":
+                            await http('{{ url('core/app/reject/') }}/' + model.id, { _token: '{{ csrf_token() }}'}, 'POST');
+                            t.ajax.reload();
+                            break;
                         case "edit":
-                            form.clear();
+                            form.reset();
                             form.fill(model);
                             modal.modal('show');
                             break;
@@ -110,6 +114,40 @@
                     }
                 },
                 items: {
+                    "reject": { name: "Rechazar", icon: "fa-times" },
+                    "edit": { name: "Editar", icon: "edit", },
+                    "delete": { name: "Eliminar", icon: "delete", },
+                }
+            };
+        },
+    });
+
+    $.contextMenu({
+        selector: ".context-menu-reject",
+        build: function ($trigger, e) {
+            return {
+                callback: async function (key, options) {
+                    var tr = $(options.$trigger[0]).closest('tr');
+                    var row = t.row(tr);
+                    var model = row.data();
+                    switch (key) {
+                        case "approve":
+                            await http('{{ url('core/app/approve/') }}/' + model.id, { _token: '{{ csrf_token() }}'}, 'POST');
+                            t.ajax.reload();
+                            break;
+                        case "edit":
+                            form.reset();
+                            form.fill(model);
+                            modal.modal('show');
+                            break;
+                        case "delete":
+                            await app.delete(model.id);
+                            t.ajax.reload();
+                            break;
+                    }
+                },
+                items: {
+                    "approve": { name: "Aprobar", icon: "fa-check" },
                     "edit": { name: "Editar", icon: "edit", },
                     "delete": { name: "Eliminar", icon: "delete", },
                 }

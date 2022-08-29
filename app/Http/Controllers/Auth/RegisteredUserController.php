@@ -61,6 +61,7 @@ class RegisteredUserController extends Controller
             $app->url = '/core';
             $app->user_id = $user->id;
             $app->save();
+            $app->setStatus(App::STATUS_APPROVED);
         }
 
         Auth::login($user);

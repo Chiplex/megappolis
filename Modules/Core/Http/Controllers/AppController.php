@@ -26,7 +26,18 @@ class AppController extends Controller
             ->addColumn('status_date', function ($app) {
                 return $app->latestStatus() != null ? $app->latestStatus()->created_at->format('d/m/Y H:i') : '';
             })
-            ->setRowClass('{{ "context-menu" }}')
+            ->setRowClass(function ($app) {
+                switch ($app->status) {
+                    case 'approved':
+                        return 'context-menu-approved';
+                        break;
+                    case 'pending':
+                    case 'rejected':
+                    default:
+                        return 'context-menu-reject';
+                        break;
+                }
+            })
             ->make(true);
     }
 
@@ -62,7 +73,8 @@ class AppController extends Controller
         try {
             $data = $request->all();
             $data['user_id'] = auth()->user()->id;
-            App::create($data);
+            $app = App::create($data);
+            $app->setStatus(App::STATUS_PENDING);
 
             if ($request->ajax())
                 return response()->json(['success' => true, 'message' => 'App was successfully inserted.']);
@@ -154,7 +166,7 @@ class AppController extends Controller
      * @param App $id
      * @return Renderable
      */
-    public function approve(App $app)
+    public function approve(Request $request, App $app)
     {
         try {
             $app->approve();
@@ -175,10 +187,10 @@ class AppController extends Controller
      * @param App $id
      * @return Renderable
      */
-    public function block(App $app)
+    public function reject(Request $request, App $app)
     {
         try {
-            $app->block();
+            $app->reject();
 
             if ($request->ajax())
                 return response()->json(['success' => true, 'message' => 'App was successfully blocked.']);

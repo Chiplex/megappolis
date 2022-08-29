@@ -20,8 +20,8 @@ Route::prefix('core/')->middleware(['auth', 'access:CORE-MEGAPPOLIS'])->group(fu
     Route::post('/app/register', 'AppController@store')->name('core.app.store');
     Route::get('/app/register/{app}', 'AppController@edit')->name('core.app.edit');
     Route::put('/app/register/{app}', 'AppController@update')->name('core.app.update');
-    Route::get('/app/approve/{app}', 'AppController@approve')->name('core.app.approve');
-    Route::get('/app/block/{app}', 'AppController@block')->name('core.app.block');
+    Route::post('/app/approve/{app}', 'AppController@approve')->name('core.app.approve');
+    Route::post('/app/reject/{app}', 'AppController@reject')->name('core.app.reject');
 
     Route::get('/module/index', 'ModuleController@index')->name('core.module.index');
     Route::get('/module/register', 'ModuleController@create')->name('core.module.create');

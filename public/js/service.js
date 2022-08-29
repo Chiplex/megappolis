@@ -1,6 +1,6 @@
 const ResolveJsonResponseSuccess = {
     List: (response) => {
-        if(response.success)
+        if (response.success)
             return response.data;
 
         Swal.fire({
@@ -11,7 +11,7 @@ const ResolveJsonResponseSuccess = {
         });
     },
     Model: (response) => {
-        if(response.success)
+        if (response.success)
             return response.data;
 
         Swal.fire({
@@ -22,7 +22,7 @@ const ResolveJsonResponseSuccess = {
         });
     },
     Value: (response) => {
-        if(response.success)
+        if (response.success)
             return response.data;
 
         Swal.fire({
@@ -33,7 +33,7 @@ const ResolveJsonResponseSuccess = {
         });
     },
     Datatable: (response) => {
-        if(response.success)
+        if (response.success)
             return response.data;
 
         Swal.fire({
@@ -147,6 +147,14 @@ const ResolveJsonResponseError = {
             confirmButtonText: 'Aceptar'
         });
     },
+    "419": (response) => {
+        Swal.fire({
+            title: 'Error',
+            text: response.responseJSON.message || 'Sesión expirada',
+            type: 'warning',
+            confirmButtonText: 'Aceptar'
+        });
+    },
     "500": (response) => {
         Swal.fire({
             title: 'Error',
@@ -221,7 +229,7 @@ class CrudService {
     }
 
     index() {
-        return http(this.url + "/index", null, "GET", "Datatable");
+        return http(this.url + "/index", null, "GET", "default");
     }
 
     store(data) {
@@ -241,7 +249,7 @@ class CrudService {
     }
 
     save(data) {
-        if(data.id)
+        if (data.id)
             return this.update(data);
         else
             return this.store(data);
@@ -400,18 +408,20 @@ class FormService {
     }
 
     fill(data) {
-        this.form.attr('method', 'PUT')
+        this.form.attr('method', 'PUT');
         for (var key in data) {
-            var control = this.form.find("[name='" + key + "']");
-            if (control.length > 0) {
-                if (control.is("input[type='checkbox']")) {
-                    control.prop("checked", data[key]);
-                }
-                else if (control.is("input[type='radio']")) {
-                    control.filter("[value='" + data[key] + "']").prop("checked", true);
-                }
-                else {
-                    control.val(data[key]);
+            if (key !== "_token") {
+                var control = this.form.find("[name='" + key + "']");
+                if (control.length > 0) {
+                    if (control.is("input[type='checkbox']")) {
+                        control.prop("checked", data[key]);
+                    }
+                    else if (control.is("input[type='radio']")) {
+                        control.filter("[value='" + data[key] + "']").prop("checked", true);
+                    }
+                    else {
+                        control.val(data[key]);
+                    }
                 }
             }
         }
