@@ -37,7 +37,7 @@ class AppController extends Controller
     public function index()
     {
         $form = ['route' => 'core.app.store', 'method' => 'POST'];
-        $data = ['form' => $form];
+        $data = ['form' => $form, 'crud' => '/core/app'];
         return $this->layout($data);
     }
 
@@ -64,10 +64,16 @@ class AppController extends Controller
             $data['user_id'] = auth()->user()->id;
             App::create($data);
 
+            if ($request->ajax())
+                return response()->json(['success' => true, 'message' => 'App was successfully inserted.']);
+
             return redirect()
                 ->route('core.app.index')
                 ->with('success_message', 'App was successfully added.');
         } catch (Exception $exception) {
+            if ($request->ajax())
+                return response()->json(['success' => false, 'message' => 'App was not successfully inserted.']);
+
             return back()
                 ->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
@@ -108,10 +114,13 @@ class AppController extends Controller
             $data = $request->all();
             $app->update($data);
 
-            return redirect()->route('core.app.index')
-                ->with('success_message', 'Attribute was successfully added.');
+            if ($request->ajax())
+                return response()->json(['success' => true, 'message' => 'App was successfully updated.']);
+
+            return redirect()->route('core.app.index')->with('success_message', 'App was successfully added.');
         } catch (Exception $exception) {
-            dd($exception);
+            if ($request->ajax())
+                return response()->json(['success' => false, 'message' => 'App was not successfully updated.']);
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
@@ -127,39 +136,57 @@ class AppController extends Controller
         try {
             $app->delete();
 
-            return redirect()->route('core.app.index')
-                ->with('success_message', 'App was successfully deleted.');
+            if ($request->ajax())
+                return response()->json(['success' => true, 'message' => 'App was successfully deleted.']);
+
+            return redirect()->route('core.app.index')->with('success_message', 'App was successfully deleted.');
         } catch (Exception $exception) {
+            if ($request->ajax())
+                return response()->json(['success' => false, 'message' => 'App was not successfully deleted.']);
+
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
     }
 
+    /**
+     * Approve the specified resource from storage.
+     * @param App $id
+     * @return Renderable
+     */
     public function approve(App $app)
     {
         try {
-            $app->approved_at = Carbon::now();
-            $app->blocked_at = null;
-            $app->save();
+            $app->approve();
+            if ($request->ajax())
+                return response()->json(['success' => true, 'message' => 'App was successfully approved.']);
 
-            return redirect()->route('core.app.index')
-                ->with('success_message', 'Attribute was successfully added.');
+            return redirect()->route('core.app.index')->with('success_message', 'App was successfully approved.');
         } catch (Exception $exception) {
+            if ($request->ajax())
+                return response()->json(['success' => false, 'message' => 'App was not successfully approved.']);
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
     }
 
+    /**
+     * Reject the specified resource from storage.
+     * @param App $id
+     * @return Renderable
+     */
     public function block(App $app)
     {
         try {
-            $app->blocked_at = Carbon::now();
-            $app->approved_at = null;
-            $app->save();
+            $app->block();
 
-            return redirect()->route('core.app.index')
-                ->with('success_message', 'Attribute was successfully added.');
+            if ($request->ajax())
+                return response()->json(['success' => true, 'message' => 'App was successfully blocked.']);
+
+            return redirect()->route('core.app.index')->with('success_message', 'App was successfully added.');
         } catch (Exception $exception) {
+            if ($request->ajax())
+                return response()->json(['success' => false, 'message' => 'App was not successfully blocked.']);
             return back()->withInput()
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }

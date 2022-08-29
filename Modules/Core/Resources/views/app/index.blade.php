@@ -72,6 +72,8 @@
 @push('js')
 <script>
     var modal = $("#modal");
+    var app = new CrudService('{{ $crud }}');
+    var form = new FormService(modal.find("form"));
     var t = $('#table').DataTable({
         processing: true,
         serverSide: true,
@@ -91,36 +93,23 @@
         selector: ".context-menu",
         build: function ($trigger, e) {
             return {
-                callback: function (key, options) {
+                callback: async function (key, options) {
                     var tr = $(options.$trigger[0]).closest('tr');
                     var row = t.row(tr);
                     var model = row.data();
                     switch (key) {
-                        case "info":
-                            OpenWindow('{{ url('/core/app/info/') }}/' + model.id);
-                            break;
                         case "edit":
-                            modal.find('form').attr('action', '{{ url('/core/app/update') }}');
-                            modal.find('form').attr('method', 'post');
-                            modal.find('form').find('input[name=id]').val(model.id);
-                            modal.find('form').find('input[name=name]').val(model.name);
-                            modal.find('form').find('input[name=type]').val(model.type);
-                            modal.find('form').find('input[name=description]').val(model.description);
+                            form.clear();
+                            form.fill(model);
                             modal.modal('show');
                             break;
                         case "delete":
-                            http({
-                                url: '{{ url('/core/app/delete/') }}/' + model.id,
-                                method: 'DELETE',
-                                success: function (response) {
-                                    row.remove().draw();
-                                }
-                            });
+                            await app.delete(model.id);
+                            t.ajax.reload();
                             break;
                     }
                 },
                 items: {
-                    "info": { name: "Info", icon: "info", },
                     "edit": { name: "Editar", icon: "edit", },
                     "delete": { name: "Eliminar", icon: "delete", },
                 }
@@ -128,13 +117,16 @@
         },
     });
 
-    $('#btnAddApp').on('click', function () {
-        modal.find('input[name="id"]').val('');
-        modal.find('input[name="name"]').val('');
-        modal.find('input[name="type"]').val('');
-        modal.find('input[name="description"]').val('');
+    $('#btnAddApp').on('click', () => {
+        form.reset();
         modal.modal('show');
     });
 
+    form.onSubmit(async () => {
+        var data = form.asModel();
+        await app.save(data);
+        modal.modal('hide');
+        t.ajax.reload();
+    })
 </script>
 @endpush

@@ -42,4 +42,22 @@ class App extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Approve the app.
+     */
+    public function approve()
+    {
+        $this->setStatus(App::STATUS_APPROVED);
+        $this->save();
+    }
+
+    /**
+     * Reject the app.
+     */
+    public function reject()
+    {
+        $this->setStatus(App::STATUS_REJECTED);
+        $this->save();
+    }
 }

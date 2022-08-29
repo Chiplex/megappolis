@@ -9,8 +9,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Module\Core\Entities\Role;
-use Module\Core\Entities\App;
+use Modules\Core\Entities\Role;
+use Modules\Core\Entities\App;
 
 class RegisteredUserController extends Controller
 {
